@@ -1,5 +1,11 @@
+import { Hero } from "@/components/Hero";
+
 const Page = () => {
-    return <p>Dashboard Page</p>;
+    return (
+        <>
+            <Hero />
+        </>
+    );
 }
 
 export default Page;
