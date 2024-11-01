@@ -4,5 +4,15 @@
     "next/typescript",
     "plugin:tailwindcss/recommended"
   ],
-  "plugins": ["tailwindcss"]
+  "plugins": ["tailwindcss", "no-relative-import-paths"],
+  "rules": {
+    "no-relative-import-paths/no-relative-import-paths": [
+      "error",
+      {
+        "allowSameFolder": true,
+        "prefix": "@",
+        "rootDir": "src"
+      }
+    ]
+  }
 }

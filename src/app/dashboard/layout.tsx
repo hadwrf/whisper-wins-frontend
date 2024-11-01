@@ -1,11 +1,11 @@
-import NavBar from '@/app/ui/dashboard/navBar';
 import { PropsWithChildren } from 'react';
+import NavBar from '@/app/ui/dashboard/navBar';
 
 export default function Layout(props: PropsWithChildren) {
     return (
         <div className="h-screen flex-row overflow-hidden">
             <NavBar />
-            <div className="grow p-6 md:overflow-y-auto md:p-12">{props.children}</div>
+            <div className="grow overflow-y-auto p-12">{props.children}</div>
         </div>
     );
 }

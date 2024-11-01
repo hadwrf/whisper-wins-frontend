@@ -1,7 +1,7 @@
+import { PowerIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
-import NavLinks from '@/app/ui/dashboard/nav-links';
-import { PowerIcon } from '@heroicons/react/24/outline';
+import NavLinks from './nav-links';
 
 export default function NavBar() {
     return (
