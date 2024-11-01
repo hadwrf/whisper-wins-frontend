@@ -1,11 +1,11 @@
-import { Hero } from "@/components/Hero";
+import { Hero } from '@/components/Hero';
 
 const Page = () => {
-    return (
-        <>
-            <Hero />
-        </>
-    );
-}
+  return (
+    <>
+      <Hero />
+    </>
+  );
+};
 
 export default Page;

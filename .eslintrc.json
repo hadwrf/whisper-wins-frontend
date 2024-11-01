@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "next/typescript",
-    "plugin:tailwindcss/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "next/typescript", "plugin:tailwindcss/recommended", "prettier"],
   "plugins": ["tailwindcss", "no-relative-import-paths"],
   "rules": {
     "no-relative-import-paths/no-relative-import-paths": [
@@ -14,7 +10,6 @@
         "rootDir": "src"
       }
     ],
-    "@typescript-eslint/no-require-imports": "off",
-    "indent": "error"
+    "@typescript-eslint/no-require-imports": "off"
   }
 }
