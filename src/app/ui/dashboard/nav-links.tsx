@@ -30,7 +30,7 @@ export default function NavLinks() {
                         className="flex h-[48px] flex-none grow items-center justify-start gap-2 rounded-md bg-gray-50 p-2 px-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600"
                     >
                         <LinkIcon className="w-6" />
-                        <p className="hidden md:block">{link.name}</p>
+                        <p>{link.name}</p>
                     </a>
                 );
             })}
