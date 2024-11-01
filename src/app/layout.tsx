@@ -9,19 +9,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-    <body
-        className={`${inter.className} antialiased`}
-      >
-        {children}
-        <SpeedInsights />
-        <Analytics />
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body
+                className={`${inter.className} antialiased`}
+            >
+                {children}
+                <SpeedInsights />
+                <Analytics />
+            </body>
+        </html>
+    );
 }
