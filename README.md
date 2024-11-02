@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Quick Start
 
-## Getting Started
+[NVM](https://github.com/nvm-sh/nvm)
 
-First, run the development server:
-
+Install node v20 with nvm. Then activate v20 with nvm:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+nvm use
+```
+
+Install dependencies:
+```bash
+pnpm install
+```
+
+Run development server:
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Before development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* To ensure code consistency and quality, please configure your IDE to automatically format with **Prettier** and **ESLint** on save.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Git
+* Clear, **descriptive commit messages** are essential for a maintainable codebase. They help us understand why changes were made, 
+make it easier to trace bugs, and improve collaboration. 
+* Separate subject and body with a blank line
+* Explain the **why**, not just the what.
+* To maintain a clean and linear commit history, **please use rebase instead of merge** when incorporating changes from the main branch
