@@ -5,7 +5,7 @@ import NavLinks from './NavLinks';
 
 export default function NavBar() {
   return (
-    <div className='flex justify-between p-4'>
+    <div className='flex justify-between bg-white p-4'>
       <Link href='/dashboard'>
         <Image
           src='/whisper-logo.svg'
