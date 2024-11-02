@@ -1,5 +1,7 @@
+import { ComingSoon } from '@/components/ComingSoon';
+
 const CreateAuction = () => {
-  return <h1>Create Auction</h1>;
+  return <ComingSoon />;
 };
 
 export default CreateAuction;

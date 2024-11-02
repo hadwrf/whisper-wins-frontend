@@ -1,5 +1,7 @@
+import { ComingSoon } from '@/components/ComingSoon';
+
 const Explore = () => {
-  return <h1>Explore</h1>;
+  return <ComingSoon />;
 };
 
 export default Explore;

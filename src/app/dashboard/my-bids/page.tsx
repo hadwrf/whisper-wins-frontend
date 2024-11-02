@@ -1,5 +1,7 @@
+import { ComingSoon } from '@/components/ComingSoon';
+
 const MyBids = () => {
-  return <h1>My Bids</h1>;
+  return <ComingSoon />;
 };
 
 export default MyBids;
