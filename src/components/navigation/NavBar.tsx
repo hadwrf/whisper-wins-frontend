@@ -1,7 +1,7 @@
-import { Power } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import NavLinks from './NavLinks';
+import { ConnectBtn } from './ConnectButton';
 
 export default function NavBar() {
   return (
@@ -15,12 +15,7 @@ export default function NavBar() {
         />
       </Link>
       <NavLinks />
-      <form>
-        <button className='flex h-[48px] w-full flex-none grow items-center justify-start gap-2 rounded-md bg-gray-50 p-2 px-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600'>
-          <Power className='w-6' />
-          <div className=''>Sign Out</div>
-        </button>
-      </form>
+      <ConnectBtn />
     </div>
   );
 }
