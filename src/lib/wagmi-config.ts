@@ -4,7 +4,10 @@ import { http, createStorage, cookieStorage } from 'wagmi';
 import { sepolia, bscTestnet, blastSepolia, mainnet } from 'wagmi/chains';
 import { Chain, getDefaultConfig } from '@rainbow-me/rainbowkit';
 
-const projectId: string = '';
+const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
+if (!projectId) {
+    throw new Error('Project ID is not defined');
+}
 
 const supportedChains: Chain[] = [sepolia, bscTestnet, blastSepolia, mainnet];
 
