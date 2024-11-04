@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import "@rainbow-me/rainbowkit/styles.css";
+import '@rainbow-me/rainbowkit/styles.css';
 import { inter } from '@/app/ui/fonts';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   let cookie: string | null = null;
   Promise.resolve(headers()).then((header) => {
-    cookie = header.get("cookie");
+    cookie = header.get('cookie');
   });
 
   return (
