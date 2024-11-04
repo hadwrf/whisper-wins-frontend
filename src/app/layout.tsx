@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import '@rainbow-me/rainbowkit/styles.css';
 import { inter } from '@/app/ui/fonts';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
+import Providers from '@/lib/wagmi-providers';
+import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
   title: 'Whisper Wins',
@@ -13,10 +16,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let cookie: string | null = null;
+  Promise.resolve(headers()).then((header) => {
+    cookie = header.get('cookie');
+  });
+
   return (
     <html lang='en'>
       <body className={`${inter.className} antialiased`}>
-        {children}
+        <Providers cookie={cookie}>{children}</Providers>
         <SpeedInsights />
         <Analytics />
       </body>
