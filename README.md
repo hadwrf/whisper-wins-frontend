@@ -41,3 +41,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - Separate subject and body with a blank line
 - Explain the **why**, not just the what.
 - To maintain a clean and linear commit history, **please use rebase instead of merge** when incorporating changes from the main branch
+
+## Dockerize
+
+Optionally the application can be build and run in docker container.
+
+Uncomment [next.config.ts](next.config.ts) `output: 'standalone'`
+
+```bash
+docker-compose up --build
+```

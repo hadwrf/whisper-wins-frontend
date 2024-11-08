@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: . # Refers to the directory where your Dockerfile is located
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
