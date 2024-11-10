@@ -27,7 +27,7 @@ const CreateAuction = () => {
       return;
     }
 
-    const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/upload', {
+    const response = await fetch('/api/upload', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const CreateAuction = () => {
 
   const getImage = async () => {
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/upload');
+      const response = await fetch('/api/upload');
       if (!response.ok) {
         throw new Error('Failed to fetch image');
       }
@@ -95,7 +95,7 @@ const CreateAuction = () => {
           <Button
             onClick={async () => {
               console.log('fetching');
-              const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/upload', {
+              const response = await fetch('/api/upload', {
                 method: 'GET',
               });
               console.log('response', response);
