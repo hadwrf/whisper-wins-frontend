@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 } from 'uuid';
 import { NextResponse } from 'next/server';
 
-export const r2 = new S3Client({
+const r2 = new S3Client({
   region: 'auto', // Cloudflare R2 doesn't use regions, but this is required by the SDK
   endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
   credentials: {
@@ -12,7 +12,7 @@ export const r2 = new S3Client({
   },
 });
 
-export async function GET(): Promise<{ url: string }> {
+export async function GET() {
   try {
     const command = new GetObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME,
