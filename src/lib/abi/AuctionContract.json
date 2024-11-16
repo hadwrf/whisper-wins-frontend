@@ -1,0 +1,176 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "onchainCallback",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "test",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "TestEvent",
+      "inputs": [
+        {
+          "name": "",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        }
+      ],
+      "anonymous": false
+    }
+  ],
+  "bytecode": {
+    "object": "0x6080604052348015600f57600080fd5b506101008061001f6000396000f3fe6080604052348015600f57600080fd5b5060043610603c5760003560e01c80634a5250541460415780638da5cb5b146043578063f8a8fd6d146071575b600080fd5b005b6000546055906001600160a01b031681565b6040516001600160a01b03909116815260200160405180910390f35b60417fe75028ff36bb6473da3731a30e1aeeae9988e2415dba2c4e91e0357955065fba60405160c0906020808252600c908201526b5465737420776f726b696e6760a01b604082015260600190565b60405180910390a156fea26469706673582212200a2143b3af0893085937a01e6362378a70c4e73df6e3e9c45fe269bbce902f2f64736f6c634300081c0033",
+    "sourceMap": "96:273:17:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052348015600f57600080fd5b5060043610603c5760003560e01c80634a5250541460415780638da5cb5b146043578063f8a8fd6d146071575b600080fd5b005b6000546055906001600160a01b031681565b6040516001600160a01b03909116815260200160405180910390f35b60417fe75028ff36bb6473da3731a30e1aeeae9988e2415dba2c4e91e0357955065fba60405160c0906020808252600c908201526b5465737420776f726b696e6760a01b604082015260600190565b60405180910390a156fea26469706673582212200a2143b3af0893085937a01e6362378a70c4e73df6e3e9c45fe269bbce902f2f64736f6c634300081c0033",
+    "sourceMap": "96:273:17:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;223:36;;127:20;;;;;-1:-1:-1;;;;;127:20:17;;;;;;-1:-1:-1;;;;;178:32:21;;;160:51;;148:2;133:18;127:20:17;;;;;;;295:72;;335:25;;;;;424:2:21;406:21;;;463:2;443:18;;;436:30;-1:-1:-1;;;497:2:21;482:18;;475:42;549:2;534:18;;222:336;335:25:17;;;;;;;;295:72::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "onchainCallback()": "4a525054",
+    "owner()": "8da5cb5b",
+    "test()": "f8a8fd6d"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.28+commit.7893614a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"TestEvent\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"onchainCallback\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"test\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/AuctionContract.sol\":\"AuctionContract\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":Solidity-RLP/=lib/suave-std/lib/Solidity-RLP/contracts/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":elliptic-curve-solidity/=lib/suave-std/lib/elliptic-curve-solidity/\",\":forge-std/=lib/forge-std/src/\",\":solady/=lib/suave-std/lib/solady/\",\":suave-std/=lib/suave-std/src/\"]},\"sources\":{\"lib/suave-std/src/Logs.sol\":{\"keccak256\":\"0xb677b430a60720404420d39d2365b012251de02f8b264c66eb48a418dea40ed7\",\"license\":\"Unlicense\",\"urls\":[\"bzz-raw://b23026fd8c6ece80af9f61beb845d589241d3cb5d4231bd53416f4b3ffee85bc\",\"dweb:/ipfs/QmUVYufQR9RyJC1XB19rgURcwusxHRVNK1WynN1imuvKNZ\"]},\"lib/suave-std/src/Suapp.sol\":{\"keccak256\":\"0xd00efc18a99197b1fc7f05c9b66f68c6b29e3d3a849c901ad066e4bd4770db8c\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://cc4c13c3b97a256ce225d6ab6c7a1237a8e739d471dae31e825cce1a4cb54bb4\",\"dweb:/ipfs/QmUp7ewYxA4KcLobuKkTgHPw5kF3S51ksVLrzDjd4K4SqK\"]},\"lib/suave-std/src/suavelib/Suave.sol\":{\"keccak256\":\"0xe7567897bcfd51cd6773993abbbd00bcfd294936cc02fee8b3b86a3d0e23000a\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://c8d65d3c439e6d8584b48a8eeace969f3f2f359a18a34796df182a6ab081e2b8\",\"dweb:/ipfs/QmNgmTeNmd7yfrPt87aobKAcT9ZHFJiY5BZJjCfzr8VQGu\"]},\"src/AuctionContract.sol\":{\"keccak256\":\"0x0209aa18de9ea578db4cbaaadcf37146cce3995ddf18fe84a7d6bf1a55ec30f1\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://7919d51bdfb089a676836ce1cae096738fdb737590b6a31fcc090bde23befbe5\",\"dweb:/ipfs/Qme4mMauXmpD1Ty9q8jtzKpdcZKJGU9Byy2dYVemX7Jr21\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.28+commit.7893614a"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "TestEvent",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "onchainCallback"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "test"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "Solidity-RLP/=lib/suave-std/lib/Solidity-RLP/contracts/",
+        "ds-test/=lib/forge-std/lib/ds-test/src/",
+        "elliptic-curve-solidity/=lib/suave-std/lib/elliptic-curve-solidity/",
+        "forge-std/=lib/forge-std/src/",
+        "solady/=lib/suave-std/lib/solady/",
+        "suave-std/=lib/suave-std/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/AuctionContract.sol": "AuctionContract"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "lib/suave-std/src/Logs.sol": {
+        "keccak256": "0xb677b430a60720404420d39d2365b012251de02f8b264c66eb48a418dea40ed7",
+        "urls": [
+          "bzz-raw://b23026fd8c6ece80af9f61beb845d589241d3cb5d4231bd53416f4b3ffee85bc",
+          "dweb:/ipfs/QmUVYufQR9RyJC1XB19rgURcwusxHRVNK1WynN1imuvKNZ"
+        ],
+        "license": "Unlicense"
+      },
+      "lib/suave-std/src/Suapp.sol": {
+        "keccak256": "0xd00efc18a99197b1fc7f05c9b66f68c6b29e3d3a849c901ad066e4bd4770db8c",
+        "urls": [
+          "bzz-raw://cc4c13c3b97a256ce225d6ab6c7a1237a8e739d471dae31e825cce1a4cb54bb4",
+          "dweb:/ipfs/QmUp7ewYxA4KcLobuKkTgHPw5kF3S51ksVLrzDjd4K4SqK"
+        ],
+        "license": "UNLICENSED"
+      },
+      "lib/suave-std/src/suavelib/Suave.sol": {
+        "keccak256": "0xe7567897bcfd51cd6773993abbbd00bcfd294936cc02fee8b3b86a3d0e23000a",
+        "urls": [
+          "bzz-raw://c8d65d3c439e6d8584b48a8eeace969f3f2f359a18a34796df182a6ab081e2b8",
+          "dweb:/ipfs/QmNgmTeNmd7yfrPt87aobKAcT9ZHFJiY5BZJjCfzr8VQGu"
+        ],
+        "license": "UNLICENSED"
+      },
+      "src/AuctionContract.sol": {
+        "keccak256": "0x0209aa18de9ea578db4cbaaadcf37146cce3995ddf18fe84a7d6bf1a55ec30f1",
+        "urls": [
+          "bzz-raw://7919d51bdfb089a676836ce1cae096738fdb737590b6a31fcc090bde23befbe5",
+          "dweb:/ipfs/Qme4mMauXmpD1Ty9q8jtzKpdcZKJGU9Byy2dYVemX7Jr21"
+        ],
+        "license": "UNLICENSED"
+      }
+    },
+    "version": 1
+  },
+  "id": 17
+}
