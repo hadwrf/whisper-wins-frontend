@@ -1,10 +1,12 @@
 'use client';
 
+import { DatePicker } from '@/components/DatePicker';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { myFirstSuappAbi } from '@/lib/abi';
+import { myFirstSuapp } from '@/lib/abi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { useWriteContract } from 'wagmi';
 import { Auction } from './types';
@@ -24,13 +26,14 @@ export const CreateAuctionForm = () => {
       name: '',
       price: '',
       startingBid: '',
+      endDate: '',
     },
   });
 
   const onSubmit = () => {
     writeContractAsync({
       address: CONTRACT_ADDRESS,
-      abi: myFirstSuappAbi,
+      abi: myFirstSuapp.abi,
       functionName: 'offchain',
     })
       .then((tx) => {
@@ -91,6 +94,22 @@ export const CreateAuctionForm = () => {
                   placeholder='Starting Bid'
                   type='number'
                   {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='endDate'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>End Date</FormLabel>
+              <FormControl>
+                <DatePicker
+                  value={field.value ? new Date(field.value) : undefined}
+                  onChange={(date) => date && field.onChange(format(date, 'dd.MM.yyyy'))}
                 />
               </FormControl>
               <FormMessage />

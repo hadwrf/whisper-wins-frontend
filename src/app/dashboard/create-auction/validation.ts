@@ -18,4 +18,5 @@ export const auctionFormSchema = z.object({
     .min(1, {
       message: 'Starting bid must be given.',
     }),
+  endDate: z.string(),
 });

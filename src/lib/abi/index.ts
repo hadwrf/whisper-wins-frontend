@@ -1,6 +1,6 @@
-import { abi as auctionContractAbi } from './AuctionContract.json';
-import { abi as factoryContractAbi } from './FactoryContract.json';
-import { abi as whisperBasicsContractAbi } from './WhisperBasic.json';
-import { abi as myFirstSuappAbi } from './MyFirstSuapp.json';
+import { default as auctionContract } from './AuctionContract.json';
+import { default as factoryContract } from './FactoryContract.json';
+import { default as whisperBasicsContract } from './WhisperBasic.json';
+import { default as myFirstSuapp } from './MyFirstSuapp.json';
 
-export { auctionContractAbi, factoryContractAbi, whisperBasicsContractAbi, myFirstSuappAbi };
+export { auctionContract, factoryContract, whisperBasicsContract, myFirstSuapp };
