@@ -11,4 +11,11 @@ export const auctionFormSchema = z.object({
     .min(1, {
       message: 'Price must be given.',
     }),
+  startingBid: z
+    .string({
+      message: 'Starting bid must be given.',
+    })
+    .min(1, {
+      message: 'Starting bid must be given.',
+    }),
 });

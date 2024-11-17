@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { myFirstSuappAbi } from '@/lib/abi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { useWatchContractEvent, useWriteContract } from 'wagmi';
+import { useWriteContract } from 'wagmi';
 import { Auction } from './types';
 import { auctionFormSchema } from './validation';
 
@@ -23,36 +23,23 @@ export const CreateAuctionForm = () => {
     defaultValues: {
       name: '',
       price: '',
+      startingBid: '',
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onSubmit = (auction: Auction) => {
-    try {
-      writeContractAsync({
-        address: CONTRACT_ADDRESS,
-        abi: myFirstSuappAbi,
-        functionName: 'offchain',
+  const onSubmit = () => {
+    writeContractAsync({
+      address: CONTRACT_ADDRESS,
+      abi: myFirstSuappAbi,
+      functionName: 'offchain',
+    })
+      .then((tx) => {
+        console.log('Transaction:', tx);
       })
-        .then((tx) => {
-          console.log('Transaction:', tx);
-        })
-        .catch((err) => {
-          console.error('Failed to send transaction:', err);
-        });
-    } catch (err) {
-      console.error('Failed to send transaction:', err);
-    }
+      .catch((err) => {
+        console.error('Failed to send transaction:', err);
+      });
   };
-
-  useWatchContractEvent({
-    address: CONTRACT_ADDRESS,
-    abi: myFirstSuappAbi,
-    eventName: 'OffchainEvent',
-    onLogs(logs) {
-      console.log('New logs!', logs);
-    },
-  });
 
   return (
     <Form {...form}>
@@ -85,6 +72,23 @@ export const CreateAuctionForm = () => {
               <FormControl>
                 <Input
                   placeholder='Price'
+                  type='number'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='startingBid'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Starting Bid</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder='Starting Bid'
                   type='number'
                   {...field}
                 />
