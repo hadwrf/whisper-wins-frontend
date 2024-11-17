@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { myFirstSuapp } from '@/lib/abi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { useWriteContract } from 'wagmi';
 import { Auction } from './types';
@@ -108,7 +108,7 @@ export const CreateAuctionForm = () => {
               <FormLabel>End Date</FormLabel>
               <FormControl>
                 <DatePicker
-                  value={field.value ? new Date(field.value) : undefined}
+                  value={field.value ? parse(field.value, 'dd.MM.yyyy', new Date()) : undefined}
                   onChange={(date) => date && field.onChange(format(date, 'dd.MM.yyyy'))}
                 />
               </FormControl>
