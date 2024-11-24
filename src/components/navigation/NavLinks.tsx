@@ -11,7 +11,7 @@ const links = [
     href: '/dashboard/explore',
   },
   { name: 'My Bids', href: '/dashboard/my-bids' },
-  { name: 'Create Auction', href: '/dashboard/create-auction' },
+  { name: 'My NFTs', href: '/dashboard/my-nfts' },
 ];
 
 export default function NavLinks() {
