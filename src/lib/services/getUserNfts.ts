@@ -49,7 +49,7 @@ const API_BASE_URL = 'https://eth-sepolia.g.alchemy.com/nft/v3';
  * @param withMetadata - Whether to include metadata in the response.
  * @returns Promise<GetNftsResponse>
  */
-export async function getUserNfts(owner: string | null, withMetadata: boolean = true): Promise<GetUserNftsResponse> {
+export async function getUserNfts(owner: string, withMetadata: boolean = true): Promise<GetUserNftsResponse> {
   const url = `${API_BASE_URL}/${ALCHEMY_API_KEY}/getNFTsForOwner?owner=${owner}&withMetadata=${withMetadata}`;
   try {
     const response = await fetch(url);

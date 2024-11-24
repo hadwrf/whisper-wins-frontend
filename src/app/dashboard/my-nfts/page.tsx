@@ -14,6 +14,9 @@ const MyNfts = () => {
 
   useEffect(() => {
     async function fetchNfts() {
+      if (!account) {
+        return;
+      }
       try {
         const data = await getUserNfts(account);
         setNfts(data.ownedNfts);

@@ -5,7 +5,7 @@ export const LoginToContinue = () => {
     <div className='mx-auto max-w-5xl p-20'>
       <div className='m-auto grid grid-cols-1 place-items-center justify-center space-y-20'>
         <Image
-          src='/login.svg'
+          src='/login-to-continue.svg'
           alt='Login to continue'
           width={700}
           height={700}
