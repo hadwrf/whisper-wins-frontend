@@ -23,7 +23,6 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className} antialiased`}>
-        <Providers cookie={cookie}>{children}</Providers>
         <Providers cookie={cookie}>
           <AuthProvider>{children}</AuthProvider>
         </Providers>
