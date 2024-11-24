@@ -17,9 +17,10 @@ export const ConnectBtn = () => {
 
   useEffect(() => {
     let disconnectTimeout: NodeJS.Timeout | null = null;
-    if (isConnected && address && !account) {
+    if (isConnected && address) {
       setAccount(address);
-    } else if (!isConnected && address && account) {
+    }
+    if (!isConnected && account) {
       disconnectTimeout = setTimeout(() => {
         logout();
       }, 500);
@@ -51,7 +52,7 @@ export const ConnectBtn = () => {
     return renderButton('success', openAccountModal, 'Wallet');
   }
 
-  if (!isConnected && !account && !address) {
+  if (!isConnected && !address) {
     return renderButton('neutral', openConnectModal, 'Connect Wallet');
   }
 
