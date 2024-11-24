@@ -30,6 +30,10 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Diagrams
+
+https://drive.google.com/file/d/19jZ1hQXeQ_DD8X2mG30jL5OF7pkZccaU/view?usp=sharing
+
 ## Before Development
 
 - To ensure code consistency and quality, please configure your IDE to automatically format with **Prettier** and **ESLint** on save.
