@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import { inter } from '@/app/ui/fonts';
-import Providers from '@/lib/wagmi-providers';
+import Providers from '@/lib/wagmi/providers';
 import { headers } from 'next/headers';
+import { AuthProvider } from '@/context/AuthContext';
 
 export const metadata: Metadata = {
   title: 'Whisper Wins',
@@ -23,6 +24,9 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${inter.className} antialiased`}>
         <Providers cookie={cookie}>{children}</Providers>
+        <Providers cookie={cookie}>
+          <AuthProvider>{children}</AuthProvider>
+        </Providers>
       </body>
     </html>
   );
