@@ -1,23 +1,36 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useConnectModal, useAccountModal, useChainModal } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import { Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuthContext } from '@/context/AuthContext';
 
 export const ConnectBtn = () => {
-  const { isConnecting, isConnected, chain } = useAccount();
+  const { isConnected, chain, address } = useAccount();
+  const { account, setAccount, logout } = useAuthContext();
 
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
 
-  const isMounted = useRef(false);
-
   useEffect(() => {
-    isMounted.current = true;
-  }, []);
+    let disconnectTimeout: NodeJS.Timeout | null = null;
+    if (isConnected && address && !account) {
+      setAccount(address);
+    } else if (!isConnected && address && account) {
+      disconnectTimeout = setTimeout(() => {
+        logout();
+      }, 500);
+    }
+
+    return () => {
+      if (disconnectTimeout) {
+        clearTimeout(disconnectTimeout);
+      }
+    };
+  }, [isConnected, address, account, setAccount, logout]);
 
   const renderButton = (
     variant: 'neutral' | 'error' | 'success',
@@ -34,9 +47,12 @@ export const ConnectBtn = () => {
     </Button>
   );
 
-  if (!isConnected) {
-    const status = isConnecting ? 'Connecting...' : 'Connect Wallet';
-    return renderButton('neutral', openConnectModal, status);
+  if (account) {
+    return renderButton('success', openAccountModal, 'Wallet');
+  }
+
+  if (!isConnected && !account && !address) {
+    return renderButton('neutral', openConnectModal, 'Connect Wallet');
   }
 
   if (isConnected && !chain) {

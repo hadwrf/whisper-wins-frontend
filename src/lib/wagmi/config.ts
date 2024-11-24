@@ -1,16 +1,17 @@
 'use client';
 
 import { http, createStorage, cookieStorage } from 'wagmi';
+import { sepolia } from 'wagmi/chains';
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { localhost } from './chains/localhost';
-import { toliman } from './chains/toliman';
+import { localhost } from '@/lib/chains/localhost';
+import { toliman } from '@/lib/chains/toliman';
 
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID;
 if (!projectId) {
   throw new Error('Project ID is not defined');
 }
 
-const supportedChains = [localhost, toliman] as const;
+const supportedChains = [localhost, sepolia, toliman] as const;
 
 export const config = getDefaultConfig({
   appName: 'WalletConnection',
