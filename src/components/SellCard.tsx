@@ -1,3 +1,5 @@
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { Nft } from '@/lib/services/getUserNfts';
@@ -8,7 +10,10 @@ type SellCardProps = {
   nft: Nft;
 };
 
-export const SellCard: React.FC<SellCardProps> = ({ nft }) => {
+export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
+  const { nft } = props;
+  const { push } = useRouter();
+
   return (
     <Card className='w-60'>
       <CardMedia>
@@ -28,7 +33,14 @@ export const SellCard: React.FC<SellCardProps> = ({ nft }) => {
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{nft.name}</p>
       </CardContent>
       <CardFooter>
-        <Button size='xs'>Sell NFT</Button>
+        <Button
+          size='xs'
+          onClick={() => {
+            push(`/dashboard/create-auction`);
+          }}
+        >
+          Sell NFT
+        </Button>
         <Button
           size='xs'
           variant='outline'
