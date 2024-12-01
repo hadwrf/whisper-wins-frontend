@@ -1,0 +1,28 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+enum AuctionStatus {
+  NFT_TRANSFER_PENDING
+  IN_PROGRESS
+  WINNER_CLAIM_PENDING
+  ENDED
+}
+
+model auctions {
+  contractAddress   String   @map(name: "contract_address") @unique
+  ownerAddress      String   @map(name: "owner_address")
+  nftAddress        String   @map(name: "nft_address")
+  tokenId           String   @map(name: "token_id")
+  status            AuctionStatus @default(NFT_TRANSFER_PENDING) @map(name: "status")
+  createdAt         DateTime @default(now()) @map(name: "created_at")
+  updatedAt         DateTime @default(now()) @map(name: "updated_at")
+}
