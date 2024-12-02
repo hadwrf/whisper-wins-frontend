@@ -12,6 +12,7 @@ const links = [
   },
   { name: 'My Bids', href: '/dashboard/my-bids' },
   { name: 'My NFTs', href: '/dashboard/my-nfts' },
+  { name: 'My Auctions', href: '/dashboard/my-auctions' },
 ];
 
 export default function NavLinks() {

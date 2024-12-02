@@ -8,7 +8,7 @@ export interface Nft {
   tokenId: string;
   tokenType: string;
   name: string;
-  desctiption: string;
+  description: string;
   tokenUri: string;
   image: {
     originalUrl: string;
@@ -32,6 +32,12 @@ export interface Nft {
     transactionHash: string;
   };
   timeLastUpdated: string;
+}
+
+export interface NftRequest {
+  contractAddress: string;
+  tokenId: string;
+  tokenType: string;
 }
 
 export interface GetUserNftsResponse {
@@ -58,9 +64,32 @@ export async function getUserNfts(owner: string, withMetadata: boolean = true): 
       throw new Error(`Failed to fetch NFTs: ${response.statusText}`);
     }
 
-    const data: GetUserNftsResponse = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     throw error;
   }
+}
+
+/**
+ * Fetch Auction NFTs for a specific owner.
+ * @param nftRequests - NFT request data as an array
+ * @returns Promise<Nft[]>
+ */
+export async function getUserAuctionNFTs(nftRequests: NftRequest[]): Promise<Nft[]> {
+  const url = `${API_BASE_URL}/${ALCHEMY_API_KEY}/getNFTMetadataBatch`;
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({
+      tokens: nftRequests,
+      refreshCache: false,
+    }),
+  };
+
+  console.log(options);
+
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch NFTs: ${response.statusText}`);
+  }
+  return await response.json();
 }
