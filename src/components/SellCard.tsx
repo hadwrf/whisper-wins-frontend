@@ -14,6 +14,11 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
   const { nft } = props;
   const { push } = useRouter();
 
+  const handleSellClick = () => {
+    const url = `/dashboard/create-auction?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`;
+    push(url);
+  };
+
   return (
     <Card className='w-60'>
       <CardMedia>
@@ -35,9 +40,7 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
       <CardFooter>
         <Button
           size='xs'
-          onClick={() => {
-            push(`/dashboard/create-auction`);
-          }}
+          onClick={handleSellClick}
         >
           Sell NFT
         </Button>
