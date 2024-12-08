@@ -3,11 +3,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
+import { getNft, Nft, NftRequest } from '@/lib/services/getUserNfts';
 import { Auction } from '@prisma/client';
-import { CameraOff, DollarSign, Info, CalendarClock, Tag } from 'lucide-react';
+import { format } from 'date-fns';
+import { CalendarClock, CameraOff, DollarSign, Info, Tag } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { getNft, Nft, NftRequest } from '@/lib/services/getUserNfts';
 import { useEffect, useState } from 'react';
 
 interface AuctionCardProps {
@@ -17,8 +18,7 @@ interface AuctionCardProps {
 export const AuctionCard = ({ auction }: AuctionCardProps) => {
   const { push } = useRouter();
   const [nft, setNft] = useState<Nft | null>(null);
-
-  console.log(auction);
+  // const [endDate, setEndDate] = useState<string | null>(null);
 
   useEffect(() => {
     const nftRequest: NftRequest = {
@@ -34,6 +34,11 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
   const handleSellClick = () => {
     push(`/dashboard/place-bid?auctionAddress=${auction.contractAddress}`);
   };
+
+  // todo normally the auction contract should return the end date but for now we print the createdAt date
+  // retrieveContractEndDate(auction.contractAddress).then((res) => {
+  //   setEndDate(res);
+  // });
 
   return (
     <Card className='w-60'>
@@ -65,20 +70,17 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
             className='flex gap-1'
           >
             <CalendarClock size={13} />
-            02.10.2024
+            {format(auction.createdAt, 'P')}
           </Badge>
         </div>
         <div className='flex max-w-full gap-1 overflow-x-auto'>
-          {Array.from({ length: 2 }).map((_, i) => (
-            <Badge
-              key={i}
-              variant='outline'
-              className='flex gap-1'
-            >
-              <Tag size={12} />
-              <p>nft</p>
-            </Badge>
-          ))}
+          <Badge
+            variant='outline'
+            className='flex gap-1'
+          >
+            <Tag size={12} />
+            <p>nft</p>
+          </Badge>
         </div>
       </CardContent>
       <CardFooter>

@@ -1,13 +1,16 @@
 import { AuctionCards } from '@/components/cards/AuctionCards';
 import { Hero } from '@/components/Hero';
-import { SearchBar } from '@/components/SearchBar';
+import { SellYourNfts } from '@/components/SellYourNfts';
 
 const Page = () => {
   return (
     <div className='p-4'>
       <Hero />
+      <div className={'mb-8'}>
+        <SellYourNfts />
+      </div>
       <div className='mx-auto max-w-5xl'>
-        <SearchBar />
+        {/*<SearchBar />*/}
         <AuctionCards />
       </div>
     </div>
