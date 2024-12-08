@@ -7,8 +7,8 @@ export const AuctionCards = async () => {
   return (
     <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
       {auctions.map((auction) => (
-        <div key={auction.tokenId}>
-          <AuctionCard />
+        <div key={auction.nftAddress}>
+          <AuctionCard auction={auction} />
         </div>
       ))}
     </div>

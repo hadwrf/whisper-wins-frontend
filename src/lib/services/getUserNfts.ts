@@ -37,7 +37,6 @@ export interface Nft {
 export interface NftRequest {
   contractAddress: string;
   tokenId: string;
-  tokenType: string;
 }
 
 export interface GetUserNftsResponse {
@@ -71,6 +70,30 @@ export async function getUserNfts(owner: string, withMetadata: boolean = true): 
 }
 
 /**
+ * Fetch NFTs for a specific owner.
+ * @param nftRequest - The wallet address of the owner.
+ * @returns Promise<Nft>
+ */
+export async function getNft(nftRequest: NftRequest): Promise<Nft> {
+  const url = new URL(`${API_BASE_URL}/${ALCHEMY_API_KEY}/getNFTMetadata`);
+  url.searchParams.append('contractAddress', nftRequest.contractAddress);
+  url.searchParams.append('tokenId', nftRequest.tokenId);
+  url.searchParams.append('refreshCache', 'false');
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch NFT: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
  * Fetch Auction NFTs for a specific owner.
  * @param nftRequests - NFT request data as an array
  * @returns Promise<Nft[]>
@@ -84,8 +107,6 @@ export async function getUserAuctionNFTs(nftRequests: NftRequest[]): Promise<Nft
       refreshCache: false,
     }),
   };
-
-  console.log(options);
 
   const response = await fetch(url, options);
   if (!response.ok) {

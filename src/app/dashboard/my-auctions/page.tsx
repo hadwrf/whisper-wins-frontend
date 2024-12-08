@@ -131,7 +131,7 @@ const MyAuctions = () => {
         {!loading && !list.length && <NoDataFound />}
         <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
           {list.map((item) => (
-            <div key='a'>
+            <div key={item.nft.tokenId}>
               <Card className='w-60'>
                 <CardMedia>
                   {item.nft.image.originalUrl ? (
