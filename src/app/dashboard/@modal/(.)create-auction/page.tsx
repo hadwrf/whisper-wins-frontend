@@ -1,6 +1,7 @@
 'use client';
 
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CreateAuctionForm } from '@/components/forms/CreateAuctionForm';
 
@@ -16,6 +17,9 @@ const CreateAuctionModal = () => {
       open={true}
       onOpenChange={() => router.back()}
     >
+      <VisuallyHidden>
+        <DialogTitle></DialogTitle>
+      </VisuallyHidden>
       <DialogContent>
         <CreateAuctionForm
           nftAddress={nftAddress}

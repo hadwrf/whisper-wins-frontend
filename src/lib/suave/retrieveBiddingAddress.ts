@@ -28,6 +28,7 @@ async function retrieveBiddingAddress(contractAddress: string) {
     transport: http(SUAVE),
   });
 
+  // send a confidential compute request
   const ccr: TransactionRequestSuave = {
     to: contractAddress as Hex,
     gasPrice: BigInt(10000000000),
@@ -42,9 +43,9 @@ async function retrieveBiddingAddress(contractAddress: string) {
   };
 
   const ccrHash = await wallet.sendTransaction(ccr);
-  console.log('ccrhash', ccrHash);
+  console.log('ccr tx hash:', ccrHash);
   const receipts = await publicClient.waitForTransactionReceipt({ hash: ccrHash });
-  console.log(receipts);
+  console.log('receipts', receipts);
 
   const eventAbi = ['event EncBiddingAddress(address owner, string encodedL1Address)'];
 

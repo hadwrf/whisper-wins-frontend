@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { placeBidSchema } from '@/app/dashboard/validation';
 import { useState } from 'react';
 import retrieveBiddingAddress from '@/lib/suave/retrieveBiddingAddress';
+import { Spinner } from '@/components/Spinner';
 
 interface PlaceBidFormProps {
   auctionAddress: string;
@@ -62,12 +63,15 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
             </FormItem>
           )}
         />
-        <Button
-          type='submit'
-          disabled={loading || biddingAddress != null}
-        >
-          Place Bid
-        </Button>
+        <div className='flex items-center gap-2'>
+          <Button
+            type='submit'
+            disabled={loading || biddingAddress != null}
+          >
+            Place Bid
+          </Button>
+          <Spinner show={loading} />
+        </div>
       </form>
     </Form>
   );

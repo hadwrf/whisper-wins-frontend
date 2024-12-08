@@ -14,7 +14,7 @@ export const BidCard = () => {
   const { push } = useRouter();
 
   const handleSellClick = () => {
-    const auctionAddress = '0xe9922a5db4fdc4fd8feb3b53366298b65d8532b0';
+    const auctionAddress = '0x0e99aefc77a809fd69fb7c5266a72a47749157d6';
     const url = `/dashboard/place-bid?auctionAddress=${auctionAddress}`;
     push(url);
   };
@@ -43,7 +43,7 @@ export const BidCard = () => {
           </Badge>
         </div>
         <div className='flex max-w-full gap-1 overflow-x-auto'>
-          {Array.from({ length: 7 }).map((_, i) => (
+          {Array.from({ length: 2 }).map((_, i) => (
             <Badge
               key={i}
               variant='outline'
