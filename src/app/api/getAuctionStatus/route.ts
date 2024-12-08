@@ -1,4 +1,4 @@
-import getNftStatus from '@/lib/db/getNftStatus';
+import getAuctionStatus from '@/lib/db/getAuctionStatus';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -12,11 +12,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Call your database function
-    const nftStatus = await getNftStatus({ nftAddress, tokenId });
-
-    NextResponse.json({ nftStatus });
+    const auctionStatus = await getAuctionStatus({ nftAddress, tokenId });
+    if (auctionStatus == null) {
+      return NextResponse.json({ error: 'There is no auction fond in the db for the given NFT' }, { status: 500 });
+    }
+    return NextResponse.json({ auctionStatus });
   } catch (error) {
     console.error('Error retrieving NFT status:', error);
-    NextResponse.json({ error: 'Failed to retrieve NFT status' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to retrieve NFT status' }, { status: 500 });
   }
 }

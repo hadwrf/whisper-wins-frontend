@@ -18,8 +18,7 @@ const LoadingQRCode = () => {
           row.map(() => {
             // Simulate fluid movement by changing states randomly
             const randomChance = Math.random();
-            const isFluidMovement = randomChance > 0.5 ? true : false;
-            return isFluidMovement;
+            return randomChance > 0.5;
           }),
         ),
       );
@@ -29,12 +28,12 @@ const LoadingQRCode = () => {
   }, []);
 
   return (
-    <div className='flex flex-col justify-center items-center'>
-      <div className='flex justify-center items-center'>
+    <div className='flex flex-col items-center justify-items-center'>
+      <div className='flex items-center justify-items-center'>
         <div className='relative'>
           <div
-            className='grid grid-cols-22'
-            style={{ gridTemplateRows: `repeat(${qrSize}, 1fr)` }}
+            className='grid'
+            style={{ gridTemplateColumns: `repeat(${qrSize}, 1fr)`, gridTemplateRows: `repeat(${qrSize}, 1fr)` }}
           >
             {dots.map((row, rowIndex) =>
               row.map((dot, colIndex) => (

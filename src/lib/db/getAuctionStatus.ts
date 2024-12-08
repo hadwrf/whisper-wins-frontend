@@ -1,11 +1,11 @@
 import prisma from './prisma';
 
-interface GetNftStatusParams {
+interface GetAuctionsStatusParams {
   nftAddress: string;
   tokenId: string;
 }
 
-export default async function getNftStatus(params: GetNftStatusParams) {
+export default async function getAuctionStatus(params: GetAuctionsStatusParams) {
   console.log(params);
   return await prisma.auctions.findFirst({
     where: {

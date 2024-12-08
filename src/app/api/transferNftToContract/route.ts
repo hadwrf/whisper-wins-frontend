@@ -9,9 +9,9 @@ export async function POST(request: NextRequest) {
   try {
     const { auctionAddress }: TransferNftToContractParams = await request.json();
     await transferNftToContract({ auctionAddress });
-    NextResponse.json({ message: 'Auction status changed to IN_PROGRESS successfully' });
+    return NextResponse.json({ message: 'Auction status changed to IN_PROGRESS successfully' });
   } catch (error) {
     console.error('Error changing auction status to IN_PROGRESS:', error);
-    NextResponse.json({ error: 'Failed to change auction status to IN_PROGRESS' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to change auction status to IN_PROGRESS' }, { status: 500 });
   }
 }

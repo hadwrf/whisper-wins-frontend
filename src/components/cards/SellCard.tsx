@@ -22,8 +22,8 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
     push(url);
   };
 
-  const checkNftStatus = async () => {
-    const response = await fetch(`/api/getNftStatus?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`, {
+  const checkAuctionStatus = async () => {
+    const response = await fetch(`/api/getAuctionStatus?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -34,7 +34,7 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
   };
 
   useEffect(() => {
-    checkNftStatus();
+    checkAuctionStatus();
   }, []);
 
   return (

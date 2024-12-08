@@ -12,6 +12,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Auction created successfully' });
   } catch (error) {
     console.error('Error creating auction:', error);
-    NextResponse.json({ error: 'Failed to create auction' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create auction' }, { status: 500 });
   }
 }

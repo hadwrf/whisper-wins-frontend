@@ -30,6 +30,12 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Prisma Studio
+
+```bash
+npx prisma studio
+```
+
 ## Diagrams
 
 https://drive.google.com/file/d/19jZ1hQXeQ_DD8X2mG30jL5OF7pkZccaU/view?usp=sharing

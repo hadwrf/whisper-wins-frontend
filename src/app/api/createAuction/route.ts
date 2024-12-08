@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
   try {
     const { auctionAddress, ownerAddress, nftAddress, tokenId }: CreateAuctionParams = await req.json();
     await createAuction({ auctionAddress, ownerAddress, nftAddress, tokenId });
-    NextResponse.json({ message: 'Auction created successfully' });
+    return NextResponse.json({ message: 'Auction created successfully' });
   } catch (error) {
     console.error('Error creating auction:', error);
-    NextResponse.json({ error: 'Failed to create auction' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create auction' }, { status: 500 });
   }
 }
