@@ -1,8 +1,8 @@
-import { BrowserProvider, ethers } from 'ethers';
+import sealedAuction from '@/lib/abi/SealedAuction.json';
+import { Address, createPublicClient, custom, encodeFunctionData, type Hex, http } from '@flashbots/suave-viem';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
-import { http, type Hex, Address, createPublicClient, encodeFunctionData, custom } from '@flashbots/suave-viem';
-import sealedAuction from '@/lib/abi/SealedAuction.json';
+import { BrowserProvider, ethers, LogDescription } from 'ethers';
 
 async function retrieveBiddingAddress(contractAddress: string) {
   const SUAVE = 'https://rpc.toliman.suave.flashbots.net';
@@ -53,8 +53,7 @@ async function retrieveBiddingAddress(contractAddress: string) {
   const decodedLogs = receipts.logs
     .map((log) => {
       try {
-        const decoded = contractInterface.parseLog(log);
-        return decoded;
+        return contractInterface.parseLog(log);
       } catch (e) {
         console.error('Failed to parse log:', e);
         return null;
@@ -62,13 +61,15 @@ async function retrieveBiddingAddress(contractAddress: string) {
     })
     .filter(Boolean);
 
-  decodedLogs.forEach((decoded) => {
-    const { owner, encodedL1Address } = decoded.args;
-    console.log('Owner:', owner);
-    console.log('Encoded L1 Address:', encodedL1Address);
+  decodedLogs.forEach((decoded: LogDescription | null) => {
+    if (decoded !== null) {
+      const { owner, encodedL1Address } = decoded.args;
+      console.log('Owner:', owner);
+      console.log('Encoded L1 Address:', encodedL1Address);
+    }
   });
 
-  return decodedLogs[0].args.encodedL1Address;
+  return decodedLogs[0]?.args.encodedL1Address;
 }
 
 export default retrieveBiddingAddress;
