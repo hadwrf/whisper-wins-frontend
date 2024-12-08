@@ -6,7 +6,7 @@ import { LoginToContinue } from '@/components/LoginToContinue';
 import { getUserNfts, Nft } from '@/lib/services/getUserNfts';
 import React, { useEffect, useState } from 'react';
 
-import { auctions } from '@prisma/client';
+import { Auction } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { useAuthContext } from '@/context/AuthContext';
@@ -22,15 +22,15 @@ const MyAuctions = () => {
   const [nftsFetched, setNftsFetched] = useState(false);
 
   const [nfts, setNfts] = useState<Nft[]>([]);
-  const [auctions, setAuctions] = useState<auctions[]>([]);
+  const [auctions, setAuctions] = useState<Auction[]>([]);
 
-  const [list, setList] = useState<{ nft: Nft; auction: auctions }[]>([]);
+  const [list, setList] = useState<{ nft: Nft; auction: Auction }[]>([]);
 
   const startAuctionCall = async (auctionAddress: string) => {
     await startAuction(auctionAddress);
     await updateAuctionRecordInDb(auctionAddress);
 
-    const nftsToList: { nft: Nft; auction: auctions }[] = [];
+    const nftsToList: { nft: Nft; auction: Auction }[] = [];
 
     list.map((item) => {
       if (item.auction.contractAddress === auctionAddress) {
@@ -102,7 +102,7 @@ const MyAuctions = () => {
 
   useEffect(() => {
     if (nfts.length > 0 && auctions.length > 0) {
-      const nftsToList: { nft: Nft; auction: auctions }[] = [];
+      const nftsToList: { nft: Nft; auction: Auction }[] = [];
       auctions.forEach((auction) => {
         const nft = nfts.find((nft) => nft.tokenId === auction.tokenId && nft.contract.address === auction.nftAddress);
         if (nft) {

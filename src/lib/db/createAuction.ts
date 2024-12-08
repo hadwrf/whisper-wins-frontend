@@ -8,7 +8,7 @@ interface CreateAuctionParams {
 }
 
 export default async function createAuction(params: CreateAuctionParams) {
-  await prisma.auctions.create({
+  await prisma.auction.create({
     data: {
       contractAddress: params.auctionAddress,
       ownerAddress: params.ownerAddress,

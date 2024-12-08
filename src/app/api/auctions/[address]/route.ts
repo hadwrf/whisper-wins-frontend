@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import getAuctions from '@/lib/db/getAuctions';
+import { getAuctions } from '@/lib/db/getAuctions';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ address: string }> }) {
   const address = (await params).address;

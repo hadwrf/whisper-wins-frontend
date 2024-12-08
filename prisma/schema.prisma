@@ -17,7 +17,7 @@ enum AuctionStatus {
   ENDED
 }
 
-model auctions {
+model Auction {
   contractAddress   String   @map(name: "contract_address") @unique
   ownerAddress      String   @map(name: "owner_address")
   nftAddress        String   @map(name: "nft_address")
@@ -25,4 +25,6 @@ model auctions {
   status            AuctionStatus @default(NFT_TRANSFER_PENDING) @map(name: "status")
   createdAt         DateTime @default(now()) @map(name: "created_at")
   updatedAt         DateTime @default(now()) @map(name: "updated_at")
+
+  @@map("auctions")
 }

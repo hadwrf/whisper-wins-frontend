@@ -7,7 +7,7 @@ interface GetAuctionsStatusParams {
 
 export default async function getAuctionStatus(params: GetAuctionsStatusParams) {
   console.log(params);
-  return await prisma.auctions.findFirst({
+  return await prisma.auction.findFirst({
     where: {
       nftAddress: params.nftAddress,
       tokenId: params.tokenId,

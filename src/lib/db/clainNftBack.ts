@@ -5,7 +5,7 @@ interface ClaimNftBackParams {
 }
 
 export default async function claimNftBack(params: ClaimNftBackParams) {
-  await prisma.auctions.update({
+  await prisma.auction.update({
     where: {
       contractAddress: params.auctionAddress,
     },

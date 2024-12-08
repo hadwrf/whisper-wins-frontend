@@ -10,7 +10,7 @@ interface TransferNftToContractParams {
  * @param params - Parameters to update the auction status.
  */
 export default async function transferNftToContract(params: TransferNftToContractParams) {
-  await prisma.auctions.update({
+  await prisma.auction.update({
     where: {
       contractAddress: params.auctionAddress,
     },

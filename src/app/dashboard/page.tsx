@@ -1,4 +1,4 @@
-import { BidCards } from '@/components/cards/BidCards';
+import { AuctionCards } from '@/components/cards/AuctionCards';
 import { Hero } from '@/components/Hero';
 import { SearchBar } from '@/components/SearchBar';
 
@@ -8,7 +8,7 @@ const Page = () => {
       <Hero />
       <div className='mx-auto max-w-5xl'>
         <SearchBar />
-        <BidCards />
+        <AuctionCards />
       </div>
     </div>
   );

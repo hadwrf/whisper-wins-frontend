@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { CameraOff, DollarSign, Info, CalendarClock, Tag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+//
+// interface AuctionCardProps {
+//   auction: Auction;
+// }
 
-// type BidCardProps = {
-//   auctionAddress: string;
-// };
-
-export const BidCard = () => {
+export const AuctionCard = () => {
   const { push } = useRouter();
 
   const handleSellClick = () => {
