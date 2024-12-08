@@ -3,7 +3,7 @@
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoadingQRCode from '@/components/LoadingQRCode';
-import { PlaceBidForm } from '@/app/dashboard/PlaceBidForm';
+import { PlaceBidForm } from '@/components/forms/PlaceBidForm';
 import { useState } from 'react';
 import BiddingQRCode from '@/components/BiddingQRCode';
 import { Hex } from '@flashbots/suave-viem';

@@ -1,4 +1,4 @@
-import { BidCards } from '@/components/BidCards';
+import { BidCards } from '@/components/cards/BidCards';
 import { Hero } from '@/components/Hero';
 import { SearchBar } from '@/components/SearchBar';
 

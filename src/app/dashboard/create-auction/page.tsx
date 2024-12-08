@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { CreateAuctionForm } from './CreateAuctionForm';
+import { CreateAuctionForm } from '@/components/forms/CreateAuctionForm';
 
 const CreateAuction = () => {
   const searchParams = useSearchParams();

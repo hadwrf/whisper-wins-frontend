@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { auctionFormSchema } from './validation';
+import { auctionFormSchema } from '@/app/dashboard/create-auction/validation';
 import { useAuthContext } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import createAuction from '@/lib/suave/createAuction';

@@ -5,7 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { placeBidSchema } from './validation';
+import { placeBidSchema } from '@/app/dashboard/validation';
 import { useState } from 'react';
 import retrieveBiddingAddress from '@/lib/suave/retrieveBiddingAddress';
 

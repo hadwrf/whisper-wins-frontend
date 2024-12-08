@@ -1,9 +1,10 @@
 'use client';
-import SellCards from '@/components/SellCards';
+
 import { LoginToContinue } from '@/components/LoginToContinue';
 import { useEffect, useState } from 'react';
 import { Nft, getUserNfts } from '@/lib/services/getUserNfts';
-import { SkeletonSellCards } from '@/components/SkeletonSellCards';
+import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
+import { SellCards } from '@/components/cards/SellCards';
 import { useAuthContext } from '@/context/AuthContext';
 
 const MyNfts = () => {
