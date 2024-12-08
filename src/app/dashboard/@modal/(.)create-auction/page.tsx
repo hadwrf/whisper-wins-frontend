@@ -1,11 +1,15 @@
 'use client';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { useRouter } from 'next/navigation';
-import { CreateAuctionForm } from '@/app/dashboard/create-auction/CreateAuctionForm';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { CreateAuctionForm } from '@/components/forms/CreateAuctionForm';
 
 const CreateAuctionModal = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const nftAddress = searchParams?.get('nftAddress') || '';
+  const tokenId = searchParams?.get('tokenId') || '';
 
   return (
     <Dialog
@@ -13,7 +17,10 @@ const CreateAuctionModal = () => {
       onOpenChange={() => router.back()}
     >
       <DialogContent>
-        <CreateAuctionForm />
+        <CreateAuctionForm
+          nftAddress={nftAddress}
+          tokenId={tokenId}
+        />
       </DialogContent>
     </Dialog>
   );

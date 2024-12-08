@@ -1,22 +1,22 @@
 import { z } from 'zod';
 
 export const auctionFormSchema = z.object({
-  name: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
-  }),
-  price: z
-    .string({
-      message: 'Price must be given.',
-    })
-    .min(1, {
-      message: 'Price must be given.',
-    }),
+  seller: z
+    .string()
+    .min(1, 'Seller address is required')
+    .length(42, 'Seller address must be 42 characters long')
+    .startsWith('0x', 'Seller address must start with "0x"'),
+
+  nftAddress: z
+    .string()
+    .min(1, 'NFT contract address is required')
+    .length(42, 'NFT contract address must be 42 characters long')
+    .startsWith('0x', 'NFT address must start with "0x"'),
+
+  tokenId: z.string().min(1, 'NFT Token ID is required').regex(/^\d+$/, 'Token ID must be a number'),
+
   startingBid: z
-    .string({
-      message: 'Starting bid must be given.',
-    })
-    .min(1, {
-      message: 'Starting bid must be given.',
-    }),
-  endDate: z.string(),
+    .string()
+    .min(1, 'Starting bid is required')
+    .regex(/^\d+(\.\d{1,18})?$/, 'Starting bid must be a valid number in ETH'),
 });

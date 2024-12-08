@@ -1,12 +1,12 @@
 import { Nft } from '@/lib/services/getUserNfts';
 import { SellCard } from './SellCard';
-import { SearchBar } from './SearchBar';
+import { SearchBar } from '@/components/SearchBar';
 
 interface Props {
   nfts: Nft[];
 }
 
-export default function SellCards({ nfts }: Props) {
+export const SellCards = ({ nfts }: Props) => {
   return (
     <div>
       <h1>Your NFTs</h1>
@@ -20,4 +20,4 @@ export default function SellCards({ nfts }: Props) {
       </div>
     </div>
   );
-}
+};

@@ -1,9 +1,24 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { CameraOff, DollarSign, Info, CalendarClock, Tag } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+// type BidCardProps = {
+//   auctionAddress: string;
+// };
 
 export const BidCard = () => {
+  const { push } = useRouter();
+
+  const handleSellClick = () => {
+    const auctionAddress = '0xe9922a5db4fdc4fd8feb3b53366298b65d8532b0';
+    const url = `/dashboard/place-bid?auctionAddress=${auctionAddress}`;
+    push(url);
+  };
+
   return (
     <Card className='w-60'>
       <CardMedia>
@@ -41,7 +56,12 @@ export const BidCard = () => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button size='xs'>Place Bid</Button>
+        <Button
+          onClick={handleSellClick}
+          size='xs'
+        >
+          Place Bid
+        </Button>
         <Button
           size='xs'
           variant='outline'
