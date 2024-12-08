@@ -12,7 +12,7 @@ import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { useAuthContext } from '@/context/AuthContext';
 import startAuction from '@/lib/suave/startAuction';
 import { NoDataFound } from '@/components/NoDataFound';
-import { SkeletonSellCards } from '@/components/SkeletonSellCards';
+import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();

@@ -65,15 +65,19 @@ async function startAuction(contractAddress: string) {
     .filter(Boolean);
 
   decodedLogs.forEach((decoded) => {
-    const { contractAddr, nftContractAddress, nftTokenId, endTimestamp, minimalBiddingAmount } = decoded.args;
-    console.log('contractAddr:', contractAddr);
-    console.log('nftContractAddress:', nftContractAddress);
-    console.log('nftTokenId:', nftTokenId);
-    console.log('endTimestamp:', endTimestamp);
-    console.log('minimalBiddingAmount:', minimalBiddingAmount);
+    if (decoded?.args) {
+      const { contractAddr, nftContractAddress, nftTokenId, endTimestamp, minimalBiddingAmount } = decoded.args;
+      console.log('contractAddr:', contractAddr);
+      console.log('nftContractAddress:', nftContractAddress);
+      console.log('nftTokenId:', nftTokenId);
+      console.log('endTimestamp:', endTimestamp);
+      console.log('minimalBiddingAmount:', minimalBiddingAmount);
+    } else {
+      console.error('decoded logs are null');
+    }
   });
 
-  return decodedLogs[0].args.minimalBiddingAmount;
+  return decodedLogs[0]?.args.minimalBiddingAmount;
 }
 
 export default startAuction;
