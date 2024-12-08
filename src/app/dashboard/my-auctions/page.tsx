@@ -9,15 +9,56 @@ import React, { useEffect, useState } from 'react';
 import { auctions } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
+import { useAuthContext } from '@/context/AuthContext';
+import startAuction from '@/lib/suave/startAuction';
+import { NoDataFound } from '@/components/NoDataFound';
+import { SkeletonSellCards } from '@/components/SkeletonSellCards';
 
 const MyAuctions = () => {
-  // const { account } = useAuthContext();
-  const account = '0x973501C85DB87E550952b04F72f75C2E2f1599B9';
+  const { account } = useAuthContext();
+
+  const [loading, setLoading] = useState(true);
+  const [auctionsFetched, setAuctionsFetched] = useState(false);
+  const [nftsFetched, setNftsFetched] = useState(false);
 
   const [nfts, setNfts] = useState<Nft[]>([]);
   const [auctions, setAuctions] = useState<auctions[]>([]);
 
   const [list, setList] = useState<{ nft: Nft; auction: auctions }[]>([]);
+
+  const startAuctionCall = async (auctionAddress: string) => {
+    await startAuction(auctionAddress);
+    await updateAuctionRecordInDb(auctionAddress);
+
+    const nftsToList: { nft: Nft; auction: auctions }[] = [];
+
+    list.map((item) => {
+      if (item.auction.contractAddress === auctionAddress) {
+        nftsToList.push({
+          ...item,
+          auction: {
+            ...item.auction,
+            status: 'IN_PROGRESS',
+          },
+        });
+      } else {
+        nftsToList.push(item);
+      }
+    });
+    setList(nftsToList);
+  };
+
+  const updateAuctionRecordInDb = async (auctionAddress: string) => {
+    const response = await fetch('/api/transferNftToContract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        auctionAddress: auctionAddress,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+  };
 
   useEffect(() => {
     async function fetchNfts() {
@@ -27,6 +68,7 @@ const MyAuctions = () => {
       try {
         const data = await getUserNfts(account);
         setNfts(data.ownedNfts);
+        setNftsFetched(true);
       } catch (error) {
         console.error('Failed to load NFTs:', error);
       }
@@ -48,6 +90,7 @@ const MyAuctions = () => {
           const res = await response.json();
           console.log('AUCTIONS', res);
           setAuctions(res);
+          setAuctionsFetched(true);
         } else {
           const { error } = await response.json();
           console.error('Failed to load NFTs:', error);
@@ -61,22 +104,31 @@ const MyAuctions = () => {
     if (nfts.length > 0 && auctions.length > 0) {
       const nftsToList: { nft: Nft; auction: auctions }[] = [];
       auctions.forEach((auction) => {
-        const nft = nfts.find((nft) => nft.tokenId === auction.tokenId);
+        const nft = nfts.find((nft) => nft.tokenId === auction.tokenId && nft.contract.address === auction.nftAddress);
         if (nft) {
           nftsToList.push({ nft: nft, auction: auction });
         }
       });
       setList(nftsToList);
+      console.log('NFTs to tils', nftsToList);
       console.log('NFTS', nfts);
       console.log('AUCTIONS', auctions);
     }
   }, [nfts, auctions]);
+
+  useEffect(() => {
+    if (nftsFetched && auctionsFetched) {
+      setLoading(false);
+    }
+  }, [nftsFetched, auctionsFetched]);
 
   if (!account) return <LoginToContinue />;
 
   return (
     <div className='p-4'>
       <div className='mx-auto max-w-5xl'>
+        {loading && <SkeletonSellCards />}
+        {!loading && !list.length && <NoDataFound />}
         <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
           {list.map((item) => (
             <div key='a'>
@@ -101,6 +153,7 @@ const MyAuctions = () => {
                   <Button
                     size='xs'
                     variant='outline'
+                    onClick={() => startAuctionCall(item.auction.contractAddress)}
                   >
                     <Info /> {item.auction.status}
                   </Button>

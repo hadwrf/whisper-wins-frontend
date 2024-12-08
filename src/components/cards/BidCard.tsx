@@ -14,7 +14,7 @@ export const BidCard = () => {
   const { push } = useRouter();
 
   const handleSellClick = () => {
-    const auctionAddress = '0xec74b597a40d7bdbea11641763dc17f9522b3c4d';
+    const auctionAddress = '0xe9922a5db4fdc4fd8feb3b53366298b65d8532b0';
     const url = `/dashboard/place-bid?auctionAddress=${auctionAddress}`;
     push(url);
   };

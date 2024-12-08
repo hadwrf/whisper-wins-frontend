@@ -2,9 +2,9 @@ import { BrowserProvider } from 'ethers';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet } from '@flashbots/suave-viem/chains/utils';
 import { http, type Hex, Address, createPublicClient, custom } from '@flashbots/suave-viem';
-import sealedAuction from '@/lib/abi/SealedAuction.json';
+import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
 
-async function createAuction() {
+async function createAuction(nftContractAddress: string, tokenId: string) {
   const SUAVE = 'https://rpc.toliman.suave.flashbots.net';
 
   const { abi, bytecode } = sealedAuction;
@@ -21,6 +21,7 @@ async function createAuction() {
     abi,
     account: signer.address as Address,
     bytecode: bytecode.object as Hex,
+    args: [signer.address as Hex, nftContractAddress, BigInt(1), BigInt(tokenId), BigInt(1000000000)],
   });
   console.log(hash);
 
@@ -35,6 +36,7 @@ async function createAuction() {
   });
 
   const receipt = await publicClient.waitForTransactionReceipt({ hash: hash });
+  console.log(receipt);
   const contractAddress = receipt.contractAddress;
   console.log('Contract deployed at:', contractAddress);
   return contractAddress;

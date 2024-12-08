@@ -1,10 +1,10 @@
-import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
-import { Address, createPublicClient, custom, encodeFunctionData, type Hex, http } from '@flashbots/suave-viem';
+import { BrowserProvider, ethers } from 'ethers';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
-import { BrowserProvider, ethers, LogDescription } from 'ethers';
+import { http, type Hex, Address, createPublicClient, encodeFunctionData, custom } from '@flashbots/suave-viem';
+import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
 
-async function retrieveBiddingAddress(contractAddress: string) {
+async function startAuction(contractAddress: string) {
   const SUAVE = 'https://rpc.toliman.suave.flashbots.net';
   const KETTLE_ADDRESS = '0xf579de142d98f8379c54105ac944fe133b7a17fe';
 
@@ -35,7 +35,7 @@ async function retrieveBiddingAddress(contractAddress: string) {
     type: SuaveTxRequestTypes.ConfidentialRequest,
     data: encodeFunctionData({
       abi: abi,
-      functionName: 'getBiddingAddress',
+      functionName: 'startAuction',
     }),
     confidentialInputs: '0x',
     kettleAddress: KETTLE_ADDRESS,
@@ -46,14 +46,17 @@ async function retrieveBiddingAddress(contractAddress: string) {
   const receipts = await publicClient.waitForTransactionReceipt({ hash: ccrHash });
   console.log(receipts);
 
-  const eventAbi = ['event EncBiddingAddress(address owner, string encodedL1Address)'];
+  const eventAbi = [
+    'event AuctionOpened(address contractAddr, address nftContractAddress, uint256 nftTokenId, uint256 endTimestamp, uint256 minimalBiddingAmount)',
+  ];
 
   const contractInterface = new ethers.Interface(eventAbi);
 
   const decodedLogs = receipts.logs
     .map((log) => {
       try {
-        return contractInterface.parseLog(log);
+        const decoded = contractInterface.parseLog(log);
+        return decoded;
       } catch (e) {
         console.error('Failed to parse log:', e);
         return null;
@@ -61,15 +64,16 @@ async function retrieveBiddingAddress(contractAddress: string) {
     })
     .filter(Boolean);
 
-  decodedLogs.forEach((decoded: LogDescription | null) => {
-    if (decoded !== null) {
-      const { owner, encodedL1Address } = decoded.args;
-      console.log('Owner:', owner);
-      console.log('Encoded L1 Address:', encodedL1Address);
-    }
+  decodedLogs.forEach((decoded) => {
+    const { contractAddr, nftContractAddress, nftTokenId, endTimestamp, minimalBiddingAmount } = decoded.args;
+    console.log('contractAddr:', contractAddr);
+    console.log('nftContractAddress:', nftContractAddress);
+    console.log('nftTokenId:', nftTokenId);
+    console.log('endTimestamp:', endTimestamp);
+    console.log('minimalBiddingAmount:', minimalBiddingAmount);
   });
 
-  return decodedLogs[0]?.args.encodedL1Address;
+  return decodedLogs[0].args.minimalBiddingAmount;
 }
 
-export default retrieveBiddingAddress;
+export default startAuction;

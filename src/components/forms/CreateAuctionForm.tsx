@@ -51,8 +51,8 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
 
   const onSubmit = async (data: AuctionFormData) => {
     setLoading(true);
-    const auctionAddress = await createAuction();
     const { seller, nftAddress, tokenId } = data;
+    const auctionAddress = await createAuction(nftAddress, tokenId);
     await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId);
     setLoading(false);
     setAuctionAddress(auctionAddress);
