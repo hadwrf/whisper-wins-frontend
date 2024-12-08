@@ -4,6 +4,7 @@ import { default as whisperBasicsContract } from './WhisperBasic.json';
 import { default as myFirstSuapp } from './MyFirstSuapp.json';
 import { default as basicAuctionContract } from './BasicAuctionContract.json';
 import { default as sealedAuctionContract } from './SealedAuction.json';
+import { default as sealedAuctionv2Contract } from './SealedAuctionv2.json';
 
 export {
   auctionContract,
@@ -12,4 +13,5 @@ export {
   myFirstSuapp,
   basicAuctionContract,
   sealedAuctionContract,
+  sealedAuctionv2Contract,
 };
