@@ -9,6 +9,12 @@ async function startAuction(contractAddress: string) {
   const KETTLE_ADDRESS = '0xf579de142d98f8379c54105ac944fe133b7a17fe';
 
   const { abi } = sealedAuction;
+
+  await window.ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: `0x201188a` }],
+  });
+
   const provider = new BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
 

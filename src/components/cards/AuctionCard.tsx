@@ -29,7 +29,7 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
     getNft(nftRequest).then((nft) => {
       setNft(nft);
     });
-  }, []);
+  }, [auction.nftAddress, auction.tokenId]);
 
   const handleSellClick = () => {
     push(`/dashboard/place-bid?auctionAddress=${auction.contractAddress}`);

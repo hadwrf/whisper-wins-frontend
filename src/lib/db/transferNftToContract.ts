@@ -1,7 +1,9 @@
+import { AuctionStatus } from '@prisma/client';
 import prisma from './prisma';
 
 interface TransferNftToContractParams {
   auctionAddress: string;
+  status: AuctionStatus;
 }
 
 /**
@@ -15,7 +17,7 @@ export default async function transferNftToContract(params: TransferNftToContrac
       contractAddress: params.auctionAddress,
     },
     data: {
-      status: 'IN_PROGRESS',
+      status: params.status,
       updatedAt: new Date(),
     },
   });

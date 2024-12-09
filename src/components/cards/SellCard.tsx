@@ -22,20 +22,20 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
     push(url);
   };
 
-  const checkAuctionStatus = async () => {
-    const response = await fetch(`/api/getAuctionStatus?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const result = await response.json();
-    if (!result.nftStatus) {
-      setIsSellable(true);
-    }
-  };
-
   useEffect(() => {
+    const checkAuctionStatus = async () => {
+      const response = await fetch(`/api/getAuctionStatus?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const result = await response.json();
+      if (!result.auctionStatus) {
+        setIsSellable(true);
+      }
+    };
+
     checkAuctionStatus();
-  }, []);
+  }, [nft.contract.address, nft.tokenId]);
 
   return (
     <Card className='w-60'>
