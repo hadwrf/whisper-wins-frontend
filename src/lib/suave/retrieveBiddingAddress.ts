@@ -7,6 +7,12 @@ import { getPublicClient, KETTLE_ADDRESS } from './client';
 
 async function retrieveBiddingAddress(contractAddress: string) {
   const { abi } = sealedAuction;
+
+  await window.ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: `0x201188a` }],
+  });
+
   const provider = new BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
 

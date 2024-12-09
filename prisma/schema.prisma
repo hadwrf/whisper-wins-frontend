@@ -13,6 +13,7 @@ datasource db {
 enum AuctionStatus {
   NFT_TRANSFER_PENDING
   IN_PROGRESS
+  START_PENDING
   WINNER_CLAIM_PENDING
   ENDED
 }

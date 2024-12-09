@@ -3,16 +3,17 @@
 import { CameraOff, Info } from 'lucide-react';
 import Image from 'next/image';
 import { LoginToContinue } from '@/components/LoginToContinue';
-import { getUserNfts, Nft } from '@/lib/services/getUserNfts';
+import { getNft, Nft, NftRequest } from '@/lib/services/getUserNfts';
 import React, { useEffect, useState } from 'react';
 
-import { Auction } from '@prisma/client';
+import { Auction, AuctionStatus } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { useAuthContext } from '@/context/AuthContext';
 import startAuction from '@/lib/suave/startAuction';
 import { NoDataFound } from '@/components/NoDataFound';
 import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
+import transferNftToAddress from '@/lib/ethereum/transferNftToAddress';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -21,15 +22,36 @@ const MyAuctions = () => {
   const [auctionsFetched, setAuctionsFetched] = useState(false);
   const [nftsFetched, setNftsFetched] = useState(false);
 
-  const [nfts, setNfts] = useState<Nft[]>([]);
   const [auctions, setAuctions] = useState<Auction[]>([]);
 
   const [list, setList] = useState<{ nft: Nft; auction: Auction }[]>([]);
 
-  const startAuctionCall = async (auctionAddress: string) => {
-    await startAuction(auctionAddress);
-    await updateAuctionRecordInDb(auctionAddress);
+  const handleButtonClick = async (nft: Nft, auction: Auction) => {
+    if (auction.status === AuctionStatus.NFT_TRANSFER_PENDING) {
+      await transferNftToAddress(nft.contract.address, nft.tokenId);
+      await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.START_PENDING);
+      updateNftList(AuctionStatus.START_PENDING, auction.contractAddress);
+    } else {
+      await startAuction(auction.contractAddress);
+      await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.IN_PROGRESS);
+      updateNftList(AuctionStatus.IN_PROGRESS, auction.contractAddress);
+    }
+  };
 
+  const updateAuctionRecordInDb = async (auctionAddress: string, status: string) => {
+    const response = await fetch('/api/transferNftToContract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        auctionAddress: auctionAddress,
+        status: status,
+      }),
+    });
+    const result = await response.json();
+    console.log(result);
+  };
+
+  const updateNftList = (status: AuctionStatus, auctionAddress: string) => {
     const nftsToList: { nft: Nft; auction: Auction }[] = [];
 
     list.map((item) => {
@@ -38,7 +60,7 @@ const MyAuctions = () => {
           ...item,
           auction: {
             ...item.auction,
-            status: 'IN_PROGRESS',
+            status: status,
           },
         });
       } else {
@@ -47,34 +69,6 @@ const MyAuctions = () => {
     });
     setList(nftsToList);
   };
-
-  const updateAuctionRecordInDb = async (auctionAddress: string) => {
-    const response = await fetch('/api/transferNftToContract', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        auctionAddress: auctionAddress,
-      }),
-    });
-    const result = await response.json();
-    console.log(result);
-  };
-
-  useEffect(() => {
-    async function fetchNfts() {
-      if (!account) {
-        return;
-      }
-      try {
-        const data = await getUserNfts(account);
-        setNfts(data.ownedNfts);
-        setNftsFetched(true);
-      } catch (error) {
-        console.error('Failed to load NFTs:', error);
-      }
-    }
-    fetchNfts();
-  }, [account]);
 
   useEffect(() => {
     async function fetchAuctions() {
@@ -101,26 +95,38 @@ const MyAuctions = () => {
   }, [account]);
 
   useEffect(() => {
-    if (nfts.length > 0 && auctions.length > 0) {
-      const nftsToList: { nft: Nft; auction: Auction }[] = [];
-      auctions.forEach((auction) => {
-        const nft = nfts.find((nft) => nft.tokenId === auction.tokenId && nft.contract.address === auction.nftAddress);
-        if (nft) {
-          nftsToList.push({ nft: nft, auction: auction });
-        }
-      });
-      setList(nftsToList);
-      console.log('NFTs to tils', nftsToList);
-      console.log('NFTS', nfts);
-      console.log('AUCTIONS', auctions);
+    async function fetchNfts() {
+      if (auctions.length > 0) {
+        const nftsToList: { nft: Nft; auction: Auction }[] = [];
+        await Promise.all(
+          auctions.map(async (auction) => {
+            const nftRequest: NftRequest = {
+              contractAddress: auction.nftAddress,
+              tokenId: auction.tokenId,
+            };
+
+            try {
+              const nft = await getNft(nftRequest);
+              nftsToList.push({ nft, auction });
+            } catch (error) {
+              console.error(`Failed to fetch NFT for auction ${auction.contractAddress}:`, error);
+            }
+          }),
+        );
+        setList(nftsToList);
+        setNftsFetched(true);
+        console.log('NFTs to list', nftsToList);
+        console.log('AUCTIONS', auctions);
+      }
     }
-  }, [nfts, auctions]);
+    fetchNfts();
+  }, [auctions]);
 
   useEffect(() => {
-    if (nftsFetched && auctionsFetched) {
+    if (auctionsFetched && nftsFetched) {
       setLoading(false);
     }
-  }, [nftsFetched, auctionsFetched]);
+  }, [auctionsFetched, nftsFetched]);
 
   if (!account) return <LoginToContinue />;
 
@@ -153,7 +159,7 @@ const MyAuctions = () => {
                   <Button
                     size='xs'
                     variant='outline'
-                    onClick={() => startAuctionCall(item.auction.contractAddress)}
+                    onClick={() => handleButtonClick(item.nft, item.auction)}
                   >
                     <Info /> {item.auction.status}
                   </Button>
