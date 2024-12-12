@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { auctionFormSchema } from '@/app/dashboard/create-auction/validation';
@@ -10,6 +11,8 @@ import { useAuthContext } from '@/context/AuthContext';
 import { useEffect, useState } from 'react';
 import createAuction from '@/lib/suave/createAuction';
 import { Hex } from '@flashbots/suave-viem';
+import { useToast } from '@/hooks/use-toast';
+import { Spinner } from '@/components/Spinner';
 
 interface CreateAuctionFormProps {
   nftAddress: string;
@@ -26,7 +29,8 @@ interface AuctionFormData {
 export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProps) => {
   const { account } = useAuthContext();
   const [loading, setLoading] = useState(false);
-  const [auctionAddress, setAuctionAddress] = useState<string | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(auctionFormSchema),
@@ -52,10 +56,24 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
   const onSubmit = async (data: AuctionFormData) => {
     setLoading(true);
     const { seller, nftAddress, tokenId } = data;
-    const auctionAddress = await createAuction(nftAddress, tokenId);
-    await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId);
-    setLoading(false);
-    setAuctionAddress(auctionAddress);
+    // create auction call pops up the metamask window.
+    return createAuction(nftAddress, tokenId)
+      .then(async (auctionAddress) => {
+        await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId);
+        toast({
+          title: 'Auction created successfully!',
+          description: auctionAddress,
+        });
+        router.back();
+      })
+      .catch(() => {
+        toast({
+          description: 'Transaction signature denied!',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const createAuctionRecordInDb = async (
@@ -75,7 +93,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
       }),
     });
     const result = await response.json();
-    console.log(result);
+    console.log('createAuctionRecordInDb result:', result);
   };
 
   return (
@@ -152,13 +170,15 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
             </FormItem>
           )}
         />
-        <Button
-          type='submit'
-          disabled={loading || auctionAddress != null}
-        >
-          Create Auction
-        </Button>
-        {auctionAddress && !loading && <div>Auction Address: {auctionAddress}</div>}
+        <div className='flex items-center gap-2'>
+          <Button
+            type='submit'
+            disabled={loading}
+          >
+            Create Auction
+          </Button>
+          <Spinner show={loading} />
+        </div>
       </form>
     </Form>
   );

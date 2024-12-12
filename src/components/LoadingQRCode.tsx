@@ -28,31 +28,28 @@ const LoadingQRCode = () => {
   }, []);
 
   return (
-    <div className='flex flex-col items-center justify-items-center'>
-      <div className='flex items-center justify-items-center'>
-        <div className='relative'>
-          <div
-            className='grid'
-            style={{ gridTemplateColumns: `repeat(${qrSize}, 1fr)`, gridTemplateRows: `repeat(${qrSize}, 1fr)` }}
-          >
-            {dots.map((row, rowIndex) =>
-              row.map((dot, colIndex) => (
-                <div
-                  key={`${rowIndex}-${colIndex}`}
-                  className={`size-4 ${dot ? 'bg-indigo-950' : 'bg-transparent'} transition-all duration-300`}
-                  style={{
-                    gridColumn: colIndex + 1,
-                    gridRow: rowIndex + 1,
-                    opacity: dot ? 1 : 0.2, // Fluid-like fading effect
-                    transform: `scale(${dot ? 1.1 : 1})`, // Simulating a fluid wave with scaling
-                  }}
-                ></div>
-              )),
-            )}
-          </div>
+    <div className='flex items-center justify-items-center'>
+      <div className='relative'>
+        <div
+          className='grid'
+          style={{ gridTemplateColumns: `repeat(${qrSize}, 1fr)`, gridTemplateRows: `repeat(${qrSize}, 1fr)` }}
+        >
+          {dots.map((row, rowIndex) =>
+            row.map((dot, colIndex) => (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`size-4 ${dot ? 'bg-indigo-950' : 'bg-transparent'} transition-all duration-300`}
+                style={{
+                  gridColumn: colIndex + 1,
+                  gridRow: rowIndex + 1,
+                  opacity: dot ? 1 : 0.2, // Fluid-like fading effect
+                  transform: `scale(${dot ? 1.1 : 1})`, // Simulating a fluid wave with scaling
+                }}
+              ></div>
+            )),
+          )}
         </div>
       </div>
-      <p className='mt-5'>Retrieving Confidential Bidding Address..</p>
     </div>
   );
 };

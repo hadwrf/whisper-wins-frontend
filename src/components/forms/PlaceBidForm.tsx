@@ -9,6 +9,7 @@ import { placeBidSchema } from '@/app/dashboard/validation';
 import { useState } from 'react';
 import retrieveBiddingAddress from '@/lib/suave/retrieveBiddingAddress';
 import { Spinner } from '@/components/Spinner';
+import { useToast } from '@/hooks/use-toast';
 
 interface PlaceBidFormProps {
   auctionAddress: string;
@@ -22,7 +23,7 @@ interface PlaceBidFormData {
 
 export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBiddingAmountChange }: PlaceBidFormProps) => {
   const [loading, setLoading] = useState(false);
-  const [biddingAddress, setBiddingAddress] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(placeBidSchema),
@@ -33,11 +34,23 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
 
   const onSubmit = async (data: PlaceBidFormData) => {
     setLoading(true);
-    const biddingAddress = await retrieveBiddingAddress(auctionAddress);
-    setBiddingAddress(biddingAddress);
-    onBiddingAddressChange(biddingAddress);
-    onBiddingAmountChange(data.amount);
-    setLoading(false);
+    retrieveBiddingAddress(auctionAddress)
+      .then((biddingAddress) => {
+        onBiddingAddressChange(biddingAddress);
+        onBiddingAmountChange(data.amount);
+        toast({
+          title: 'Bidding address retrieved!',
+          description: auctionAddress,
+        });
+      })
+      .catch(() => {
+        toast({
+          description: 'Transaction signature denied!',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -66,7 +79,7 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
         <div className='flex items-center gap-2'>
           <Button
             type='submit'
-            disabled={loading || biddingAddress != null}
+            disabled={loading}
           >
             Place Bid
           </Button>

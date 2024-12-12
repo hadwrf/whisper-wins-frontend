@@ -28,10 +28,10 @@ async function createAuction(nftContractAddress: string, tokenId: string) {
     bytecode: bytecode.object as Hex,
     args: [signer.address as Hex, nftContractAddress, BigInt(1), BigInt(tokenId), BigInt(1000000000)],
   });
-  console.log(hash);
+  console.log('deployContract tx hash:', hash);
 
   const receipt = await getPublicClient().waitForTransactionReceipt({ hash: hash });
-  console.log(receipt);
+  console.log('transaction receipt:', receipt);
   const contractAddress = receipt.contractAddress;
   console.log('Contract deployed at:', contractAddress);
   return contractAddress;

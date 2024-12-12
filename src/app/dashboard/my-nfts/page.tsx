@@ -6,9 +6,11 @@ import { Nft, getUserNfts } from '@/lib/services/getUserNfts';
 import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import { SellCards } from '@/components/cards/SellCards';
 import { useAuthContext } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 const MyNfts = () => {
   const { account } = useAuthContext();
+  const { toast } = useToast();
 
   const [nfts, setNfts] = useState<Nft[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -22,6 +24,9 @@ const MyNfts = () => {
         const data = await getUserNfts(account);
         setNfts(data.ownedNfts);
       } catch (error) {
+        toast({
+          title: 'Failed to load NFTs!',
+        });
         console.error('Failed to load NFTs:', error);
       } finally {
         setLoading(false);

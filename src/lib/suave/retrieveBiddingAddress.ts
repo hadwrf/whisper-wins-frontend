@@ -50,7 +50,7 @@ async function retrieveBiddingAddress(contractAddress: string) {
       try {
         return contractInterface.parseLog(log);
       } catch (e) {
-        console.error('Failed to parsse log:', e);
+        console.error('Failed to parse log:', e);
         return null;
       }
     })

@@ -4,10 +4,12 @@ import { AuctionCard } from './AuctionCard';
 import { useEffect, useState } from 'react';
 import { Auction } from '@prisma/client';
 import { useAuthContext } from '@/context/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 export const AuctionCards = () => {
   const { account } = useAuthContext();
   const [auctions, setAuctions] = useState<Auction[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchAuctions = async () => {
@@ -22,9 +24,15 @@ export const AuctionCards = () => {
           setAuctions(res);
         } else {
           const { error } = await response.json();
+          toast({
+            title: 'Failed to load auctions!',
+          });
           console.error('Failed to load auctions:', error);
         }
       } catch (error) {
+        toast({
+          title: 'Error fetching auctions!',
+        });
         console.error('Error fetching auctions:', error);
       }
     };

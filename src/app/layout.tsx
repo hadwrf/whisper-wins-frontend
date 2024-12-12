@@ -5,6 +5,7 @@ import { inter } from '@/app/ui/fonts';
 import Providers from '@/lib/wagmi/providers';
 import { headers } from 'next/headers';
 import { AuthProvider } from '@/context/AuthContext';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: 'Whisper Wins',
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <Providers cookie={cookie}>
           <AuthProvider>{children}</AuthProvider>
+          <Toaster />
         </Providers>
       </body>
     </html>

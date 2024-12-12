@@ -24,12 +24,13 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
 
   useEffect(() => {
     const checkAuctionStatus = async () => {
+      // Ideally, create a new endpoint for checking the existence of the auction.
       const response = await fetch(`/api/getAuctionStatus?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
-      const result = await response.json();
-      if (!result.auctionStatus) {
+      if (!response.ok) {
+        // means the auction status couldn't find and there is no such auction.
         setIsSellable(true);
       }
     };

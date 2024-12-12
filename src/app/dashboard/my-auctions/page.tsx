@@ -14,10 +14,11 @@ import startAuction from '@/lib/suave/startAuction';
 import { NoDataFound } from '@/components/NoDataFound';
 import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import transferNftToAddress from '@/lib/ethereum/transferNftToAddress';
+import { useToast } from '@/hooks/use-toast';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
-
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [auctionsFetched, setAuctionsFetched] = useState(false);
   const [nftsFetched, setNftsFetched] = useState(false);
@@ -79,17 +80,23 @@ const MyAuctions = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(async (response) => {
-        if (response.ok) {
-          const res = await response.json();
-          console.log('AUCTIONS', res);
-          setAuctions(res);
-          setAuctionsFetched(true);
-        } else {
-          const { error } = await response.json();
-          console.error('Failed to load NFTs:', error);
-        }
-      });
+      })
+        .then(async (response) => {
+          if (response.ok) {
+            const res = await response.json();
+            console.log('AUCTIONS', res);
+            setAuctions(res);
+            setAuctionsFetched(true);
+          } else {
+            const { error } = await response.json();
+            console.error('Failed to load NFTs:', error);
+          }
+        })
+        .catch(() => {
+          toast({
+            title: 'Failed to load NFTs!',
+          });
+        });
     }
     fetchAuctions();
   }, [account]);
