@@ -23,6 +23,8 @@ interface PlaceBidFormData {
 
 export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBiddingAmountChange }: PlaceBidFormProps) => {
   const [loading, setLoading] = useState(false);
+  const [scanMode, setScanMode] = useState(false);
+
   const { toast } = useToast();
 
   const form = useForm({
@@ -38,6 +40,7 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
       .then((biddingAddress) => {
         onBiddingAddressChange(biddingAddress);
         onBiddingAmountChange(data.amount);
+        setScanMode(true);
         toast({
           title: 'Bidding address retrieved!',
           description: auctionAddress,
@@ -76,15 +79,17 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
             </FormItem>
           )}
         />
-        <div className='flex items-center gap-2'>
-          <Button
-            type='submit'
-            disabled={loading}
-          >
-            Place Bid
-          </Button>
-          <Spinner show={loading} />
-        </div>
+        {!scanMode && (
+          <div className='flex items-center gap-2'>
+            <Button
+              type='submit'
+              disabled={loading}
+            >
+              {loading ? 'Retrieving the bidding address' : 'Place Bid'}
+            </Button>
+            <Spinner show={loading} />
+          </div>
+        )}
       </form>
     </Form>
   );

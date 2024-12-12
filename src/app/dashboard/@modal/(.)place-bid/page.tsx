@@ -27,21 +27,23 @@ const PlaceBidModal = () => {
         <DialogTitle></DialogTitle>
       </VisuallyHidden>
       <DialogContent>
-        {!biddingAddress && !biddingAmount && (
-          <div className='flex flex-col items-center justify-items-center'>
-            <LoadingQRCode />
-            <p className='mt-5'>Enter your bid amount</p>
-          </div>
-        )}
-        {biddingAddress && biddingAmount && (
-          <div className='flex flex-col items-center justify-items-center'>
-            <BiddingQRCode
-              recipient={biddingAddress as Hex}
-              amount={biddingAmount}
-            />
-            <p className='mt-5'>Scan QR code to send your bid..</p>
-          </div>
-        )}
+        <div className='flex flex-col items-center justify-items-center'>
+          {!biddingAddress && !biddingAmount && (
+            <>
+              <LoadingQRCode />
+              <p className='mt-5'>Enter your bid amount</p>
+            </>
+          )}
+          {biddingAddress && biddingAmount && (
+            <>
+              <BiddingQRCode
+                recipient={biddingAddress as Hex}
+                amount={biddingAmount}
+              />
+              <p className='mt-5'>Scan QR code to send your bid..</p>
+            </>
+          )}
+        </div>
         <PlaceBidForm
           auctionAddress={auctionAddress}
           onBiddingAddressChange={setBiddingAddress}
