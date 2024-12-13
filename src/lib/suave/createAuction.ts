@@ -8,11 +8,6 @@ import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
 async function createAuction(nftContractAddress: string, tokenId: string) {
   const { abi, bytecode } = sealedAuction;
 
-  await window.ethereum.request({
-    method: 'wallet_switchEthereumChain',
-    params: [{ chainId: `0x201188a` }],
-  });
-
   const provider = new BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
 
@@ -21,6 +16,8 @@ async function createAuction(nftContractAddress: string, tokenId: string) {
     jsonRpcAccount: signer.address as Address,
     chain: suaveChain,
   });
+
+  await wallet.switchChain({ id: suaveChain.id });
 
   const hash = await wallet.deployContract({
     abi,
