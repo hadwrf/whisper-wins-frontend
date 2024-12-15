@@ -13,7 +13,6 @@ import createAuction from '@/lib/suave/createAuction';
 import { Hex } from '@flashbots/suave-viem';
 import { useToast } from '@/hooks/use-toast';
 import { Spinner } from '@/components/Spinner';
-import { ToastAction } from '@/components/ui/toast';
 
 interface CreateAuctionFormProps {
   nftAddress: string;
@@ -61,20 +60,8 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
     return createAuction(nftAddress, tokenId, startingBid)
       .then(async (auctionAddress) => {
         await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId);
-        toast({
-          title: 'Auction created successfully!',
-          action: (
-            <ToastAction
-              altText='Show in block explorer'
-              onClick={() => {
-                window.open(`https://explorer.toliman.suave.flashbots.net/address/${auctionAddress}`, '_blank');
-              }}
-            >
-              Show in block explorer
-            </ToastAction>
-          ),
-        });
-        router.back();
+        const nextStepsUrl = `/dashboard/auction-create-next-step?auctionAddress=${auctionAddress}`;
+        router.push(nextStepsUrl);
       })
       .catch(() => {
         toast({

@@ -127,6 +127,8 @@ const MyAuctions = () => {
         setNftsFetched(true);
         console.log('NFTs to list', nftsToList);
         console.log('AUCTIONS', auctions);
+      } else {
+        setLoading(false);
       }
     }
     fetchNfts();
