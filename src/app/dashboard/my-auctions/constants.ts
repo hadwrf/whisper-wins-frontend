@@ -21,7 +21,7 @@ export const AuctionStatusInfoMapping = new Map<AuctionStatus, string>()
   .set(AuctionStatus.ENDED, 'Ended');
 
 export const AuctionStatusActionMapping = new Map<AuctionStatus, string>()
-  .set(AuctionStatus.NFT_TRANSFER_PENDING, 'Transfet NFT')
+  .set(AuctionStatus.NFT_TRANSFER_PENDING, 'Transfer NFT')
   .set(AuctionStatus.IN_PROGRESS, 'End Auction')
   .set(AuctionStatus.START_PENDING, 'Start Auction')
   .set(AuctionStatus.WINNER_CLAIM_PENDING, 'Claim your NFT')

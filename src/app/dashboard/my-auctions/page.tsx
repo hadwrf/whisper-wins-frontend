@@ -16,7 +16,8 @@ import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import transferNftToAddress from '@/lib/ethereum/transferNftToAddress';
 import { useToast } from '@/hooks/use-toast';
 import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
-import { AuctionStatusActionMapping, AuctionStatusMapping } from './constants';
+import { AuctionStatusActionMapping, AuctionStatusInfoMapping, AuctionStatusMapping } from './constants';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -167,13 +168,22 @@ const MyAuctions = () => {
                 <CardFooter className='flex-none'>
                   {/* TODO: add tooltip on hover, get AuctionStatusInfoMapping */}
                   <div>
-                    <Button
-                      size='xs'
-                      variant='outline'
-                      className={`${AuctionStatusBackgroundColor.get(item.auction.status)} font-bold text-white`}
-                    >
-                      <Info /> {AuctionStatusMapping.get(item.auction.status)}
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size='xs'
+                            variant='outline'
+                            className={`${AuctionStatusBackgroundColor.get(item.auction.status)} font-bold text-white`}
+                          >
+                            <Info /> {AuctionStatusMapping.get(item.auction.status)}
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{AuctionStatusInfoMapping.get(item.auction.status)}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                     <Button
                       className='mt-2'
                       size='xs'
