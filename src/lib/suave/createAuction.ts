@@ -4,12 +4,11 @@ import { getSuaveWallet } from '@flashbots/suave-viem/chains/utils';
 import { type Hex, Address, custom } from '@flashbots/suave-viem';
 import { getPublicClient } from './client';
 import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
-import { formatUnits } from 'viem';
 
 async function createAuction(nftContractAddress: string, tokenId: string, biddingPrice: number) {
   const { abi, bytecode } = sealedAuction;
 
-  const bidInEther = formatUnits(BigInt(biddingPrice), 18);
+  const bidInWei = BigInt(biddingPrice * 10 ** 18);
 
   const provider = new BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();
@@ -26,7 +25,7 @@ async function createAuction(nftContractAddress: string, tokenId: string, biddin
     abi,
     account: signer.address as Address,
     bytecode: bytecode.object as Hex,
-    args: [signer.address as Hex, nftContractAddress, BigInt(1), BigInt(tokenId), bidInEther],
+    args: [signer.address as Hex, nftContractAddress, BigInt(1), BigInt(tokenId), bidInWei],
   });
   console.log('deployContract tx hash:', hash);
 
