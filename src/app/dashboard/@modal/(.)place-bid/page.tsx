@@ -8,6 +8,7 @@ import { PlaceBidForm } from '@/components/forms/PlaceBidForm';
 import { useState } from 'react';
 import BiddingQRCode from '@/components/BiddingQRCode';
 import { Hex } from '@flashbots/suave-viem';
+import BalanceDisplay from '@/components/BalanceDisplay';
 
 const PlaceBidModal = () => {
   const router = useRouter();
@@ -43,6 +44,7 @@ const PlaceBidModal = () => {
               <p className='mt-5'>Scan QR code to send your bid..</p>
             </>
           )}
+          {biddingAddress && <BalanceDisplay biddingAddress={biddingAddress as Hex} />}
         </div>
         <PlaceBidForm
           auctionAddress={auctionAddress}
