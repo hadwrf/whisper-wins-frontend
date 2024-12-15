@@ -31,10 +31,10 @@ const BalanceDisplay: React.FC<BalanceDisplayProps> = ({ biddingAddress }) => {
 
   return (
     <p
-      className='cursor-pointer mt-5 text-blue-600 hover:underline'
+      className='mt-5 cursor-pointer text-blue-600 hover:underline'
       onClick={handleBalanceClick}
     >
-      {balance ? `Sent amount: ${balance} ETH` : 'Fetching balance...'}
+      {balance ? `Currently staked amount: ${balance} ETH` : 'Fetching balance...'}
     </p>
   );
 };

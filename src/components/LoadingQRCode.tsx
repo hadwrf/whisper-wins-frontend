@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 const LoadingQRCode = () => {
   const [dots, setDots] = useState<boolean[][]>([]);
-  const qrSize = 22; // Size of the QR code grid
+  const qrSize = 44; // Size of the QR code grid
 
   // Initialize the grid with false (no active dots)
   useEffect(() => {
@@ -22,23 +22,27 @@ const LoadingQRCode = () => {
           }),
         ),
       );
-    }, 500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className='flex items-center justify-items-center'>
+    <div className='flex items-center justify-center'>
       <div className='relative'>
+        {/* Overlay text */}
+        <div className='absolute inset-0 z-10 flex items-center justify-center'>
+          <span className='bg-white text-indigo-950 px-14 py-1'>Your QR code will appear here</span>
+        </div>
         <div
-          className='grid'
+          className='relative z-0 grid'
           style={{ gridTemplateColumns: `repeat(${qrSize}, 1fr)`, gridTemplateRows: `repeat(${qrSize}, 1fr)` }}
         >
           {dots.map((row, rowIndex) =>
             row.map((dot, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
-                className={`size-4 ${dot ? 'bg-indigo-950' : 'bg-transparent'} transition-all duration-300`}
+                className={`size-2 transition-all duration-[2000ms] ${dot ? 'bg-indigo-950' : 'bg-transparent'}`}
                 style={{
                   gridColumn: colIndex + 1,
                   gridRow: rowIndex + 1,
