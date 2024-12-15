@@ -15,6 +15,8 @@ import { NoDataFound } from '@/components/NoDataFound';
 import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import transferNftToAddress from '@/lib/ethereum/transferNftToAddress';
 import { useToast } from '@/hooks/use-toast';
+import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
+import { AuctionStatusMapping } from './constants';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -166,9 +168,10 @@ const MyAuctions = () => {
                   <Button
                     size='xs'
                     variant='outline'
+                    className={`${AuctionStatusBackgroundColor.get(item.auction.status)} font-bold text-white`}
                     onClick={() => handleButtonClick(item.nft, item.auction)}
                   >
-                    <Info /> {item.auction.status}
+                    <Info /> {AuctionStatusMapping.get(item.auction.status)}
                   </Button>
                 </CardFooter>
               </Card>
