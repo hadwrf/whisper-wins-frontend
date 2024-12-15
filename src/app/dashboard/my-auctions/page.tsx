@@ -16,7 +16,7 @@ import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import transferNftToAddress from '@/lib/ethereum/transferNftToAddress';
 import { useToast } from '@/hooks/use-toast';
 import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
-import { AuctionStatusMapping } from './constants';
+import { AuctionStatusActionMapping, AuctionStatusMapping } from './constants';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -146,7 +146,7 @@ const MyAuctions = () => {
         {!loading && !list.length && <NoDataFound />}
         <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
           {list.map((item) => (
-            <div key={item.nft.tokenId}>
+            <div key={`${item.nft.contract.address}-${item.nft.tokenId}`}>
               <Card className='w-60'>
                 <CardMedia>
                   {item.nft.image.originalUrl ? (
@@ -164,15 +164,24 @@ const MyAuctions = () => {
                 <CardContent className='h-fit overflow-hidden p-3'>
                   <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{item.nft.name}</p>
                 </CardContent>
-                <CardFooter>
-                  <Button
-                    size='xs'
-                    variant='outline'
-                    className={`${AuctionStatusBackgroundColor.get(item.auction.status)} font-bold text-white`}
-                    onClick={() => handleButtonClick(item.nft, item.auction)}
-                  >
-                    <Info /> {AuctionStatusMapping.get(item.auction.status)}
-                  </Button>
+                <CardFooter className='flex-none'>
+                  {/* TODO: add tooltip on hover, get AuctionStatusInfoMapping */}
+                  <div>
+                    <Button
+                      size='xs'
+                      variant='outline'
+                      className={`${AuctionStatusBackgroundColor.get(item.auction.status)} font-bold text-white`}
+                    >
+                      <Info /> {AuctionStatusMapping.get(item.auction.status)}
+                    </Button>
+                    <Button
+                      className='mt-2'
+                      size='xs'
+                      onClick={() => handleButtonClick(item.nft, item.auction)}
+                    >
+                      {AuctionStatusActionMapping.get(item.auction.status)}
+                    </Button>
+                  </div>
                 </CardFooter>
               </Card>
             </div>

@@ -56,9 +56,9 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
 
   const onSubmit = async (data: AuctionFormData) => {
     setLoading(true);
-    const { seller, nftAddress, tokenId } = data;
+    const { seller, nftAddress, tokenId, startingBid } = data;
     // create auction call pops up the metamask window.
-    return createAuction(nftAddress, tokenId)
+    return createAuction(nftAddress, tokenId, startingBid)
       .then(async (auctionAddress) => {
         await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId);
         toast({
