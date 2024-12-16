@@ -21,7 +21,7 @@ export default function Providers({ children, cookie }: Props) {
       initialState={initialState}
     >
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>{children}</RainbowKitProvider>
+        <RainbowKitProvider locale='en-US'>{children}</RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
