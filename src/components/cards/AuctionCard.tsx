@@ -41,7 +41,7 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
     retrieveMinimalBid(auction.contractAddress).then((res) => {
       setMinimalBid(res);
     });
-  }, []);
+  }, [auction.contractAddress]);
 
   return (
     <Card className='w-60'>

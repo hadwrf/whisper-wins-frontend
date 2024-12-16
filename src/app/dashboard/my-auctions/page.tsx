@@ -13,9 +13,10 @@ import { useAuthContext } from '@/context/AuthContext';
 import startAuction from '@/lib/suave/startAuction';
 import { NoDataFound } from '@/components/NoDataFound';
 import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
-import transferNftToAddress from '@/lib/ethereum/transferNftToAddress';
+import { transferNftToAddress, waitForNftTransferReceipt } from '@/lib/ethereum/transferNftToAddress';
 import { useToast } from '@/hooks/use-toast';
 import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
+import { TransferDialog } from '@/components/TransferDialog';
 import { AuctionStatusActionMapping, AuctionStatusInfoMapping, AuctionStatusMapping } from './constants';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SearchBar } from '@/components/SearchBar';
@@ -26,6 +27,7 @@ const MyAuctions = () => {
   const [loading, setLoading] = useState(true);
   const [auctionsFetched, setAuctionsFetched] = useState(false);
   const [nftsFetched, setNftsFetched] = useState(false);
+  const [transferTokenDialogOpen, setTransferTokenDialogOpen] = useState(false);
 
   const [auctions, setAuctions] = useState<Auction[]>([]);
 
@@ -33,9 +35,26 @@ const MyAuctions = () => {
 
   const handleButtonClick = async (nft: Nft, auction: Auction) => {
     if (auction.status === AuctionStatus.NFT_TRANSFER_PENDING) {
-      await transferNftToAddress(nft.contract.address, nft.tokenId);
-      await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.START_PENDING);
-      updateNftList(AuctionStatus.START_PENDING, auction.contractAddress);
+      transferNftToAddress(nft.contract.address, nft.tokenId)
+        .then((transactionHash) => {
+          console.log('setTransferTokenDialogOpen', true);
+          setTransferTokenDialogOpen(true);
+          waitForNftTransferReceipt(transactionHash).then(() => {
+            updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.START_PENDING).then(() => {
+              updateNftList(AuctionStatus.START_PENDING, auction.contractAddress);
+              toast({
+                title: 'NFT transferred successfully!',
+              });
+              console.log('setTransferTokenDialogOpen', false);
+              setTransferTokenDialogOpen(false);
+            });
+          });
+        })
+        .catch(() => {
+          toast({
+            title: 'Failed to transfer NFT!',
+          });
+        });
     } else {
       await startAuction(auction.contractAddress);
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.IN_PROGRESS);
@@ -169,7 +188,6 @@ const MyAuctions = () => {
                   <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{item.nft.name}</p>
                 </CardContent>
                 <CardFooter className='flex-none'>
-                  {/* TODO: add tooltip on hover, get AuctionStatusInfoMapping */}
                   <div>
                     <TooltipProvider>
                       <Tooltip>
@@ -201,6 +219,10 @@ const MyAuctions = () => {
             </div>
           ))}
         </div>
+        <TransferDialog
+          open={transferTokenDialogOpen}
+          onOpenChange={setTransferTokenDialogOpen}
+        />
       </div>
     </div>
   );

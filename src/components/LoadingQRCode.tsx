@@ -32,7 +32,7 @@ const LoadingQRCode = () => {
       <div className='relative'>
         {/* Overlay text */}
         <div className='absolute inset-0 z-10 flex items-center justify-center'>
-          <span className='bg-white text-indigo-950 px-14 py-1'>Your QR code will appear here</span>
+          <span className='bg-white px-14 py-1 text-indigo-950'>Your QR code will appear here</span>
         </div>
         <div
           className='relative z-0 grid'
@@ -42,7 +42,7 @@ const LoadingQRCode = () => {
             row.map((dot, colIndex) => (
               <div
                 key={`${rowIndex}-${colIndex}`}
-                className={`size-2 transition-all duration-[2000ms] ${dot ? 'bg-indigo-950' : 'bg-transparent'}`}
+                className={`duration-[2000ms] size-2 transition-all ${dot ? 'bg-indigo-950' : 'bg-transparent'}`}
                 style={{
                   gridColumn: colIndex + 1,
                   gridRow: rowIndex + 1,
