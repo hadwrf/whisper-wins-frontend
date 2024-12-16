@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
 import { AuctionStatusActionMapping, AuctionStatusInfoMapping, AuctionStatusMapping } from './constants';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { SearchBar } from '@/components/SearchBar';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -106,6 +107,7 @@ const MyAuctions = () => {
 
   useEffect(() => {
     async function fetchNfts() {
+      if (!auctionsFetched) return;
       if (auctions.length > 0) {
         const nftsToList: { nft: Nft; auction: Auction }[] = [];
         await Promise.all(
@@ -124,12 +126,10 @@ const MyAuctions = () => {
           }),
         );
         setList(nftsToList);
-        setNftsFetched(true);
         console.log('NFTs to list', nftsToList);
         console.log('AUCTIONS', auctions);
-      } else {
-        setLoading(false);
       }
+      setNftsFetched(true);
     }
     fetchNfts();
   }, [auctions]);
@@ -147,6 +147,7 @@ const MyAuctions = () => {
       <div className='mx-auto max-w-5xl'>
         {loading && <SkeletonSellCards />}
         {!loading && !list.length && <NoDataFound />}
+        {!loading && list.length && <SearchBar />}
         <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
           {list.map((item) => (
             <div key={`${item.nft.contract.address}-${item.nft.tokenId}`}>
@@ -189,6 +190,7 @@ const MyAuctions = () => {
                     <Button
                       className='mt-2'
                       size='xs'
+                      disabled={item.auction.status == AuctionStatus.IN_PROGRESS}
                       onClick={() => handleButtonClick(item.nft, item.auction)}
                     >
                       {AuctionStatusActionMapping.get(item.auction.status)}

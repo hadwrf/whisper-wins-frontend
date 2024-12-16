@@ -9,7 +9,6 @@ interface Props {
 export const SellCards = ({ nfts }: Props) => {
   return (
     <div>
-      <h1>Your NFTs</h1>
       <SearchBar />
       <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
         {nfts.map((nft, i) => (
