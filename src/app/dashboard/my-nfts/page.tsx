@@ -1,12 +1,13 @@
 'use client';
 
-import { LoginToContinue } from '@/components/LoginToContinue';
-import { useEffect, useState } from 'react';
-import { Nft, getUserNfts } from '@/lib/services/getUserNfts';
-import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import { SellCards } from '@/components/cards/SellCards';
+import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
+import { LoginToContinue } from '@/components/LoginToContinue';
+import { NoDataFoundNft } from '@/components/NoDataFoundNft';
 import { useAuthContext } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { getUserNfts, Nft } from '@/lib/services/getUserNfts';
+import { useEffect, useState } from 'react';
 
 const MyNfts = () => {
   const { account } = useAuthContext();
@@ -37,7 +38,7 @@ const MyNfts = () => {
   }, [account]);
 
   if (!account) return <LoginToContinue />;
-  if (!loading && !nfts.length) return <div>No NFTs found for this owner.</div>;
+  if (!loading && !nfts.length) return <NoDataFoundNft />;
 
   return (
     <div className='p-4'>

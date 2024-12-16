@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { useAuthContext } from '@/context/AuthContext';
 import startAuction from '@/lib/suave/startAuction';
-import { NoDataFound } from '@/components/NoDataFound';
+import { NoDataFoundAuction } from '@/components/NoDataFoundAuction';
 import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import { transferNftToAddress, waitForNftTransferReceipt } from '@/lib/ethereum/transferNftToAddress';
 import { useToast } from '@/hooks/use-toast';
@@ -165,7 +165,7 @@ const MyAuctions = () => {
     <div className='p-4'>
       <div className='mx-auto max-w-5xl'>
         {loading && <SkeletonSellCards />}
-        {!loading && !list.length && <NoDataFound />}
+        {!loading && !list.length && <NoDataFoundAuction />}
         {!loading && list.length && <SearchBar />}
         <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
           {list.map((item) => (
