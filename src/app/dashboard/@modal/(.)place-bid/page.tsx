@@ -9,6 +9,8 @@ import { useState } from 'react';
 import BiddingQRCode from '@/components/BiddingQRCode';
 import { Hex } from '@flashbots/suave-viem';
 import BalanceDisplay from '@/components/BalanceDisplay';
+import { Button } from '@/components/ui/button';
+import { transferTransactionToAddress } from '@/lib/ethereum/transferTransactionToAddress';
 
 const PlaceBidModal = () => {
   const router = useRouter();
@@ -18,6 +20,10 @@ const PlaceBidModal = () => {
 
   const [biddingAddress, setBiddingAddress] = useState<string | null>(null);
   const [biddingAmount, setBiddingAmount] = useState<number | null>(null);
+
+  const handleClickTransaction = (biddingAddress: string | null, biddingAmount: number | null) => {
+    transferTransactionToAddress(biddingAddress as Hex, biddingAmount as number);
+  };
 
   return (
     <Dialog
@@ -42,6 +48,12 @@ const PlaceBidModal = () => {
                 amount={biddingAmount}
               />
               <p className='mt-5'>Scan QR code to send your bid..</p>
+              <Button
+                variant={'ghost'}
+                onClick={() => handleClickTransaction(biddingAddress, biddingAmount)}
+              >
+                or click here!
+              </Button>
             </>
           )}
           {biddingAddress && <BalanceDisplay biddingAddress={biddingAddress as Hex} />}
