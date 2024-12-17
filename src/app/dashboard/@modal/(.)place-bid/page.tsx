@@ -11,10 +11,12 @@ import { Hex } from '@flashbots/suave-viem';
 import BalanceDisplay from '@/components/BalanceDisplay';
 import { Button } from '@/components/ui/button';
 import { transferTransactionToAddress } from '@/lib/ethereum/transferTransactionToAddress';
+import { Spinner } from '@/components/Spinner';
 
 const PlaceBidModal = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [loading, setLoading] = useState(false);
 
   const auctionAddress = searchParams?.get('auctionAddress') || '';
 
@@ -22,7 +24,13 @@ const PlaceBidModal = () => {
   const [biddingAmount, setBiddingAmount] = useState<number | null>(null);
 
   const handleClickTransaction = (biddingAddress: string | null, biddingAmount: number | null) => {
-    transferTransactionToAddress(biddingAddress as Hex, biddingAmount as number);
+    setLoading(true);
+    transferTransactionToAddress(biddingAddress as Hex, biddingAmount as number)
+      .then(() => {})
+      .catch(() => {})
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -48,12 +56,15 @@ const PlaceBidModal = () => {
                 amount={biddingAmount}
               />
               <p className='mt-5'>Scan QR code to send your bid..</p>
-              <Button
-                variant={'ghost'}
-                onClick={() => handleClickTransaction(biddingAddress, biddingAmount)}
-              >
-                or click here!
-              </Button>
+              <div className='flex items-center gap-2'>
+                <Button
+                  variant={'ghost'}
+                  onClick={() => handleClickTransaction(biddingAddress, biddingAmount)}
+                >
+                  or click here!
+                </Button>
+                <Spinner show={loading} />
+              </div>
             </>
           )}
           {biddingAddress && <BalanceDisplay biddingAddress={biddingAddress as Hex} />}
