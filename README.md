@@ -30,7 +30,17 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Prisma Studio
+## Prisma
+
+Do not change the tables directly in the database.
+To change the model schema, edit the `schema.prisma` file.
+Then run the following command to generate the migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+To run prisma studio:
 
 ```bash
 npx prisma studio
