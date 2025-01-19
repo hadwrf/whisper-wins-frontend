@@ -37,8 +37,8 @@ enum BidStatus {
 
 model Bid {
   id                Int      @id @default(autoincrement())
-  auction           Auction  @relation(fields: [auctionId], references: [contractAddress])
-  auctionId         String   @map(name: "auction_id")
+  auction           Auction  @relation(fields: [auctionAddress], references: [contractAddress])
+  auctionAddress    String   @map(name: "auction_address")
   bidderAddress     String   @map(name: "bidder_address")
   status            BidStatus @default(ACTIVE) @map(name: "status")
   createdAt         DateTime @default(now()) @map(name: "created_at")
