@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import NavLinks from './NavLinks';
 import { ConnectBtn } from './ConnectButton';
+import NotificationBell from '@/components/NotificationBell';
 
 export default function NavBar() {
   return (
@@ -15,7 +16,10 @@ export default function NavBar() {
         />
       </Link>
       <NavLinks />
-      <ConnectBtn />
+      <div className='flex items-center'>
+        <NotificationBell />
+        <ConnectBtn />
+      </div>
     </div>
   );
 }
