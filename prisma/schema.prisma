@@ -29,7 +29,6 @@ enum AuctionStatus {
   START_PENDING
 }
 
-
 enum BidStatus {
   ACTIVE
   WINNER
@@ -40,6 +39,7 @@ model Bid {
   id                Int      @id @default(autoincrement())
   auction           Auction  @relation(fields: [auctionId], references: [contractAddress])
   auctionId         String   @map(name: "auction_id")
+  bidderAddress     String   @map(name: "bidder_address")
   status            BidStatus @default(ACTIVE) @map(name: "status")
   createdAt         DateTime @default(now()) @map(name: "created_at")
   updatedAt         DateTime @default(now()) @map(name: "updated_at")

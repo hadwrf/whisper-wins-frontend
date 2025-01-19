@@ -15,10 +15,13 @@ export async function getAllAuctions(): Promise<Auction[]> {
   return await prisma.auction.findMany();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function getBiddableAuctions({ address }: GetAuctionsParams) {
   return await prisma.auction.findMany({
     where: {
-      AND: [{ ownerAddress: { not: address } }, { status: AuctionStatus.IN_PROGRESS }],
+      // todo show all auctions for now for debugging purpose.
+      // AND: [{ ownerAddress: { not: address } }, { status: AuctionStatus.IN_PROGRESS }],
+      status: AuctionStatus.IN_PROGRESS,
     },
   });
 }
