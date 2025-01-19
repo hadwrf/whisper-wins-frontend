@@ -1,11 +1,11 @@
 import prisma from './prisma';
 
 interface GetBidsParams {
-  bidderAddress: string;
+  l1Address: string;
 }
 
-export async function getBids({ bidderAddress }: GetBidsParams) {
+export async function getBids({ l1Address }: GetBidsParams) {
   return await prisma.bid.findMany({
-    where: { bidderAddress },
+    where: { l1Address },
   });
 }

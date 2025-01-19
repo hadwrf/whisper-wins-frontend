@@ -13,9 +13,11 @@ import { Button } from '@/components/ui/button';
 import { transferTransactionToAddress } from '@/lib/ethereum/transferTransactionToAddress';
 import { Spinner } from '@/components/Spinner';
 import { useToast } from '@/hooks/use-toast';
+import { useAuthContext } from '@/context/AuthContext';
 
 const PlaceBidModal = () => {
   const router = useRouter();
+  const { account } = useAuthContext();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -44,6 +46,7 @@ const PlaceBidModal = () => {
       body: JSON.stringify({
         auctionAddress: auctionAddress,
         bidderAddress: bidderAddress,
+        l1Address: account,
         amount: amount,
       }),
     })
