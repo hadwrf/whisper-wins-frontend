@@ -12,11 +12,13 @@ import BalanceDisplay from '@/components/BalanceDisplay';
 import { Button } from '@/components/ui/button';
 import { transferTransactionToAddress } from '@/lib/ethereum/transferTransactionToAddress';
 import { Spinner } from '@/components/Spinner';
+import { useToast } from '@/hooks/use-toast';
 
 const PlaceBidModal = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const auctionAddress = searchParams?.get('auctionAddress') || '';
 
@@ -26,10 +28,34 @@ const PlaceBidModal = () => {
   const handleClickTransaction = (biddingAddress: string | null, biddingAmount: number | null) => {
     setLoading(true);
     transferTransactionToAddress(biddingAddress as Hex, biddingAmount as number)
-      .then(() => {})
+      .then(() => {
+        createBidRecordInDb(auctionAddress, biddingAddress as string, biddingAmount as number);
+      })
       .catch(() => {})
       .finally(() => {
         setLoading(false);
+      });
+  };
+
+  const createBidRecordInDb = async (auctionAddress: string, bidderAddress: string, amount: number) => {
+    fetch('/api/bids', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        auctionAddress: auctionAddress,
+        bidderAddress: bidderAddress,
+        amount: amount,
+      }),
+    })
+      .then(() => {
+        toast({
+          title: 'Bid persisted in DB!',
+        });
+      })
+      .catch(() => {
+        toast({
+          title: 'Bid persisting error!',
+        });
       });
   };
 
