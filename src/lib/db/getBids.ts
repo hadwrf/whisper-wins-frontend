@@ -7,5 +7,8 @@ interface GetBidsParams {
 export async function getBids({ l1Address }: GetBidsParams) {
   return await prisma.bid.findMany({
     where: { l1Address },
+    include: {
+      auction: true, // This will fetch the related auction object
+    },
   });
 }

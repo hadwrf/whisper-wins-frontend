@@ -1,4 +1,4 @@
-import { AuctionStatus } from '@prisma/client';
+import { AuctionStatus, BidStatus } from '@prisma/client';
 
 export const AuctionStatusBackgroundColor = new Map<AuctionStatus, string>()
   .set(AuctionStatus.NFT_TRANSFER_PENDING, 'bg-rose-500')
@@ -6,3 +6,8 @@ export const AuctionStatusBackgroundColor = new Map<AuctionStatus, string>()
   .set(AuctionStatus.START_PENDING, 'bg-orange-500')
   .set(AuctionStatus.WINNER_CLAIM_PENDING, 'bg-blue-500')
   .set(AuctionStatus.ENDED, 'bg-green-500');
+
+export const BidStatusBackgroundColor = new Map<BidStatus, string>()
+  .set(BidStatus.ACTIVE, 'bg-blue-500')
+  .set(BidStatus.WINNER, 'bg-green-500')
+  .set(BidStatus.LOSER, 'bg-rose-500');

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Bid } from '@prisma/client';
+import { MyBidCard } from '@/components/cards/MyBidCard';
 
 const MyBids = () => {
   const { account } = useAuthContext();
@@ -40,11 +41,15 @@ const MyBids = () => {
   }, [account]);
 
   return (
-    <>
-      {bids.map((bid) => (
-        <div key={bid.id}>{bid.status}</div>
-      ))}
-    </>
+    <div className='mx-auto max-w-5xl p-4'>
+      <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
+        {bids.map((bid) => (
+          <div key={bid.id}>
+            <MyBidCard bid={bid} />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
