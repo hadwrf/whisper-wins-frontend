@@ -29,3 +29,14 @@ model Auction {
 
   @@map("auctions")
 }
+
+model Notification {
+  id            Int       @id @default(autoincrement())
+  userAddress   String    @map(name: "user_address")
+  message       String    @map(name: "message")
+  read          Boolean   @default(false)   @map(name: "read")
+  createdAt     DateTime  @default(now())   @map(name: "created_at")
+  updatedAt     DateTime  @default(now())   @map(name: "updated_at")
+
+  @@map("notifications")
+}
