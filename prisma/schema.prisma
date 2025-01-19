@@ -40,6 +40,7 @@ model Bid {
   auction           Auction  @relation(fields: [auctionAddress], references: [contractAddress])
   auctionAddress    String   @map(name: "auction_address")
   bidderAddress     String   @map(name: "bidder_address")
+  amount            Float    @map(name: "amount")
   status            BidStatus @default(ACTIVE) @map(name: "status")
   createdAt         DateTime @default(now()) @map(name: "created_at")
   updatedAt         DateTime @default(now()) @map(name: "updated_at")
