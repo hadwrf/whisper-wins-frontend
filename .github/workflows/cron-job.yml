@@ -1,0 +1,14 @@
+name: Scheduled API Call
+
+on:
+  schedule:
+    - cron: '*/1 * * * *' # Runs every 10 minutes
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  run-api-call:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call Scheduled API Endpoint
+        run: curl -X GET https://whisper-wins.vercel.app/api/getAuctionStatus?nftAddress=0xc513E70a63DB355948E2D2AAa1239058B159a512&tokenId=2
