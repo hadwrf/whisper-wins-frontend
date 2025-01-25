@@ -17,12 +17,13 @@ import { transferNftToAddress, waitForNftTransferReceipt } from '@/lib/ethereum/
 import { useToast } from '@/hooks/use-toast';
 import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
 import { TransferDialog } from '@/components/TransferDialog';
-import { AuctionStatusActionMapping, AuctionStatusInfoMapping, AuctionStatusMapping } from './constants';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { AuctionStatusActionMapping, AuctionStatusMapping, AuctionStatusStepMapping } from './constants';
 import { SearchBar } from '@/components/SearchBar';
+import { useRouter } from 'next/navigation';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
+  const { push } = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [auctionsFetched, setAuctionsFetched] = useState(false);
@@ -60,6 +61,11 @@ const MyAuctions = () => {
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.IN_PROGRESS);
       updateNftList(AuctionStatus.IN_PROGRESS, auction.contractAddress);
     }
+  };
+
+  const handleStatusClick = (auctionStatus: AuctionStatus) => {
+    const step = AuctionStatusStepMapping.get(auctionStatus);
+    push(`/dashboard/auction-steps?currentStep=${step}`);
   };
 
   const updateAuctionRecordInDb = async (auctionAddress: string, status: string) => {
@@ -189,22 +195,14 @@ const MyAuctions = () => {
                 </CardContent>
                 <CardFooter className='flex-none'>
                   <div>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            size='xs'
-                            variant='outline'
-                            className={`${AuctionStatusBackgroundColor.get(item.auction.status)} font-bold text-white`}
-                          >
-                            <Info /> {AuctionStatusMapping.get(item.auction.status)}
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{AuctionStatusInfoMapping.get(item.auction.status)}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <Button
+                      onClick={() => handleStatusClick(item.auction.status)}
+                      size='xs'
+                      variant='outline'
+                      className={`${AuctionStatusBackgroundColor.get(item.auction.status)} font-bold text-white`}
+                    >
+                      <Info /> {AuctionStatusMapping.get(item.auction.status)}
+                    </Button>
                     <Button
                       className='mt-2'
                       size='xs'
