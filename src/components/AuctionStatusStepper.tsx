@@ -34,7 +34,7 @@ const steps = [
 
 const AuctionStatusStepper: React.FC<AuctionStatusStepperProps> = ({ currentStep }) => {
   return (
-    <ol className='overflow-hidden space-y-8'>
+    <ol className='space-y-8 overflow-hidden'>
       {steps.map((step, index) => {
         const stepNumber = index + 1;
         const isCompleted = currentStep > stepNumber;
@@ -45,15 +45,15 @@ const AuctionStatusStepper: React.FC<AuctionStatusStepperProps> = ({ currentStep
         return (
           <li
             key={stepNumber}
-            className={`relative flex-1 ${isCompleted ? 'after:bg-blue-500' : 'after:bg-gray-200'} after:w-0.5 after:h-full after:inline-block after:absolute after:-bottom-10 after:left-4 lg:after:left-5`}
+            className={`relative flex-1 ${isCompleted ? 'after:bg-blue-500' : 'after:bg-gray-200'} after:h-full after:w-0.5 ${stepNumber != 5 ? 'after:inline-block' : 'after:hidden'} after:absolute after:-bottom-10 after:left-4 lg:after:left-5`}
           >
-            <a className='flex items-start w-full space-y-2'>
+            <a className='flex w-full items-start space-y-2'>
               <span
-                className={`w-8 h-8 ${stepClass} border-2 ${borderClass} rounded-full flex justify-center items-center mr-3 text-sm text-white lg:w-10 lg:h-10`}
+                className={`size-8 ${stepClass} border-2 ${borderClass} mr-3 flex items-center justify-center rounded-full text-sm text-white lg:size-10`}
               >
                 {isCompleted ? (
                   <svg
-                    className='w-5 h-5 stroke-white'
+                    className='size-5 stroke-white'
                     viewBox='0 0 24 24'
                     fill='none'
                     xmlns='http://www.w3.org/2000/svg'

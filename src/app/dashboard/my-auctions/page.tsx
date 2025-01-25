@@ -205,14 +205,6 @@ const MyAuctions = () => {
                     >
                       <Info /> {AuctionStatusMapping.get(item.auction.status)}
                     </Button>
-                    <Button
-                      className='mt-2'
-                      size='xs'
-                      disabled={item.auction.status == AuctionStatus.IN_PROGRESS}
-                      onClick={() => handleButtonClick(item.nft, item.auction)}
-                    >
-                      {AuctionStatusActionMapping.get(item.auction.status)}
-                    </Button>
                     <div className='mt-2 flex space-x-2'>
                       <Button
                         size='xs'
