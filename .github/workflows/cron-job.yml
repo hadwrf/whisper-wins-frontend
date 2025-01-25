@@ -2,8 +2,7 @@ name: Scheduled API Call
 
 on:
   schedule:
-    - cron: '*/1 * * * *' # Runs every 10 minutes
-  workflow_dispatch: # Allows manual trigger
+    - cron: '*/1 * * * *' # Runs every 1 minutes
 
 jobs:
   run-api-call:
