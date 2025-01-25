@@ -10,4 +10,4 @@ jobs:
 
     steps:
       - name: Call Scheduled API Endpoint
-        run: curl -X GET https://whisper-wins.vercel.app/api/getAuctionStatus?nftAddress=0xc513E70a63DB355948E2D2AAa1239058B159a512&tokenId=2
+        run: curl -X GET 'https://whisper-wins.vercel.app/api/getAuctionStatus?nftAddress=0xc513E70a63DB355948E2D2AAa1239058B159a512&tokenId=2'
