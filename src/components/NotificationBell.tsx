@@ -16,7 +16,7 @@ const NotificationBell = () => {
 
     eventSource.onmessage = (event) => {
       const newNotification = JSON.parse(event.data);
-      setNotifications((prev) => [...prev, newNotification]);
+      setNotifications((prev) => [newNotification, ...prev]);
     };
 
     eventSource.onerror = () => {
