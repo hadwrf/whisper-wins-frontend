@@ -2,7 +2,7 @@ name: Scheduled API Call
 
 on:
   schedule:
-    - cron: '*/1 * * * *' # Runs every 1 minutes
+    - cron: '* * * * *' # Runs every minute
 
 jobs:
   run-api-call:
