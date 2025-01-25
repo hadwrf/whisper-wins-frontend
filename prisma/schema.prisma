@@ -14,11 +14,36 @@ model Auction {
   nftAddress      String        @map("nft_address")
   tokenId         String        @map("token_id")
   status          AuctionStatus @default(NFT_TRANSFER_PENDING) @map("status")
-  bids            Bid[]
   createdAt       DateTime      @default(now()) @map("created_at")
   updatedAt       DateTime      @default(now()) @map("updated_at")
+  bids            Bid[]
 
   @@map("auctions")
+}
+
+model Bid {
+  id             Int       @id @default(autoincrement())
+  status         BidStatus @default(ACTIVE) @map("status")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @default(now()) @map("updated_at")
+  bidderAddress  String    @map("bidder_address")
+  auctionAddress String    @map("auction_address")
+  amount         Float     @map("amount")
+  l1Address      String    @map("l1_address")
+  auction        Auction   @relation(fields: [auctionAddress], references: [contractAddress])
+
+  @@map("bids")
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userAddress String   @map("user_address")
+  message     String   @map("message")
+  read        Boolean  @default(false) @map("read")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @map("updated_at")
+
+  @@map("notifications")
 }
 
 enum AuctionStatus {
@@ -33,29 +58,4 @@ enum BidStatus {
   ACTIVE
   WINNER
   LOSER
-}
-
-model Bid {
-  id                Int      @id @default(autoincrement())
-  auction           Auction  @relation(fields: [auctionAddress], references: [contractAddress])
-  auctionAddress    String   @map(name: "auction_address")
-  bidderAddress     String   @map(name: "bidder_address")
-  l1Address         String   @map(name: "l1_address")
-  amount            Float    @map(name: "amount")
-  status            BidStatus @default(ACTIVE) @map(name: "status")
-  createdAt         DateTime @default(now()) @map(name: "created_at")
-  updatedAt         DateTime @default(now()) @map(name: "updated_at")
-
-  @@map("bids")
-}
-
-model Notification {
-  id            Int       @id @default(autoincrement())
-  userAddress   String    @map(name: "user_address")
-  message       String    @map(name: "message")
-  read          Boolean   @default(false)   @map(name: "read")
-  createdAt     DateTime  @default(now())   @map(name: "created_at")
-  updatedAt     DateTime  @default(now())   @map(name: "updated_at")
-
-  @@map("notifications")
 }

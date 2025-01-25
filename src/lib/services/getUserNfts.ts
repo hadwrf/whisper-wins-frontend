@@ -22,7 +22,7 @@ export interface Nft {
       attributes: {
         trait_type: string;
         value: string;
-      };
+      }[];
     };
   };
   mint: {
