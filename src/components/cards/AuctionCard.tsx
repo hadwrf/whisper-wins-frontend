@@ -7,10 +7,12 @@ import { getNft, Nft, NftRequest } from '@/lib/services/getUserNfts';
 import retrieveMinimalBid from '@/lib/suave/retrieveMinimalBid';
 import { Auction } from '@prisma/client';
 import { format } from 'date-fns';
-import { CalendarClock, CameraOff, Info, Tag } from 'lucide-react';
+import { CalendarClock, CameraOff, Tag } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import MoreInfoButton from '@/components/MoreInfoButton';
+import { Hex } from '@flashbots/suave-viem';
 
 interface AuctionCardProps {
   auction: Auction;
@@ -87,13 +89,10 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
         >
           Place Bid
         </Button>
-        <Button
-          size='xs'
-          variant='outline'
-          disabled
-        >
-          <Info /> More Info
-        </Button>
+        <MoreInfoButton
+          nftContractAddress={nft?.contract.address as Hex}
+          nftTokenId={nft?.tokenId || ''}
+        />
       </CardFooter>
     </Card>
   );

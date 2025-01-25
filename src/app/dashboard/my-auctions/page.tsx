@@ -20,6 +20,8 @@ import { TransferDialog } from '@/components/TransferDialog';
 import { AuctionStatusActionMapping, AuctionStatusInfoMapping, AuctionStatusMapping } from './constants';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { SearchBar } from '@/components/SearchBar';
+import MoreInfoButton from '@/components/MoreInfoButton';
+import { Hex } from '@flashbots/suave-viem';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -205,14 +207,19 @@ const MyAuctions = () => {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    <Button
-                      className='mt-2'
-                      size='xs'
-                      disabled={item.auction.status == AuctionStatus.IN_PROGRESS}
-                      onClick={() => handleButtonClick(item.nft, item.auction)}
-                    >
-                      {AuctionStatusActionMapping.get(item.auction.status)}
-                    </Button>
+                    <div className='mt-2 flex space-x-2'>
+                      <Button
+                        size='xs'
+                        disabled={item.auction.status == AuctionStatus.IN_PROGRESS}
+                        onClick={() => handleButtonClick(item.nft, item.auction)}
+                      >
+                        {AuctionStatusActionMapping.get(item.auction.status)}
+                      </Button>
+                      <MoreInfoButton
+                        nftContractAddress={item.nft?.contract.address as Hex}
+                        nftTokenId={item.nft?.tokenId || ''}
+                      />
+                    </div>
                   </div>
                 </CardFooter>
               </Card>

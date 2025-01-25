@@ -9,6 +9,8 @@ import { CalendarClock, CameraOff, Info } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import MoreInfoButton from '@/components/MoreInfoButton';
+import { Hex } from '@flashbots/suave-viem';
 
 interface MyBidCardProps {
   bid: Bid;
@@ -78,6 +80,10 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+        <MoreInfoButton
+          nftContractAddress={nft?.contract.address as Hex}
+          nftTokenId={nft?.tokenId || ''}
+        />
       </CardFooter>
     </Card>
   );

@@ -5,8 +5,10 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { Nft } from '@/lib/services/getUserNfts';
-import { CameraOff, Info } from 'lucide-react';
+import { CameraOff } from 'lucide-react';
 import Image from 'next/image';
+import MoreInfoButton from '@/components/MoreInfoButton';
+import { Hex } from '@flashbots/suave-viem';
 
 type SellCardProps = {
   nft: Nft;
@@ -64,12 +66,10 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
         >
           Sell NFT
         </Button>
-        <Button
-          size='xs'
-          variant='outline'
-        >
-          <Info /> More Info
-        </Button>
+        <MoreInfoButton
+          nftContractAddress={nft?.contract.address as Hex}
+          nftTokenId={nft?.tokenId || ''}
+        />
       </CardFooter>
     </Card>
   );
