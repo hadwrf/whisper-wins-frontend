@@ -71,7 +71,7 @@ enum BidStatus {
   ACTIVE
   WINNER
   LOSER
-  // time bittiğinde bid statusu resolve edılebilri seklınde bişi olacak.
+  // todo A status which indicates that the auction can be resolved when time is out.
 }
 
 enum NotificationType {

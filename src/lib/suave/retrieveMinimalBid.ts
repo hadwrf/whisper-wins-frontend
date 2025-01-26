@@ -1,6 +1,6 @@
 import { Address } from '@flashbots/suave-viem';
 import { getPublicClient } from './client';
-import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
+import { sealedAuction } from '@/lib/abi';
 import { ethers } from 'ethers';
 
 async function retrieveMinimalBid(contractAddress: string): Promise<string> {

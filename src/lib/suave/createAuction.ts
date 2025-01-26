@@ -3,7 +3,7 @@ import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet } from '@flashbots/suave-viem/chains/utils';
 import { type Hex, Address, custom } from '@flashbots/suave-viem';
 import { getPublicClient } from './client';
-import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
+import { sealedAuction } from '@/lib/abi';
 
 async function createAuction(nftContractAddress: string, tokenId: string, biddingPrice: number) {
   const { abi, bytecode } = sealedAuction;
@@ -21,6 +21,7 @@ async function createAuction(nftContractAddress: string, tokenId: string, biddin
 
   await wallet.switchChain({ id: suaveChain.id });
 
+  // TODO CHECK THE DIFFERENCES BETWEEN V2 AND V4
   const hash = await wallet.deployContract({
     abi,
     account: signer.address as Address,

@@ -2,7 +2,7 @@ import { BrowserProvider, ethers } from 'ethers';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
 import { http, type Hex, Address, createPublicClient, encodeFunctionData, custom } from '@flashbots/suave-viem';
-import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
+import { sealedAuction } from '@/lib/abi';
 
 async function startAuction(contractAddress: string) {
   const SUAVE = 'https://rpc.toliman.suave.flashbots.net';

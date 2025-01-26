@@ -1,4 +1,4 @@
-import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
+import { sealedAuction } from '@/lib/abi';
 import { Address, custom, encodeFunctionData, type Hex } from '@flashbots/suave-viem';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
