@@ -20,11 +20,29 @@ const Explore = () => {
     setFilters(appliedFilters);
   };
 
+  // Handle deploy oracle
+  // const handleDeployOracle = () => {
+  //   deployOracle()
+  //     .then(async (oracleAddress) => {
+  //       console.log('Oracle deployed at:', oracleAddress);
+  //     })
+  //     .catch((e) => {
+  //       console.log('createAuction error:', e);
+  //     });
+  // };
+
   return (
     <div className='p-4'>
       <div className='mx-auto max-w-5xl'>
         <AuctionsFilter onApplyFilters={handleFilters} />
         <div className='mt-10'>
+          {/*<Button*/}
+          {/*  size='lg'*/}
+          {/*  className='bg-gray-700 text-gray-100 transition-colors duration-300 hover:bg-gray-800'*/}
+          {/*  onClick={() => handleDeployOracle()}*/}
+          {/*>*/}
+          {/*  Deploy Oracle*/}
+          {/*</Button>*/}
           <AuctionCards filters={filters} />
         </div>
       </div>

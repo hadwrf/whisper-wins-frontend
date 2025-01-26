@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     // Call your database function
     const auctionStatus = await getAuctionStatus({ nftAddress, tokenId });
     if (auctionStatus == null) {
-      return NextResponse.json({ error: 'There is no auction found in the db for the given NFT' }, { status: 500 });
+      return NextResponse.json({ error: 'There is no auction found in the db for the given NFT' }, { status: 404 });
     }
     return NextResponse.json({ auctionStatus });
   } catch (error) {

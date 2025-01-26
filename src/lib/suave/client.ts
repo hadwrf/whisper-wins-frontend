@@ -1,7 +1,7 @@
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { createPublicClient, http } from '@flashbots/suave-viem';
 
-const SUAVE = 'https://rpc.toliman.suave.flashbots.net';
+export const SUAVE = 'https://rpc.toliman.suave.flashbots.net';
 
 export const getPublicClient = () => {
   return createPublicClient({

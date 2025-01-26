@@ -3,11 +3,9 @@ import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
 import { http, type Hex, Address, createPublicClient, encodeFunctionData, custom } from '@flashbots/suave-viem';
 import { sealedAuction } from '@/lib/abi';
+import { KETTLE_ADDRESS, SUAVE } from './client';
 
 async function startAuction(contractAddress: string) {
-  const SUAVE = 'https://rpc.toliman.suave.flashbots.net';
-  const KETTLE_ADDRESS = '0xf579de142d98f8379c54105ac944fe133b7a17fe';
-
   const { abi } = sealedAuction;
 
   await window.ethereum.request({
@@ -41,12 +39,13 @@ async function startAuction(contractAddress: string) {
     type: SuaveTxRequestTypes.ConfidentialRequest,
     data: encodeFunctionData({
       abi: abi,
-      functionName: 'startAuction',
+      functionName: 'startAuctionTest',
     }),
-    confidentialInputs: '0x',
     kettleAddress: KETTLE_ADDRESS,
   };
 
+  console.log('auction contract address: ', contractAddress);
+  console.log('before send start auction transaction');
   const ccrHash = await wallet.sendTransaction(ccr);
   console.log('ccrhash', ccrHash);
   const receipts = await publicClient.waitForTransactionReceipt({ hash: ccrHash });

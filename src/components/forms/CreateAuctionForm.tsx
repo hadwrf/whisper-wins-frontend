@@ -63,9 +63,11 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
         const nextStepsUrl = `/dashboard/auction-create-next-step?auctionAddress=${auctionAddress}`;
         router.push(nextStepsUrl);
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log('createAuction error:', e);
         toast({
-          description: 'Transaction signature denied!',
+          title: 'Transaction failed!',
+          description: e.shortMessage,
         });
       })
       .finally(() => {

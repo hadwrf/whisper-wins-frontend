@@ -6,6 +6,8 @@ To configure your environment, please follow these steps:
 
 2. **Fill in the Necessary Fields**: Open the .env file in a text editor and fill in the required values for your environment.
 
+Oracle address: 0x17fa7F77cA31dDB536A5e13f8167EFaD12B75cB6
+
 ## Running the App in Your Local Environment
 
 [NVM](https://github.com/nvm-sh/nvm)
