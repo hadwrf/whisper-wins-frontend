@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { Nft } from '@/lib/services/getUserNfts';
@@ -17,28 +17,11 @@ type SellCardProps = {
 export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
   const { nft } = props;
   const { push } = useRouter();
-  const [isSellable, setIsSellable] = useState(false);
 
   const handleSellClick = () => {
     const url = `/dashboard/create-auction?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`;
     push(url);
   };
-
-  useEffect(() => {
-    const checkAuctionStatus = async () => {
-      // Ideally, create a new endpoint for checking the existence of the auction.
-      const response = await fetch(`/api/getAuctionStatus?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!response.ok) {
-        // means the auction status couldn't find and there is no such auction.
-        setIsSellable(true);
-      }
-    };
-
-    checkAuctionStatus();
-  }, [nft.contract.address, nft.tokenId]);
 
   return (
     <Card className='w-60'>
@@ -62,7 +45,6 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
         <Button
           size='xs'
           onClick={handleSellClick}
-          disabled={!isSellable}
         >
           Sell NFT
         </Button>

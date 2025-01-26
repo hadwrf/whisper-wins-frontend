@@ -21,9 +21,21 @@ const MyNfts = () => {
       if (!account) {
         return;
       }
+
       try {
-        const data = await getUserNfts(account);
-        setNfts(data.ownedNfts);
+        const data = await getUserNfts(account); // Assuming this function fetches NFTs
+        const nftList = data.ownedNfts;
+
+        // Check auction status for each NFT and filter out those that aren't sellable
+        const filteredNfts = await Promise.all(
+          nftList.map(async (nft) => {
+            const isSellable = await checkAuctionStatus(nft);
+            return isSellable ? nft : null;
+          }),
+        );
+
+        // Remove null values from the array (NFTs that are not sellable)
+        setNfts(filteredNfts.filter((nft) => nft !== null) as Nft[]);
       } catch (error) {
         toast({
           title: 'Failed to load NFTs!',
@@ -36,6 +48,27 @@ const MyNfts = () => {
 
     fetchNfts();
   }, [account]);
+
+  const checkAuctionStatus = async (nft: Nft) => {
+    try {
+      const response = await fetch(`/api/getAuctionStatus?nftAddress=${nft.contract.address}&tokenId=${nft.tokenId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        // No auction found, mark as sellable
+        return true;
+      }
+
+      const auctionData = await response.json();
+      // If auction exists, return false (not sellable)
+      return auctionData?.active ? false : true;
+    } catch (error) {
+      console.error('Failed to check auction status:', error);
+      return true; // Default to sellable in case of error
+    }
+  };
 
   if (!account) return <LoginToContinue />;
   if (!loading && !nfts.length) return <NoDataFoundNft />;
