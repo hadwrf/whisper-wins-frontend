@@ -19,6 +19,8 @@
     "@bitjson/qr-code": "^1.0.2",
     "@flashbots/suave-viem": "^1.15.1",
     "@hookform/resolvers": "^3.9.1",
+    "@neondatabase/serverless": "^0.10.4",
+    "@prisma/adapter-neon": "^6.2.1",
     "@prisma/client": "^6.0.0",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
@@ -45,12 +47,14 @@
     "tailwindcss-animate": "^1.0.7",
     "viem": "^2.21.37",
     "wagmi": "^2.12.25",
+    "ws": "^8.18.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/ws": "^8.5.14",
     "eslint": "^9",
     "eslint-config-next": "15.0.2",
     "eslint-config-prettier": "^9.1.0",
