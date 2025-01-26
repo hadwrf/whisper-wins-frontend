@@ -1,4 +1,4 @@
-import prisma from './prisma';
+import { prismaEdge } from '@/prisma/edge';
 
 interface GetNewNotificationsParams {
   userAddress: string;
@@ -17,7 +17,7 @@ export default async function getNewNotifications({ userAddress, lastFetchedId }
   }
 
   // Fetch notifications from the database
-  const notifications = await prisma.notification.findMany({
+  const notifications = await prismaEdge.notification.findMany({
     where: whereCondition,
     orderBy: {
       id: 'asc', // Ensures notifications are ordered by their creation ID
