@@ -1,4 +1,4 @@
-import claimNftBack from '@/lib/db/clainNftBack';
+import claimNftBack from '@/lib/db/claimNftBack';
 import { NextRequest, NextResponse } from 'next/server';
 
 interface ClaimNftBackParams {
