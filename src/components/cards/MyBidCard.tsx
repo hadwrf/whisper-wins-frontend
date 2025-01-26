@@ -1,10 +1,16 @@
 import { BidStatusBackgroundColor } from '@/app/ui/colors';
+import { CountdownTimer } from '@/components/CountdownTimer';
+import MoreInfoButton from '@/components/MoreInfoButton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { getNft, Nft, NftRequest } from '@/lib/services/getUserNfts';
 import { AuctionStatus, Bid, BidStatus } from '@prisma/client';
 import { format } from 'date-fns';
 import { CalendarClock, CameraOff, Info } from 'lucide-react';
+import getAuctionEndTime from '@/lib/suave/getAuctionEndTime';
+import { Hex } from '@flashbots/suave-viem';
+import { Bid, BidStatus } from '@prisma/client';
+import { CameraOff, Info } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +25,7 @@ interface MyBidCardProps {
 export const MyBidCard = ({ bid }: MyBidCardProps) => {
   const { push } = useRouter();
   const [nft, setNft] = useState<Nft | null>(null);
+  const [auctionEndTime, setAuctionEndTime] = useState<Date | null>(null);
 
   // Some prisma issues with included properties: https://stackoverflow.com/a/71445155
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -31,7 +38,8 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       tokenId: auction.tokenId,
     };
 
-    getNft(nftRequest).then((nft) => {
+    Promise.all([getAuctionEndTime(auction.contractAddress), getNft(nftRequest)]).then(([endTime, nft]) => {
+      setAuctionEndTime(endTime);
       setNft(nft);
     });
   }, [auction.nftAddress, auction.tokenId]);
@@ -60,13 +68,12 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{nft?.name || 'No Name'}</p>
         <div className='mb-1 flex justify-between'>
           <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {bid.amount}</p>
-          <Badge
-            variant='secondary'
-            className='flex gap-1'
-          >
-            <CalendarClock size={13} />
-            {format(bid.createdAt, 'P')}
-          </Badge>
+          {auctionEndTime && (
+            <CountdownTimer
+              startTime={auction.createdAt}
+              auctionEndTime={auctionEndTime}
+            />
+          )}
         </div>
       </CardContent>
       <CardFooter className='w-full flex-none'>

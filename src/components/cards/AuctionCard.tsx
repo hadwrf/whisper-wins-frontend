@@ -1,15 +1,16 @@
 'use client';
 
+import { CountdownTimer } from '@/components/CountdownTimer';
+import MoreInfoButton from '@/components/MoreInfoButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { AuctionCardData } from '@/lib/services/getAuctionCardData';
-import { format } from 'date-fns';
-import { CalendarClock, CameraOff, Tag } from 'lucide-react';
+import { Hex } from '@flashbots/suave-viem';
+import { CameraOff, Tag } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import MoreInfoButton from '@/components/MoreInfoButton';
-import { Hex } from '@flashbots/suave-viem';
+import React from 'react';
 
 interface AuctionCardProps {
   auction: AuctionCardData;
@@ -41,13 +42,10 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{auction.nft?.name || 'No Name'}</p>
         <div className='mb-1 flex justify-between'>
           <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {auction.minimumBid}</p>
-          <Badge
-            variant='secondary'
-            className='flex gap-1'
-          >
-            <CalendarClock size={13} />
-            {format(auction.createdAt, 'P')}
-          </Badge>
+          <CountdownTimer
+            startTime={auction.createdAt}
+            auctionEndTime={auction.endsAt}
+          />
         </div>
         <div className='flex max-w-full gap-1 overflow-x-auto'>
           <Badge

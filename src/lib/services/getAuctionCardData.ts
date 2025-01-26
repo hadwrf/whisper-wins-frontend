@@ -1,6 +1,7 @@
-import { Auction } from '@prisma/client';
-import { Nft, getNft } from './getUserNfts';
+import getAuctionEndTime from '@/lib/suave/getAuctionEndTime';
 import retrieveMinimalBid from '@/lib/suave/retrieveMinimalBid';
+import { Auction } from '@prisma/client';
+import { getNft, Nft } from './getUserNfts';
 
 export interface AuctionCardData extends Auction {
   endsAt: Date;
@@ -75,14 +76,15 @@ export const getMyAuctionCardData = async (account: string): Promise<AuctionCard
       await Promise.all(
         auctions.map(async (auction) => {
           try {
-            const [minimalBid, nft] = await Promise.all([
+            const [minimalBid, endTime, nft] = await Promise.all([
               retrieveMinimalBid(auction.contractAddress),
+              getAuctionEndTime(auction.contractAddress),
               getNft({ contractAddress: auction.nftAddress, tokenId: auction.tokenId }),
             ]);
 
             return {
               ...auction,
-              endsAt: new Date(),
+              endsAt: endTime,
               minimalBid,
               nft,
             };
@@ -94,6 +96,7 @@ export const getMyAuctionCardData = async (account: string): Promise<AuctionCard
       )
     ).filter((data): data is AuctionCardData => data !== null);
 
+    console.log('auctionCardData', auctionCardData);
     // Filter out any failed entries (nulls)
     return auctionCardData.filter((data) => data !== null) as AuctionCardData[];
   } catch (error) {
