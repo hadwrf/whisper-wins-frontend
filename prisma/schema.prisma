@@ -71,6 +71,7 @@ enum BidStatus {
   ACTIVE
   WINNER
   LOSER
+  // time bittiğinde bid statusu resolve edılebilri seklınde bişi olacak.
 }
 
 enum NotificationType {
