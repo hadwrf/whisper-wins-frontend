@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoadingQRCode from '@/components/LoadingQRCode';
@@ -69,6 +69,7 @@ const PlaceBidModal = () => {
     >
       <VisuallyHidden>
         <DialogTitle></DialogTitle>
+        <DialogDescription></DialogDescription>
       </VisuallyHidden>
       <DialogContent>
         <div className='flex flex-col items-center justify-items-center'>
