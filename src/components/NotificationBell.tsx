@@ -2,14 +2,16 @@
 import { useAuthContext } from '@/context/AuthContext';
 import { Notification } from '@prisma/client';
 import { BellIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
-
   const { account } = useAuthContext();
+
+  const bellRef = useRef<HTMLButtonElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const eventSource = new EventSource(`/api/notifications/stream?userAddress=${account}`);
@@ -51,12 +53,33 @@ const NotificationBell = () => {
     }
   };
 
-  if (!account) return;
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        bellRef.current &&
+        !bellRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  if (!account) return null;
 
   return (
     <div className='relative bg-gray-50 rounded-md mx-3'>
       {/* Bell Icon */}
       <button
+        ref={bellRef}
         className='relative p-2 text-gray-700 hover:text-gray-900'
         onClick={() => setIsOpen((prev) => !prev)}
       >
@@ -70,7 +93,10 @@ const NotificationBell = () => {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className='absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50'>
+        <div
+          ref={dropdownRef}
+          className='absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50'
+        >
           <div className='p-2'>
             {notifications.length === 0 ? (
               <p className='text-sm text-gray-500'>No notifications</p>
