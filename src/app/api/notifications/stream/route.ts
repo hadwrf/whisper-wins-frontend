@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
   }
 
   let lastFetchedId = 0;
+  const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -19,7 +20,8 @@ export async function GET(request: NextRequest) {
         const notifications = await getNewNotifications({ userAddress, lastFetchedId });
         if (notifications.length > 0) {
           notifications.forEach((notification) => {
-            controller.enqueue(`data: ${JSON.stringify(notification)}\n\n`);
+            const data = `data: ${JSON.stringify(notification)}\n\n`;
+            controller.enqueue(encoder.encode(data));
           });
 
           lastFetchedId = notifications[notifications.length - 1].id;
