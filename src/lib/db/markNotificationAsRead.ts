@@ -11,6 +11,7 @@ export default async function markNotificationAsRead(params: MarkNotificationAsR
     },
     data: {
       read: true,
+      clicked: true,
       updatedAt: new Date(),
     },
   });

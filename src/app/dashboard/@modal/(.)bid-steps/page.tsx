@@ -1,11 +1,11 @@
 'use client';
 
+import BidStatusStepper from '@/components/stepper/BidStatusStepper';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useRouter, useSearchParams } from 'next/navigation';
-import AuctionStatusStepper from '@/components/stepper/AuctionStatusStepper';
 
-const NftDetaisModal = () => {
+const BidDetaisModal = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -21,11 +21,11 @@ const NftDetaisModal = () => {
       </VisuallyHidden>
       <DialogContent className='min-w-[800px]'>
         <div className='m-6'>
-          <AuctionStatusStepper currentStep={currentStep as number} />
+          <BidStatusStepper currentStep={currentStep as number} />
         </div>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default NftDetaisModal;
+export default BidDetaisModal;

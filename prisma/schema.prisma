@@ -10,14 +10,19 @@ datasource db {
 }
 
 model Auction {
-  contractAddress String        @unique @map("contract_address")
-  ownerAddress    String        @map("owner_address")
-  nftAddress      String        @map("nft_address")
-  tokenId         String        @map("token_id")
-  status          AuctionStatus @default(NFT_TRANSFER_ADDRESS_PENDING) @map("status")
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @default(now()) @map("updated_at")
-  bids            Bid[]
+  contractAddress     String        @unique @map("contract_address")
+  ownerAddress        String        @map("owner_address")
+  nftAddress          String        @map("nft_address")
+  tokenId             String        @map("token_id")
+  status              AuctionStatus @default(NFT_TRANSFER_ADDRESS_PENDING) @map("status")
+  endTime             DateTime      @map("end_time")
+  minimumBid          Float         @map("minimum_bid")
+  winnerAddres        String?       @map("winner_address")
+  nftTransferAddress  String?       @map("nft_transfer_address")
+  resultClaimed       Boolean       @default(false) @map("result_claimed")
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @default(now()) @map("updated_at")
+  bids                Bid[]
 
   @@map("auctions")
 }
@@ -37,12 +42,18 @@ model Bid {
 }
 
 model Notification {
-  id          Int      @id @default(autoincrement())
-  userAddress String   @map("user_address")
-  message     String   @map("message")
-  read        Boolean  @default(false) @map("read")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @default(now()) @map("updated_at")
+  id              Int               @id @default(autoincrement())
+  type            NotificationType  @default(AUCTION_TIME_END) @map("type")
+  auctionAddress  String            @map("auction_address")
+  userAddress     String            @map("user_address")
+  userType        ParticipantType   @default(BIDDER) @map("user_type")
+  nftAddress      String            @map("nft_address")
+  nftTokenId      String            @map("nft_token_id")
+  nftName         String            @map("nft_name")
+  read            Boolean           @default(false) @map("read")
+  clicked         Boolean           @default(false) @map("clicked")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @default(now()) @map("updated_at")
 
   @@map("notifications")
 }
@@ -51,14 +62,25 @@ enum AuctionStatus {
   NFT_TRANSFER_ADDRESS_PENDING
   NFT_TRANSFER_PENDING
   START_PENDING
-  WINNER_CLAIM_PENDING
   IN_PROGRESS
-  EARNING_CLAIM_PENDING
-  ENDED
+  TIME_ENDED
+  RESOLVED
 }
 
 enum BidStatus {
   ACTIVE
   WINNER
   LOSER
+}
+
+enum NotificationType {
+  AUCTION_TIME_END
+  AUCTION_WON
+  AUCTION_LOST
+  CLAIM_HIGHEST_BID
+}
+
+enum ParticipantType {
+  AUCTIONEER
+  BIDDER
 }

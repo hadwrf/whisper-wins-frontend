@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 
 export interface Filters {
   name: string;
@@ -14,11 +14,11 @@ export interface Filters {
   sort: string;
 }
 
-interface AuctionsFilterProps {
+interface ExploreFilterProps {
   onApplyFilters: (filters: Filters) => void;
 }
 
-export default function AuctionsFilter({ onApplyFilters }: AuctionsFilterProps) {
+export default function ExploreFilter({ onApplyFilters }: ExploreFilterProps) {
   const [filters, setFilters] = useState({
     name: '',
     createdFrom: '',
@@ -44,9 +44,6 @@ export default function AuctionsFilter({ onApplyFilters }: AuctionsFilterProps) 
       createDates: '',
       endDates: '',
     };
-
-    console.log('in validate');
-    console.log(filters.name.length);
 
     // Name validation
     if (filters.name.length > 0 && filters.name.length < 3) {
@@ -245,8 +242,8 @@ export default function AuctionsFilter({ onApplyFilters }: AuctionsFilterProps) 
         </div>
 
         {/* Buttons */}
-        <div className='flex flex-col'>
-          <div className='flex items-center gap-4 mt-7'>
+        <div className='flex flex-col self-end'>
+          <div className='flex items-center gap-4 mt-6'>
             <div className='flex flex-col w-full sm:w-1/2'>
               <Button
                 className='w-full gap-2 px-6 py-5'
@@ -267,7 +264,6 @@ export default function AuctionsFilter({ onApplyFilters }: AuctionsFilterProps) 
               </Button>
             </div>
           </div>
-          {errors.endDates && <span className='text-xs text-red-600 mt-1'>{errors.endDates}</span>}
         </div>
       </div>
     </div>

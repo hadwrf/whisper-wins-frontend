@@ -1,7 +1,8 @@
 'use client';
 import { useAuthContext } from '@/context/AuthContext';
-import { Notification } from '@prisma/client';
+import { Notification, NotificationType } from '@prisma/client';
 import { BellIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 
 const NotificationBell = () => {
@@ -9,6 +10,7 @@ const NotificationBell = () => {
   const [isOpen, setIsOpen] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
   const { account } = useAuthContext();
+  const router = useRouter();
 
   const bellRef = useRef<HTMLButtonElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -22,34 +24,92 @@ const NotificationBell = () => {
     };
 
     eventSource.onerror = () => {
+      console.log('error happened on stresm');
       eventSource.close();
     };
 
     // Cleanup on component unmount
     return () => {
+      console.log('cleaning up');
       eventSource.close();
     };
   }, [account]);
 
-  const markAsRead = async (id: number) => {
+  const markAsReadAndClicked = async (id: number) => {
     try {
       const response = await fetch(`/api/notifications/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, clicked: true, read: true }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setNotifications((prev) => prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif)));
+        setNotifications((prev) =>
+          prev.map((notif) => (notif.id === id ? { ...notif, read: true, clicked: true } : notif)),
+        );
       } else {
-        console.error('Error marking notification as read:', data.error);
+        console.error('Error marking notification as read and clicked:', data.error);
       }
     } catch (error) {
-      console.error('Failed to mark notification as read:', error);
+      console.error('Failed to mark notification as read and clicked:', error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      const response = await fetch(`/api/notifications/markAllRead?userAddress=${account}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userAddress: account }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
+      } else {
+        console.error('Error marking all notifications as read:', data.error);
+      }
+    } catch (error) {
+      console.error('Failed to mark all notifications as read:', error);
+    }
+  };
+
+  const handleNotificationClick = (notification: Notification) => {
+    markAsReadAndClicked(notification.id);
+
+    // Redirect to the appropriate page based on user type
+    if (notification.userType === 'AUCTIONEER') {
+      router.push('/dashboard/my-auctions');
+    } else if (notification.userType === 'BIDDER') {
+      router.push('/dashboard/my-bids');
+    }
+  };
+
+  const formatNotificationMessage = (notification: Notification): string => {
+    const { type, nftName, nftTokenId } = notification;
+
+    switch (type) {
+      case NotificationType.AUCTION_TIME_END:
+        return `The auction for ${nftName || 'an NFT'} has ended. Resolve the auction now!`;
+
+      case NotificationType.AUCTION_WON:
+        return `Congratulations! You won the auction for ${nftName || 'an NFT'} (Token ID: ${nftTokenId}).`;
+
+      case NotificationType.AUCTION_LOST:
+        return `You lost the auction for ${nftName || 'an NFT'} (Token ID: ${nftTokenId}). Better luck next time!`;
+
+      case NotificationType.CLAIM_HIGHEST_BID:
+        return `Your bid for ${nftName || 'an NFT'} (Token ID: ${nftTokenId}) is the highest! Claim it now.`;
+
+      default:
+        return 'You have a new notification.';
     }
   };
 
@@ -63,6 +123,7 @@ const NotificationBell = () => {
         !bellRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        markAllAsRead(); // Mark all as read when bell is clicked
       }
     };
 
@@ -81,7 +142,9 @@ const NotificationBell = () => {
       <button
         ref={bellRef}
         className='relative p-2 text-gray-700 hover:text-gray-900'
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+        }}
       >
         <BellIcon className='h-6 w-6' />
         {unreadCount > 0 && (
@@ -109,10 +172,10 @@ const NotificationBell = () => {
                   }`}
                 >
                   <p
-                    onClick={() => markAsRead(n.id)}
+                    onClick={() => handleNotificationClick(n)} // Handle notification click
                     className='cursor-pointer'
                   >
-                    {n.message}
+                    {formatNotificationMessage(n)}
                   </p>
                 </div>
               ))
