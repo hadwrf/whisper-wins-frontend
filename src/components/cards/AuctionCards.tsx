@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { SkeletonSellCards } from './SkeletonSellCards';
-import getAuctionCardData, { AuctionCardData } from '@/lib/services/getAuctionCardData';
-import { NoDataFoundExplore } from '@/components/NoDataFoundExplore';
+import { AuctionCardData, getAuctionCardData } from '@/lib/services/getAuctionCardData';
+import { NoDataFoundExplore } from '@/components/no-data/NoDataFoundExplore';
 
 interface AuctionCardsProps {
   filters?: {
@@ -54,7 +54,7 @@ export const AuctionCards = ({ filters = {} }: AuctionCardsProps) => {
       }
 
       // Filter by price
-      const minPrice = parseFloat(auction.minimumBid || '0');
+      const minPrice = parseFloat(auction.minimalBid || '0');
       if ((minPriceFrom && minPrice < parseFloat(minPriceFrom)) || (minPriceTo && minPrice > parseFloat(minPriceTo))) {
         return false;
       }
@@ -66,9 +66,9 @@ export const AuctionCards = ({ filters = {} }: AuctionCardsProps) => {
   const sortAuctions = (filteredAuctions: AuctionCardData[]) => {
     switch (filters.sort) {
       case 'price_asc':
-        return filteredAuctions.sort((a, b) => parseFloat(a.minimumBid) - parseFloat(b.minimumBid));
+        return filteredAuctions.sort((a, b) => parseFloat(a.minimalBid) - parseFloat(b.minimalBid));
       case 'price_desc':
-        return filteredAuctions.sort((a, b) => parseFloat(b.minimumBid) - parseFloat(a.minimumBid));
+        return filteredAuctions.sort((a, b) => parseFloat(b.minimalBid) - parseFloat(a.minimalBid));
       case 'created_at_asc':
         return filteredAuctions.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       case 'created_at_desc':
@@ -109,7 +109,7 @@ export const AuctionCards = ({ filters = {} }: AuctionCardsProps) => {
     }
   }, [auctionsFetched]);
 
-  if (loading) return <SkeletonSellCards showSearchBar={false} />;
+  if (loading) return <SkeletonSellCards />;
   if (!loading && auctionsFetched && filteredAndSortedAuctions.length == 0) return <NoDataFoundExplore />;
 
   return (

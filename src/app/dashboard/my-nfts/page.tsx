@@ -3,7 +3,8 @@
 import { SellCards } from '@/components/cards/SellCards';
 import { SkeletonSellCards } from '@/components/cards/SkeletonSellCards';
 import { LoginToContinue } from '@/components/LoginToContinue';
-import { NoDataFoundNft } from '@/components/NoDataFoundNft';
+import MyNftsFilter, { Filters } from '@/components/filter/MyNftsFilter';
+import { NoDataFoundNft } from '@/components/no-data/NoDataFoundNft';
 import { useAuthContext } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { getUserNfts, Nft } from '@/lib/services/getUserNfts';
@@ -15,6 +16,30 @@ const MyNfts = () => {
 
   const [nfts, setNfts] = useState<Nft[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [filters, setFilters] = useState({
+    name: '',
+  });
+
+  // Handle filter changes
+  const handleFilters = (appliedFilters: Filters) => {
+    setFilters(appliedFilters);
+  };
+
+  const filterNfts = () => {
+    return nfts.filter((nft) => {
+      const { name } = filters;
+
+      // Filter by name
+      if (name && !nft.name.toLowerCase().includes(name.toLowerCase())) {
+        return false;
+      }
+
+      return true;
+    });
+  };
+
+  const filteredNfts = filterNfts();
 
   useEffect(() => {
     async function fetchNfts() {
@@ -71,13 +96,14 @@ const MyNfts = () => {
   };
 
   if (!account) return <LoginToContinue />;
-  if (!loading && !nfts.length) return <NoDataFoundNft />;
 
   return (
     <div className='p-4'>
       <div className='mx-auto max-w-5xl'>
+        <MyNftsFilter onApplyFilters={handleFilters} />
         {loading && <SkeletonSellCards />}
-        {!loading && <SellCards nfts={nfts} />}
+        {!loading && !filteredNfts.length && <NoDataFoundNft />}
+        {!loading && <SellCards nfts={filteredNfts} />}
       </div>
     </div>
   );

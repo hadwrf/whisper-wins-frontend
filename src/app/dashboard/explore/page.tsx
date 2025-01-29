@@ -1,5 +1,5 @@
 'use client';
-import AuctionsFilter, { Filters } from '@/components/AuctionsFilter';
+import AuctionsFilter, { Filters } from '@/components/filter/ExploreFilter';
 import { AuctionCards } from '@/components/cards/AuctionCards';
 import { useState } from 'react';
 

@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export const NoDataFoundNft = () => {
   return (
-    <div className='mx-auto max-w-5xl p-20'>
+    <div className='mx-auto max-w-5xl p-10'>
       <div className='m-auto grid grid-cols-1 place-items-center justify-center space-y-20'>
         <Image
           src='/searching.svg'
@@ -10,7 +10,7 @@ export const NoDataFoundNft = () => {
           width={500}
           height={500}
         />
-        <p className='mt-3 text-xl text-muted-foreground'>{`Your MetaMask wallet doesn't contain any NFTs. 🐾👀️`}</p>
+        <p className='mt-3 text-xl text-muted-foreground'>{`We couldn't find any mathcing NFT. 🐾👀️`}</p>
       </div>
     </div>
   );

@@ -59,7 +59,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
     // create auction call pops up the metamask window.
     return createAuction(nftAddress, tokenId, startingBid)
       .then(async (auctionAddress) => {
-        await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId);
+        await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId, startingBid);
         const nextStepsUrl = `/dashboard/auction-create-next-step?auctionAddress=${auctionAddress}`;
         router.push(nextStepsUrl);
       })
@@ -78,6 +78,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
     ownerAddress: string,
     nftAddress: string,
     tokenId: string,
+    minimumBid: number,
   ) => {
     const response = await fetch('/api/createAuction', {
       method: 'POST',
@@ -87,6 +88,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
         ownerAddress: ownerAddress,
         nftAddress: nftAddress,
         tokenId: tokenId,
+        minimumBid: minimumBid,
       }),
     });
     const result = await response.json();
