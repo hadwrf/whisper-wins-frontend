@@ -1,10 +1,11 @@
 import { sealedAuction } from '@/lib/abi';
+import { aesDecrypt } from '@/lib/crypto/aesDecrypt';
 import { Address, custom, encodeFunctionData, type Hex } from '@flashbots/suave-viem';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
+import { randomBytes } from 'crypto';
 import { BrowserProvider, ethers, LogDescription } from 'ethers';
 import { getPublicClient, KETTLE_ADDRESS } from './client';
-import { randomBytes, createDecipher } from 'crypto';
 
 async function retrieveBiddingAddress(contractAddress: string) {
   const { abi } = sealedAuction;
@@ -71,7 +72,7 @@ async function retrieveBiddingAddress(contractAddress: string) {
       console.log('Key Length:', keyBuffer.length); // Should print 32
 
       try {
-        const decryptedAddress = decryptEncryptedAddress(encodedL1Address, keyBuffer);
+        const decryptedAddress = aesDecrypt(keyBuffer, encodedL1Address);
         console.log('Decrypted L1 Address:', decryptedAddress);
       } catch (e) {
         console.log('ex', e);
@@ -84,21 +85,6 @@ async function retrieveBiddingAddress(contractAddress: string) {
     throw new Error("bidding address couldn't retrieved.");
   }
   return biddingAddress;
-}
-
-// Function to decrypt using AES-256-ECB (no IV required)
-function decryptEncryptedAddress(encryptedData: string, key: Buffer) {
-  const encryptedBuffer = Buffer.from(encryptedData.replace(/^0x/, ''), 'hex');
-
-  const decipher = createDecipher('aes-256-ecb', key);
-  decipher.setAutoPadding(false); // Handles PKCS#7 padding
-
-  let decrypted = decipher.update(encryptedBuffer);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-
-  console.log('decrypted', decrypted);
-
-  return decrypted.toString('utf-8').trim(); // Convert back to readable address format
 }
 
 export default retrieveBiddingAddress;
