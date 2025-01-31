@@ -29,14 +29,15 @@ export const getAuctionCardData = async (account: string): Promise<AuctionCardDa
       await Promise.all(
         auctions.map(async (auction) => {
           try {
-            const [minimalBid, nft] = await Promise.all([
+            const [minimalBid, endTime, nft] = await Promise.all([
               retrieveMinimalBid(auction.contractAddress),
+              getAuctionEndTime(auction.contractAddress),
               getNft({ contractAddress: auction.nftAddress, tokenId: auction.tokenId }),
             ]);
 
             return {
               ...auction,
-              endsAt: new Date(),
+              endsAt: endTime,
               minimalBid,
               nft,
             };

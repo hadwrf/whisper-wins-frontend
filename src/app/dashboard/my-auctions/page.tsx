@@ -63,6 +63,9 @@ const MyAuctions = () => {
     } else {
       await startAuction(auction.contractAddress);
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.IN_PROGRESS);
+      toast({
+        title: 'Your auction is live!',
+      });
       updateAuctionList(AuctionStatus.IN_PROGRESS, auction.contractAddress);
     }
   };
