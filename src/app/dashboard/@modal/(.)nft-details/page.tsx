@@ -44,14 +44,14 @@ const NftDetaisModal = () => {
             <div>
               <div className='flex flex-col items-center'>
                 <Image
-                  className='w-48 h-48 rounded-lg object-cover shadow-md'
+                  className='size-48 rounded-lg object-cover shadow-md'
                   src={nft.image.originalUrl}
                   alt={nft.name || 'NFT'}
                   width={500}
                   height={500}
                 />
                 <h2 className='mt-4 text-2xl font-semibold'>{nft.name || 'Unnamed NFT'}</h2>
-                <p className='text-gray-600 text-sm mt-2'>{nft.description || 'No description provided.'}</p>
+                <p className='mt-2 text-sm text-gray-600'>{nft.description || 'No description provided.'}</p>
               </div>
 
               <div className='mt-6 min-w-[380px] '>
@@ -60,7 +60,7 @@ const NftDetaisModal = () => {
                   {nft.raw.metadata.attributes?.map((attribute, index) => (
                     <li
                       key={index}
-                      className='text-sm text-gray-600 flex justify-between border-b py-1'
+                      className='flex justify-between border-b py-1 text-sm text-gray-600'
                     >
                       <span>{attribute.trait_type}</span>
                       <span>{attribute.value}</span>
@@ -72,7 +72,7 @@ const NftDetaisModal = () => {
               <div className='mt-6'>
                 <h3 className='font-medium text-gray-800'>Contract Details</h3>
                 <ul className='space-y-2'>
-                  <li className='text-sm text-gray-600 flex justify-between border-b py-1'>
+                  <li className='flex justify-between border-b py-1 text-sm text-gray-600'>
                     <span>Address</span>
                     <a
                       href={`https://sepolia.etherscan.io/address/${nft.contract.address}`}
@@ -83,7 +83,7 @@ const NftDetaisModal = () => {
                       {shortenAddress(nft.contract.address)}
                     </a>
                   </li>
-                  <li className='text-sm text-gray-600 flex justify-between border-b py-1'>
+                  <li className='flex justify-between border-b py-1 text-sm text-gray-600'>
                     <span>Token ID</span>
                     <a
                       href={nft.tokenUri}
@@ -94,7 +94,7 @@ const NftDetaisModal = () => {
                       {nft.tokenId}
                     </a>
                   </li>
-                  <li className='text-sm text-gray-600 flex justify-between border-b py-1'>
+                  <li className='flex justify-between border-b py-1 text-sm text-gray-600'>
                     <span>Token Type</span>
                     <span>{nft.contract.tokenType}</span>
                   </li>

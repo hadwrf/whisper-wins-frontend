@@ -125,9 +125,9 @@ export default function BidsFilter({ onApplyFilters }: BidsFilterProps) {
   };
 
   return (
-    <div className='mx-auto rounded-lg text-sm mt-6'>
+    <div className='mx-auto mt-6 rounded-lg text-sm'>
       {/* First Row: Name & Price Filters */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
+      <div className='mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         {/* Name Filter */}
         <div className='flex flex-col'>
           <label className='text-sm font-medium text-gray-700'>NFT Name</label>
@@ -137,51 +137,51 @@ export default function BidsFilter({ onApplyFilters }: BidsFilterProps) {
             value={filters.name}
             onChange={handleChange}
             placeholder='Search by name'
-            className='mt-2 p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+            className='mt-2 rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
           />
-          {errors.name && <span className='text-xs text-red-600 mt-1'>{errors.name}</span>}
+          {errors.name && <span className='mt-1 text-xs text-red-600'>{errors.name}</span>}
         </div>
 
         {/* Minimum Price Filter */}
         <div className='flex flex-col'>
           <label className='text-sm font-medium text-gray-700'>Bid Amount (ETH)</label>
-          <div className='flex items-center gap-4 mt-2'>
-            <div className='flex flex-col w-full sm:w-1/2'>
+          <div className='mt-2 flex items-center gap-4'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <input
                 type='number'
                 name='minPriceFrom'
                 value={filters.minPriceFrom}
                 onChange={handleChange}
                 placeholder='From'
-                className='w-full p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                className='w-full rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
               />
             </div>
             <span className='text-sm text-gray-500'>to</span>
-            <div className='flex flex-col w-full sm:w-1/2'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <input
                 type='number'
                 name='minPriceTo'
                 value={filters.minPriceTo}
                 onChange={handleChange}
                 placeholder='To'
-                className='w-full p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                className='w-full rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
               />
             </div>
           </div>
-          {errors.price && <span className='text-xs text-red-600 mt-1'>{errors.price}</span>}
+          {errors.price && <span className='mt-1 text-xs text-red-600'>{errors.price}</span>}
         </div>
 
         {/* Sorting Options */}
         <div className='flex flex-col'>
           <div className='flex items-center gap-4'>
-            <div className='flex flex-col w-1/2'>
+            <div className='flex w-1/2 flex-col'>
               <label className='text-sm font-medium text-gray-700'>Status</label>
-              <div className='flex flex-col w-full'>
+              <div className='flex w-full flex-col'>
                 <select
                   name='status'
                   value={filters.status}
                   onChange={handleChange}
-                  className='w-full p-2 pr-8 mt-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                  className='mt-2 w-full rounded-lg border border-gray-300 p-2 pr-8 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
                 >
                   <option value=''>All</option>
                   <option value='won'>Won</option>
@@ -189,14 +189,14 @@ export default function BidsFilter({ onApplyFilters }: BidsFilterProps) {
                 </select>
               </div>
             </div>
-            <div className='flex flex-col w-1/2'>
+            <div className='flex w-1/2 flex-col'>
               <label className='text-sm font-medium text-gray-700'>Sort By</label>
-              <div className='flex flex-col w-full'>
+              <div className='flex w-full flex-col'>
                 <select
                   name='sort'
                   value={filters.sort}
                   onChange={handleChange}
-                  className='w-full p-2 pr-8 mt-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                  className='mt-2 w-full rounded-lg border border-gray-300 p-2 pr-8 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
                 >
                   <option value=''>Default</option>
                   <option value='price_asc'>Bid (Ascending)</option>
@@ -213,65 +213,65 @@ export default function BidsFilter({ onApplyFilters }: BidsFilterProps) {
       </div>
 
       {/* Second Row: Ends At Filter and Sorting */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+      <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         {/* Created At Filter */}
         <div className='flex flex-col'>
           <label className='text-sm font-medium text-gray-700'>Bid Placed At</label>
-          <div className='flex items-center gap-4 mt-2'>
-            <div className='flex flex-col w-full sm:w-1/2'>
+          <div className='mt-2 flex items-center gap-4'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <input
                 type='date'
                 name='bidPlacedFrom'
                 value={filters.bidPlacedFrom}
                 onChange={handleChange}
-                className='p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                className='rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
               />
             </div>
             <span className='text-sm text-gray-500'>to</span>
-            <div className='flex flex-col w-full sm:w-1/2'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <input
                 type='date'
                 name='bidPlacedTo'
                 value={filters.bidPlacedTo}
                 onChange={handleChange}
-                className='p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                className='rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
               />
             </div>
           </div>
-          {errors.bidPlacedDates && <span className='text-xs text-red-600 mt-1'>{errors.bidPlacedDates}</span>}
+          {errors.bidPlacedDates && <span className='mt-1 text-xs text-red-600'>{errors.bidPlacedDates}</span>}
         </div>
 
         {/* Ends At Filter */}
         <div className='flex flex-col'>
           <label className='text-sm font-medium text-gray-700'>Auction Ends At</label>
-          <div className='flex items-center gap-4 mt-2'>
-            <div className='flex flex-col w-full sm:w-1/2'>
+          <div className='mt-2 flex items-center gap-4'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <input
                 type='date'
                 name='endsFrom'
                 value={filters.endsFrom}
                 onChange={handleChange}
-                className='p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                className='rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
               />
             </div>
             <span className='text-sm text-gray-500'>to</span>
-            <div className='flex flex-col w-full sm:w-1/2'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <input
                 type='date'
                 name='endsTo'
                 value={filters.endsTo}
                 onChange={handleChange}
-                className='p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+                className='rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
               />
             </div>
           </div>
-          {errors.endDates && <span className='text-xs text-red-600 mt-1'>{errors.endDates}</span>}
+          {errors.endDates && <span className='mt-1 text-xs text-red-600'>{errors.endDates}</span>}
         </div>
 
         {/* Buttons */}
         <div className='flex flex-col self-end'>
-          <div className='flex items-center gap-4 mt-6'>
-            <div className='flex flex-col w-full sm:w-1/2'>
+          <div className='mt-6 flex items-center gap-4'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <Button
                 className='w-full gap-2 px-6 py-5'
                 onClick={handleResetFilters}
@@ -281,7 +281,7 @@ export default function BidsFilter({ onApplyFilters }: BidsFilterProps) {
                 Reset Filters
               </Button>
             </div>
-            <div className='flex flex-col w-full sm:w-1/2'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <Button
                 className='w-full gap-2 px-6 py-5'
                 onClick={handleApplyFilters}
@@ -291,7 +291,7 @@ export default function BidsFilter({ onApplyFilters }: BidsFilterProps) {
               </Button>
             </div>
           </div>
-          {errors.endDates && <span className='text-xs text-red-600 mt-1'>{errors.endDates}</span>}
+          {errors.endDates && <span className='mt-1 text-xs text-red-600'>{errors.endDates}</span>}
         </div>
       </div>
     </div>

@@ -69,7 +69,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
           </Badge>
         </div>
       </CardContent>
-      <CardFooter className='flex-none w-full'>
+      <CardFooter className='w-full flex-none'>
         <div className='w-full'>
           <Button
             onClick={() => handleStatusClick(bid.status)}
@@ -79,7 +79,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
           >
             <Info /> {BidStatusInfoMapping.get(bid.status)}
           </Button>
-          <div className='mt-2 flex justify-between items-center w-full'>
+          <div className='mt-2 flex w-full items-center justify-between'>
             <Button
               size='xs'
               disabled={auction.status == AuctionStatus.IN_PROGRESS}

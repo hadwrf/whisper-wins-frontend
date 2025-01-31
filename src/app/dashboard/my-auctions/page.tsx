@@ -237,7 +237,7 @@ const MyAuctions = () => {
                       >
                         <Info /> {AuctionStatusMapping.get(auction.status)}
                       </Button>
-                      <div className='mt-2 flex justify-between items-center'>
+                      <div className='mt-2 flex items-center justify-between'>
                         <Button
                           size='xs'
                           disabled={auction.status == AuctionStatus.IN_PROGRESS}

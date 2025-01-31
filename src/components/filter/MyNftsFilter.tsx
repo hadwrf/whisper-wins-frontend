@@ -64,9 +64,9 @@ export default function MyNftsFilter({ onApplyFilters }: MyNftsFilterProps) {
   };
 
   return (
-    <div className='mx-auto rounded-lg text-sm mt-6'>
+    <div className='mx-auto mt-6 rounded-lg text-sm'>
       {/* First Row: Name & Price Filters */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
+      <div className='mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         {/* Name Filter */}
         <div className='flex flex-col lg:col-span-2'>
           <label className='text-sm font-medium text-gray-700'>NFT Name</label>
@@ -76,15 +76,15 @@ export default function MyNftsFilter({ onApplyFilters }: MyNftsFilterProps) {
             value={filters.name}
             onChange={handleChange}
             placeholder='Search by name'
-            className='mt-2 p-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800 focus:border-gray-500 transition-all'
+            className='mt-2 rounded-lg border border-gray-300 p-2 shadow-sm transition-all focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-gray-800'
           />
-          {errors.name && <span className='text-xs text-red-600 mt-1'>{errors.name}</span>}
+          {errors.name && <span className='mt-1 text-xs text-red-600'>{errors.name}</span>}
         </div>
 
         {/* Buttons */}
         <div className='flex flex-col self-end'>
-          <div className='flex items-center gap-4 mt-6'>
-            <div className='flex flex-col w-full sm:w-1/2'>
+          <div className='mt-6 flex items-center gap-4'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <Button
                 className='w-full gap-2 px-6 py-5'
                 onClick={handleResetFilters}
@@ -94,7 +94,7 @@ export default function MyNftsFilter({ onApplyFilters }: MyNftsFilterProps) {
                 Reset Filters
               </Button>
             </div>
-            <div className='flex flex-col w-full sm:w-1/2'>
+            <div className='flex w-full flex-col sm:w-1/2'>
               <Button
                 className='w-full gap-2 px-6 py-5'
                 onClick={handleApplyFilters}

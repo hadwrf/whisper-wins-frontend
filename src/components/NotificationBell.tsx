@@ -137,7 +137,7 @@ const NotificationBell = () => {
   if (!account) return null;
 
   return (
-    <div className='relative bg-gray-50 rounded-md mx-3'>
+    <div className='relative mx-3 rounded-md bg-gray-50'>
       {/* Bell Icon */}
       <button
         ref={bellRef}
@@ -146,9 +146,9 @@ const NotificationBell = () => {
           setIsOpen((prev) => !prev);
         }}
       >
-        <BellIcon className='h-6 w-6' />
+        <BellIcon className='size-6' />
         {unreadCount > 0 && (
-          <span className='absolute -top-[1px] -right-0 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center'>
+          <span className='absolute -right-0 -top-px flex size-4 items-center justify-center rounded-full bg-red-500 text-xs text-white'>
             {unreadCount}
           </span>
         )}
@@ -158,7 +158,7 @@ const NotificationBell = () => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className='absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50'
+          className='absolute right-0 z-50 mt-2 w-64 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5'
         >
           <div className='p-2'>
             {notifications.length === 0 ? (
@@ -167,8 +167,8 @@ const NotificationBell = () => {
               notifications.map((n) => (
                 <div
                   key={n.id}
-                  className={`p-2 rounded-md text-sm hover:bg-gray-100 ${
-                    n.read ? 'text-gray-500' : 'text-gray-900 font-medium'
+                  className={`rounded-md p-2 text-sm hover:bg-gray-100 ${
+                    n.read ? 'text-gray-500' : 'font-medium text-gray-900'
                   }`}
                 >
                   <p
