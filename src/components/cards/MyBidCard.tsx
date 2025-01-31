@@ -4,19 +4,13 @@ import MoreInfoButton from '@/components/MoreInfoButton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { getNft, Nft, NftRequest } from '@/lib/services/getUserNfts';
-import { AuctionStatus, Bid, BidStatus } from '@prisma/client';
-import { format } from 'date-fns';
-import { CalendarClock, CameraOff, Info } from 'lucide-react';
 import getAuctionEndTime from '@/lib/suave/getAuctionEndTime';
 import { Hex } from '@flashbots/suave-viem';
-import { Bid, BidStatus } from '@prisma/client';
+import { AuctionStatus, Bid, BidStatus } from '@prisma/client';
 import { CameraOff, Info } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import MoreInfoButton from '@/components/MoreInfoButton';
-import { Hex } from '@flashbots/suave-viem';
 import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 interface MyBidCardProps {
   bid: Bid;
@@ -65,7 +59,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
         )}
       </CardMedia>
       <CardContent className='h-fit overflow-hidden p-3'>
-        <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{nft?.name || 'No Name'}</p>
+        <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{nft?.name ?? 'No Name'}</p>
         <div className='mb-1 flex justify-between'>
           <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {bid.amount}</p>
           {auctionEndTime && (
@@ -96,7 +90,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
             </Button>
             <MoreInfoButton
               nftContractAddress={nft?.contract.address as Hex}
-              nftTokenId={nft?.tokenId || ''}
+              nftTokenId={nft?.tokenId ?? ''}
             />
           </div>
         </div>
