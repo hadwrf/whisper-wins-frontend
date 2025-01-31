@@ -7,7 +7,7 @@ import { randomBytes } from 'crypto';
 import { BrowserProvider, ethers, LogDescription } from 'ethers';
 import { getPublicClient, KETTLE_ADDRESS } from './client';
 
-async function retrieveBiddingAddress(contractAddress: string) {
+async function retrieveBiddingAddress(contractAddress: string): Promise<Address> {
   const { abi } = sealedAuction;
 
   await window.ethereum.request({
@@ -61,28 +61,33 @@ async function retrieveBiddingAddress(contractAddress: string) {
     })
     .filter(Boolean);
 
+  let biddingAddress: Address | undefined;
+
   decodedLogs.forEach((decoded: LogDescription | null) => {
     if (decoded !== null) {
       const { owner, encodedL1Address } = decoded.args;
       console.log('Owner:', owner);
       console.log('Encoded L1 Address:', encodedL1Address);
+      const encryptedBuffer = Buffer.from(encodedL1Address.replace(/^0x/, ''), 'hex');
+      console.log('encryptedBuffer L1 Address:', encryptedBuffer);
+      console.log('Buffer:', encryptedBuffer.toString('hex'));
 
       console.log('decodeSecretKey', secretKey.replace(/^0x/, ''));
       const keyBuffer = Buffer.from(secretKey.replace(/^0x/, ''), 'hex');
       console.log('Key Length:', keyBuffer.length); // Should print 32
 
       try {
-        const decryptedAddress = aesDecrypt(keyBuffer, encodedL1Address);
+        const decryptedAddress = aesDecrypt(keyBuffer, encryptedBuffer);
         console.log('Decrypted L1 Address:', decryptedAddress);
+        biddingAddress = `0x${decryptedAddress.toString('hex')}` as Address;
       } catch (e) {
         console.log('ex', e);
       }
     }
   });
 
-  const biddingAddress = decodedLogs[0]?.args.encodedL1Address;
   if (!biddingAddress) {
-    throw new Error("bidding address couldn't retrieved.");
+    throw new Error("Bidding address couldn't be retrieved.");
   }
   return biddingAddress;
 }

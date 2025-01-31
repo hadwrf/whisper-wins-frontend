@@ -1,40 +1,49 @@
 import crypto from 'crypto';
 
 /**
- * Decrypts AES-encrypted data.
- * @param {Buffer} key - The decryption key (32 bytes).
- * @param {Buffer} ciphertext - The encrypted data.
+ * Decrypts AES-256-GCM encrypted data.
+ *
+ * @param {Buffer} key - The 32-byte decryption key.
+ * @param {Buffer | string} ciphertext - The encrypted data.
+ * @param {BufferEncoding} [inputEncoding='base64'] - Encoding type if `ciphertext` is a string.
  * @returns {Buffer} - The decrypted plaintext.
  * @throws {Error} - If decryption fails or the ciphertext is invalid.
  */
-export function aesDecrypt(key: Buffer, ciphertext: Buffer): Buffer {
+export function aesDecrypt(key: Buffer, ciphertext: Buffer | string, inputEncoding: BufferEncoding = 'base64'): Buffer {
   if (key.length !== 32) {
-    throw new Error('Key must be 32 bytes long.');
+    throw new Error(`Invalid key length: expected 32 bytes, got ${key.length}`);
   }
 
-  // Define the nonce size for AES-GCM (standard is 12 bytes)
-  const nonceSize = 12;
+  // Convert ciphertext to Buffer if it is a string
+  const ciphertextBuffer = typeof ciphertext === 'string' ? Buffer.from(ciphertext, inputEncoding) : ciphertext;
 
-  if (ciphertext.length < nonceSize) {
-    throw new Error('Ciphertext too short.');
+  // Define nonce and tag sizes for AES-GCM
+  const nonceSize = 12; // Standard nonce size for AES-GCM
+  const tagSize = 16; // Standard authentication tag size
+
+  if (ciphertextBuffer.length < nonceSize + tagSize) {
+    throw new Error(
+      `Ciphertext too short: expected at least ${nonceSize + tagSize} bytes, got ${ciphertextBuffer.length}`,
+    );
   }
 
-  // Extract the nonce and the actual encrypted data
-  const nonce = ciphertext.subarray(0, nonceSize);
-  const encryptedData = ciphertext.subarray(nonceSize);
+  // Extract nonce, encrypted data, and authentication tag
+  const nonce = ciphertextBuffer.subarray(0, nonceSize);
+  const encryptedData = ciphertextBuffer.subarray(nonceSize, ciphertextBuffer.length - tagSize);
+  const tag = ciphertextBuffer.subarray(ciphertextBuffer.length - tagSize);
 
-  // Extract the authentication tag (last 16 bytes of the encrypted data)
-  const tag = encryptedData.subarray(encryptedData.length - 16);
-  const encryptedText = encryptedData.subarray(0, encryptedData.length - 16);
+  try {
+    // Create a decipher object using AES-256-GCM
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, nonce);
 
-  // Create a decipher object using AES-256-GCM
-  const decipher = crypto.createDecipheriv('aes-256-gcm', key, nonce);
+    // Set the authentication tag
+    decipher.setAuthTag(tag);
 
-  // Set the authentication tag on the decipher
-  decipher.setAuthTag(tag);
+    // Decrypt data
+    const decrypted = Buffer.concat([decipher.update(encryptedData), decipher.final()]);
 
-  // Decrypt the data
-  const decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
-
-  return decrypted;
+    return decrypted;
+  } catch (error) {
+    throw new Error(`Decryption failed: ${error}`);
+  }
 }
