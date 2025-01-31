@@ -61,7 +61,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
       .then(async (auctionAddress) => {
         await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId, startingBid);
         const nextStepsUrl = `/dashboard/auction-create-next-step?auctionAddress=${auctionAddress}`;
-        router.push(nextStepsUrl);
+        router.replace(nextStepsUrl);
       })
       .catch((e) => {
         console.log('createAuction error:', e);

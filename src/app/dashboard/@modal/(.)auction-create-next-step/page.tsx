@@ -10,10 +10,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
 
 const AuctionCreateNextStep = () => {
-  const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -22,8 +20,8 @@ const AuctionCreateNextStep = () => {
 
   return (
     <Dialog
-      open={isOpen}
-      onOpenChange={setIsOpen}
+      open={true}
+      onOpenChange={() => router.back()}
     >
       <DialogContent className='sm:max-w-[425px]'>
         <DialogHeader>
@@ -42,8 +40,7 @@ const AuctionCreateNextStep = () => {
             </Button>
             <Button
               onClick={() => {
-                setIsOpen(false);
-                router.push('/dashboard/my-auctions');
+                router.replace('/dashboard/my-auctions');
               }}
             >
               Go to My Auctions
