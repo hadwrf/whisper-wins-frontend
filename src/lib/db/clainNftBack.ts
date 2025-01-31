@@ -10,7 +10,7 @@ export default async function claimNftBack(params: ClaimNftBackParams) {
       contractAddress: params.auctionAddress,
     },
     data: {
-      status: 'ENDED',
+      status: 'RESOLVED',
       updatedAt: new Date(),
     },
   });
