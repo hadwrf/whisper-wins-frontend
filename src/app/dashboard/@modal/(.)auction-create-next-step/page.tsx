@@ -18,6 +18,13 @@ const AuctionCreateNextStep = () => {
 
   const auctionAddress = searchParams?.get('auctionAddress') || '';
 
+  const handleGoToMyAuctions = () => {
+    router.back(); // This ensures the modal is closed
+    setTimeout(() => {
+      router.replace('/dashboard/my-auctions'); // Navigate after modal closes
+    }, 100); // Small delay to allow state update
+  };
+
   return (
     <Dialog
       open={true}
@@ -38,13 +45,7 @@ const AuctionCreateNextStep = () => {
             >
               Show in Block Explorer
             </Button>
-            <Button
-              onClick={() => {
-                router.replace('/dashboard/my-auctions');
-              }}
-            >
-              Go to My Auctions
-            </Button>
+            <Button onClick={handleGoToMyAuctions}>Go to My Auctions</Button>
           </div>
         </DialogFooter>
       </DialogContent>
