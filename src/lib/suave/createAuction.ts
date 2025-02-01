@@ -5,7 +5,7 @@ import { type Hex, Address, custom } from '@flashbots/suave-viem';
 import { getPublicClient } from './client';
 import { sealedAuction } from '@/lib/abi';
 
-const ORACLE_ADDRESS: Address = '0x17fa7F77cA31dDB536A5e13f8167EFaD12B75cB6';
+const ORACLE_ADDRESS: Address = '0x9a8c1daa0e28e13ae6f754359082e370fdb7de18';
 
 async function createAuction(nftContractAddress: string, tokenId: string, biddingPrice: number) {
   const { abi, bytecode } = sealedAuction;

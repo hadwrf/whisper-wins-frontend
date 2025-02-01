@@ -2,6 +2,8 @@
 import AuctionsFilter, { Filters } from '@/components/filter/ExploreFilter';
 import { AuctionCards } from '@/components/cards/AuctionCards';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import deployOracle from '@/lib/suave/deployOracle';
 
 const Explore = () => {
   const [filters, setFilters] = useState({
@@ -21,28 +23,29 @@ const Explore = () => {
   };
 
   // Handle deploy oracle
-  // const handleDeployOracle = () => {
-  //   deployOracle()
-  //     .then(async (oracleAddress) => {
-  //       console.log('Oracle deployed at:', oracleAddress);
-  //     })
-  //     .catch((e) => {
-  //       console.log('createAuction error:', e);
-  //     });
-  // };
+  const handleDeployOracle = () => {
+    deployOracle()
+      .then(async (oracleAddress) => {
+        console.log('Oracle deployed at:', oracleAddress);
+        console.log('Change the static oracle address at: src/lib/suave/createAuction.ts');
+      })
+      .catch((e) => {
+        console.log('createAuction error:', e);
+      });
+  };
 
   return (
     <div className='p-4'>
       <div className='mx-auto max-w-5xl'>
         <AuctionsFilter onApplyFilters={handleFilters} />
         <div className='mt-10'>
-          {/*<Button*/}
-          {/*  size='lg'*/}
-          {/*  className='bg-gray-700 text-gray-100 transition-colors duration-300 hover:bg-gray-800'*/}
-          {/*  onClick={() => handleDeployOracle()}*/}
-          {/*>*/}
-          {/*  Deploy Oracle*/}
-          {/*</Button>*/}
+          <Button
+            size='lg'
+            className='bg-gray-700 text-gray-100 transition-colors duration-300 hover:bg-gray-800'
+            onClick={() => handleDeployOracle()}
+          >
+            Deploy Oracle
+          </Button>
           <AuctionCards filters={filters} />
         </div>
       </div>
