@@ -39,6 +39,10 @@ const PlaceBidModal = () => {
       });
   };
 
+  const handleCloseModal = () => {
+    router.back(); // This closes the modal by navigating back
+  };
+
   const createBidRecordInDb = async (auctionAddress: string, bidderAddress: string, amount: number) => {
     fetch('/api/bids', {
       method: 'POST',
@@ -97,7 +101,12 @@ const PlaceBidModal = () => {
               </div>
             </>
           )}
-          {biddingAddress && <BalanceDisplay biddingAddress={biddingAddress as Hex} />}
+          {biddingAddress && (
+            <BalanceDisplay
+              biddingAddress={biddingAddress as Hex}
+              onClose={handleCloseModal}
+            />
+          )}
         </div>
         <PlaceBidForm
           auctionAddress={auctionAddress}
