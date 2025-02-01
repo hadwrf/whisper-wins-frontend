@@ -13,17 +13,19 @@ import createAuction from '@/lib/suave/createAuction';
 import { Hex } from '@flashbots/suave-viem';
 import { useToast } from '@/hooks/use-toast';
 import { Spinner } from '@/components/Spinner';
+import { DateTimePicker } from '@/components/DateTimePicker';
 
 interface CreateAuctionFormProps {
   nftAddress: string;
   tokenId: string;
 }
 
-interface AuctionFormData {
+export interface AuctionFormData {
   seller: string;
   nftAddress: string;
   tokenId: string;
   startingBid: number;
+  endTime: Date;
 }
 
 export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProps) => {
@@ -32,13 +34,14 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
   const { toast } = useToast();
   const router = useRouter();
 
-  const form = useForm({
+  const form = useForm<AuctionFormData>({
     resolver: zodResolver(auctionFormSchema),
     defaultValues: {
-      seller: account || '',
-      nftAddress: nftAddress || '',
-      tokenId: tokenId || '',
+      seller: account ?? '',
+      nftAddress: nftAddress ?? '',
+      tokenId: tokenId ?? '',
       startingBid: 0,
+      endTime: new Date(),
     },
   });
 
@@ -49,17 +52,18 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
         nftAddress,
         tokenId,
         startingBid: 0,
+        endTime: new Date(),
       });
     }
   }, [account, nftAddress, tokenId, form]);
 
-  const onSubmit = async (data: AuctionFormData) => {
+  const onSubmit = async (auctionFormData: AuctionFormData) => {
     setLoading(true);
-    const { seller, nftAddress, tokenId, startingBid } = data;
+    console.log('Aucsiono', auctionFormData);
     // create auction call pops up the metamask window.
-    return createAuction(nftAddress, tokenId, startingBid)
+    return createAuction(auctionFormData)
       .then(async (auctionAddress) => {
-        await createAuctionRecordInDb(auctionAddress as Hex, seller, nftAddress, tokenId, startingBid);
+        await createAuctionRecordInDb(auctionAddress as Hex, auctionFormData);
         const nextStepsUrl = `/dashboard/auction-create-next-step?auctionAddress=${auctionAddress}`;
         router.replace(nextStepsUrl);
       })
@@ -75,27 +79,24 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
       });
   };
 
-  const createAuctionRecordInDb = async (
-    auctionAddress: string,
-    ownerAddress: string,
-    nftAddress: string,
-    tokenId: string,
-    minimumBid: number,
-  ) => {
+  const createAuctionRecordInDb = async (auctionAddress: string, auctionFormData: AuctionFormData) => {
+    const { seller, nftAddress, tokenId, startingBid } = auctionFormData;
     const response = await fetch('/api/createAuction', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         auctionAddress: auctionAddress,
-        ownerAddress: ownerAddress,
+        ownerAddress: seller,
         nftAddress: nftAddress,
         tokenId: tokenId,
-        minimumBid: minimumBid,
+        minimumBid: startingBid,
       }),
     });
     const result = await response.json();
     console.log('createAuctionRecordInDb result:', result);
   };
+
+  console.log(form.watch());
 
   return (
     <Form {...form}>
@@ -171,6 +172,20 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name='endTime'
+          render={({ field }) => (
+            <FormItem className='flex flex-col space-y-2'>
+              <FormLabel>End Time</FormLabel>
+              <FormControl>
+                <DateTimePicker {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className='flex items-center gap-2'>
           <Button
             type='submit'

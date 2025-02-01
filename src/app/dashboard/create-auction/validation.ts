@@ -19,4 +19,6 @@ export const auctionFormSchema = z.object({
     .string()
     .min(1, 'Starting bid is required')
     .regex(/^\d+(\.\d{1,18})?$/, 'Starting bid must be a valid number in ETH'),
+
+  endTime: z.date().min(new Date(), 'The end time should be in the future.'),
 });
