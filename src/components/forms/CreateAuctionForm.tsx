@@ -108,7 +108,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
           control={form.control}
           name='seller'
           render={() => (
-            <FormItem>
+            <FormItem className={'hidden'}>
               <FormLabel>Seller Address</FormLabel>
               <FormControl>
                 <Input
@@ -125,7 +125,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
           control={form.control}
           name='nftAddress'
           render={() => (
-            <FormItem>
+            <FormItem className={'hidden'}>
               <FormLabel>NFT Contract Address</FormLabel>
               <FormControl>
                 <Input
@@ -142,7 +142,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
           control={form.control}
           name='tokenId'
           render={() => (
-            <FormItem>
+            <FormItem className={'hidden'}>
               <FormLabel>NFT Token ID</FormLabel>
               <FormControl>
                 <Input

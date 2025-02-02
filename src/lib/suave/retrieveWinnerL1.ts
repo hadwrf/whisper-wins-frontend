@@ -1,17 +1,17 @@
 import { Address } from '@flashbots/suave-viem';
 import { getPublicClient } from './client';
-import sealedAuction from '@/lib/abi/SealedAuctionv2.json';
+import { sealedAuction } from '@/lib/abi';
 
-async function retrieveWinner(contractAddress: string): Promise<string> {
+async function retrieveWinnerL1(contractAddress: string): Promise<string> {
   const { abi } = sealedAuction;
 
   const winnerAddress = (await getPublicClient().readContract({
     address: contractAddress as Address,
     abi: abi,
-    functionName: 'winner',
+    functionName: 'auctionWinnerL1',
   })) as string;
 
   return winnerAddress;
 }
 
-export default retrieveWinner;
+export default retrieveWinnerL1;

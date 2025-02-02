@@ -27,6 +27,7 @@ import { Hex } from '@flashbots/suave-viem';
 import { useRouter } from 'next/navigation';
 import MyAuctionsFilter, { Filters } from '@/components/filter/MyAuctionsFilter';
 import { AuctionCardData, getMyAuctionCardData } from '@/lib/services/getAuctionCardData';
+import endAuction from '@/lib/suave/endAuction';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -60,13 +61,26 @@ const MyAuctions = () => {
             title: 'Failed to transfer NFT!',
           });
         });
-    } else {
+      return;
+    }
+    if (auction.status === AuctionStatus.START_PENDING) {
       await startAuction(auction.contractAddress);
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.IN_PROGRESS);
       toast({
         title: 'Your auction is live!',
       });
       updateAuctionList(AuctionStatus.IN_PROGRESS, auction.contractAddress);
+      return;
+    }
+    if (auction.status === AuctionStatus.TIME_ENDED) {
+      console.log('endAuction in card clicked', auction.contractAddress);
+      await endAuction(auction.contractAddress);
+      await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED);
+      toast({
+        title: 'Auction is resolved!',
+      });
+      updateAuctionList(AuctionStatus.RESOLVED, auction.contractAddress);
+      return;
     }
   };
 

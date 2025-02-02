@@ -4,7 +4,8 @@ export const AuctionStatusMapping = new Map<AuctionStatus, string>()
   .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 'Transfer Address Pending')
   .set(AuctionStatus.NFT_TRANSFER_PENDING, 'NFT Transfer Pending')
   .set(AuctionStatus.IN_PROGRESS, 'In Progress')
-  .set(AuctionStatus.START_PENDING, 'Start Pending');
+  .set(AuctionStatus.START_PENDING, 'Start Pending')
+  .set(AuctionStatus.TIME_ENDED, 'Time Ended');
 
 export const AuctionStatusInfoMapping = new Map<AuctionStatus, string>()
   .set(
@@ -20,8 +21,9 @@ export const AuctionStatusInfoMapping = new Map<AuctionStatus, string>()
 export const AuctionStatusActionMapping = new Map<AuctionStatus, string>()
   .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 'Get Address')
   .set(AuctionStatus.NFT_TRANSFER_PENDING, 'Transfer NFT')
-  .set(AuctionStatus.IN_PROGRESS, 'Resolve')
-  .set(AuctionStatus.START_PENDING, 'Start Auction');
+  .set(AuctionStatus.IN_PROGRESS, 'In Progress')
+  .set(AuctionStatus.START_PENDING, 'Start Auction')
+  .set(AuctionStatus.TIME_ENDED, 'Resolve');
 
 export const AuctionStatusStepMapping = new Map<AuctionStatus, number>()
   .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 2)
