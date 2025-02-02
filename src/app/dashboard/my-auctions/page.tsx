@@ -19,7 +19,6 @@ import { TransferDialog } from '@/components/TransferDialog';
 import setupAuction from '@/lib/suave/setupAuction';
 import readNftHoldingAddress from '@/lib/suave/readNftHoldingAddress';
 import claim from '@/lib/suave/claim';
-import moveNFTDebug from '@/lib/suave/moveNFTDebug';
 import {
   AuctionStatusActionMapping,
   AuctionStatusFromValue,
@@ -268,10 +267,10 @@ const MyAuctions = () => {
     }
   }, [auctionsFetched]);
 
-  const handleNftBack = (contractAddress: string) => {
-    console.log('handleNftBack', contractAddress, account);
-    moveNFTDebug(contractAddress, account as string);
-  };
+  // const handleNftBack = (contractAddress: string) => {
+  //   console.log('handleNftBack', contractAddress, account);
+  //   moveNFTDebug(contractAddress, account as string);
+  // };
 
   if (!account) return <LoginToContinue />;
 
@@ -287,7 +286,7 @@ const MyAuctions = () => {
               <div key={`${auction.nft.contract.address}-${auction.nft.tokenId}`}>
                 <Card className='w-60'>
                   <CardMedia>
-                    <Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>
+                    {/*<Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>*/}
                     {auction.nft.image.originalUrl ? (
                       <Image
                         className='m-auto size-full rounded-lg'
