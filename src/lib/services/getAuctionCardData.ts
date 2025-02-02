@@ -25,6 +25,8 @@ export const getAuctionCardData = async (account: string): Promise<AuctionCardDa
 
     const auctions: Auction[] = await response.json();
 
+    console.log('biddable auctions', auctions);
+
     // Fetch minimum bid and NFT data for each auction
     const auctionCardData: AuctionCardData[] = (
       await Promise.all(

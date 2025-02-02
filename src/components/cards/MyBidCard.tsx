@@ -11,6 +11,10 @@ import { CameraOff, Info } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import retrieveWinnerSuave from '@/lib/suave/retrieveWinnerSuave';
+import { useToast } from '@/hooks/use-toast';
+import claim from '@/lib/suave/claim';
+import endAuction from '@/lib/suave/endAuction';
 
 interface MyBidCardProps {
   bid: Bid;
@@ -20,6 +24,8 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   const { push } = useRouter();
   const [nft, setNft] = useState<Nft | null>(null);
   const [auctionEndTime, setAuctionEndTime] = useState<Date | null>(null);
+  const [isWinner, setIsWinner] = useState(false);
+  const { toast } = useToast();
 
   // Some prisma issues with included properties: https://stackoverflow.com/a/71445155
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -32,15 +38,88 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       tokenId: auction.tokenId,
     };
 
-    Promise.all([getAuctionEndTime(auction.contractAddress), getNft(nftRequest)]).then(([endTime, nft]) => {
+    Promise.all([
+      getAuctionEndTime(auction.contractAddress),
+      getNft(nftRequest),
+      retrieveWinnerSuave(auction.contractAddress),
+    ]).then(([endTime, nft, winnerAddress]) => {
       setAuctionEndTime(endTime);
       setNft(nft);
+      setIsWinner(winnerAddress === bid.bidderAddress);
     });
   }, [auction.nftAddress, auction.tokenId]);
 
   const handleStatusClick = (bidStatus: BidStatus) => {
     const step = BidStatusStepMapping.get(bidStatus);
     push(`/dashboard/bid-steps?currentStep=${step}`);
+  };
+
+  function getBidStatus() {
+    if (auction.status == AuctionStatus.RESOLVED) {
+      if (!bid.resultClaimed) {
+        if (isWinner) {
+          return 'Claim NFT';
+        } else {
+          return 'Claim Bid';
+        }
+      }
+      return 'Completed';
+    }
+    return 'In Progress';
+  }
+
+  function getActionWording() {
+    if (auction.status == AuctionStatus.RESOLVED) {
+      if (!bid.resultClaimed) {
+        if (isWinner) {
+          return 'Claim NFT';
+        } else {
+          return 'Claim Bid';
+        }
+      }
+      return 'Completed';
+    }
+    return 'In Progress';
+  }
+
+  const updateAuctionRecordInDb = async (auctionAddress: string, status?: string, resultClaimed?: boolean) => {
+    const requestBody = JSON.stringify({
+      contractAddress: auctionAddress,
+      status: status,
+      resultClaimed: resultClaimed,
+    });
+    console.log('updateAuctionRecordInDb requestBody:', requestBody);
+    const response = await fetch('/api/updateAuctionContract', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: requestBody,
+    });
+    const result = await response.json();
+    console.log('updateAuctionRecordInDb result', result);
+  };
+
+  const handleActionButtonClick = () => {
+    if (auction.status == AuctionStatus.RESOLVED) {
+      claim(auction.contractAddress)
+        .then(async () => {
+          await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED, true);
+          toast({
+            title: 'Claimed!',
+          });
+        })
+        .catch(() => {
+          toast({
+            title: 'Failed to claim!',
+          });
+        });
+    } else {
+      endAuction(auction.contractAddress).then(async () => {
+        await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED, false);
+        toast({
+          title: 'Auction resolved!',
+        });
+      });
+    }
   };
 
   return (
@@ -78,15 +157,15 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
             variant='outline'
             className={`${BidStatusBackgroundColor.get(bid.status)} font-bold text-white`}
           >
-            <Info /> {BidStatusInfoMapping.get(bid.status)}
+            <Info /> {getBidStatus()}
           </Button>
           <div className='mt-2 flex w-full items-center justify-between'>
             <Button
               size='xs'
               disabled={auction.status == AuctionStatus.IN_PROGRESS}
-              // onClick={() => handleButtonClick(item.nft, item.auction)}
+              onClick={() => handleActionButtonClick()}
             >
-              {BidStatusActionMapping.get(bid.status)}
+              {getActionWording()}
             </Button>
             <MoreInfoButton
               nftContractAddress={nft?.contract.address as Hex}
