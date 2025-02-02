@@ -19,6 +19,7 @@ import { TransferDialog } from '@/components/TransferDialog';
 import setupAuction from '@/lib/suave/setupAuction';
 import readNftHoldingAddress from '@/lib/suave/readNftHoldingAddress';
 import claim from '@/lib/suave/claim';
+import { printInfo } from '@/lib/suave/printInfo';
 import {
   AuctionStatusActionMapping,
   AuctionStatusFromValue,
@@ -285,7 +286,7 @@ const MyAuctions = () => {
             {filteredAndSortedAuctions.map((auction) => (
               <div key={`${auction.nft.contract.address}-${auction.nft.tokenId}`}>
                 <Card className='w-60'>
-                  <CardMedia>
+                  <CardMedia onClick={() => printInfo(auction.contractAddress)}>
                     {/*<Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>*/}
                     {auction.nft.image.originalUrl ? (
                       <Image
