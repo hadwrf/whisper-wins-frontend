@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { LoginToContinue } from '@/components/LoginToContinue';
 import React, { useEffect, useState } from 'react';
 
-import { AuctionStatus } from '@prisma/client';
+import { Auction, AuctionStatus } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { useAuthContext } from '@/context/AuthContext';
@@ -18,6 +18,8 @@ import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
 import { TransferDialog } from '@/components/TransferDialog';
 import setupAuction from '@/lib/suave/setupAuction';
 import readNftHoldingAddress from '@/lib/suave/readNftHoldingAddress';
+import claim from '@/lib/suave/claim';
+import moveNFTDebug from '@/lib/suave/moveNFTDebug';
 import {
   AuctionStatusActionMapping,
   AuctionStatusFromValue,
@@ -110,11 +112,25 @@ const MyAuctions = () => {
       updateAuctionList(AuctionStatus.RESOLVED, auction.contractAddress);
       return;
     }
+    if (auction.status === AuctionStatus.RESOLVED) {
+      if (!auction.resultClaimed) {
+        claim(auction.contractAddress).then(async () => {
+          await updateAuctionRecordInDb(auction.contractAddress, undefined, undefined, true);
+          toast({
+            title: 'Claimed successfully!',
+          });
+        });
+        return;
+      } else {
+        toast({
+          title: 'Claimed already!',
+        });
+      }
+    }
   };
 
-  const handleStatusClick = (auctionStatus: AuctionStatus) => {
-    const step = AuctionStatusStepMapping.get(auctionStatus);
-
+  const handleStatusClick = (auction: Auction) => {
+    const step = auction.resultClaimed ? 7 : AuctionStatusStepMapping.get(auction.status);
     push(`/dashboard/auction-steps?currentStep=${step}`);
   };
 
@@ -197,11 +213,17 @@ const MyAuctions = () => {
   const filteredAuctions = filterAuctions();
   const filteredAndSortedAuctions = sortAuctions(filteredAuctions);
 
-  const updateAuctionRecordInDb = async (auctionAddress: string, status: string, nftTransferAddress?: string) => {
+  const updateAuctionRecordInDb = async (
+    auctionAddress: string,
+    status?: string,
+    nftTransferAddress?: string,
+    resultClaimed?: boolean,
+  ) => {
     const requestBody = JSON.stringify({
       contractAddress: auctionAddress,
       status: status,
       nftTransferAddress: nftTransferAddress,
+      resultClaimed: resultClaimed,
     });
     console.log('updateAuctionRecordInDb requestBody:', requestBody);
     const response = await fetch('/api/updateAuctionContract', {
@@ -246,6 +268,11 @@ const MyAuctions = () => {
     }
   }, [auctionsFetched]);
 
+  const handleNftBack = (contractAddress: string) => {
+    console.log('handleNftBack', contractAddress, account);
+    moveNFTDebug(contractAddress, account as string);
+  };
+
   if (!account) return <LoginToContinue />;
 
   return (
@@ -260,6 +287,7 @@ const MyAuctions = () => {
               <div key={`${auction.nft.contract.address}-${auction.nft.tokenId}`}>
                 <Card className='w-60'>
                   <CardMedia>
+                    <Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>
                     {auction.nft.image.originalUrl ? (
                       <Image
                         className='m-auto size-full rounded-lg'
@@ -278,12 +306,15 @@ const MyAuctions = () => {
                   <CardFooter className='flex-none'>
                     <div className='w-full'>
                       <Button
-                        onClick={() => handleStatusClick(auction.status)}
+                        onClick={() => handleStatusClick(auction)}
                         size='xs'
                         variant='outline'
                         className={`${AuctionStatusBackgroundColor.get(auction.status)} font-bold text-white`}
                       >
-                        <Info /> {AuctionStatusMapping.get(auction.status)}
+                        <Info />
+                        {auction.status == AuctionStatus.RESOLVED && auction.resultClaimed
+                          ? 'Completed'
+                          : AuctionStatusMapping.get(auction.status)}
                       </Button>
                       <div className='mt-2 flex items-center justify-between'>
                         <Button

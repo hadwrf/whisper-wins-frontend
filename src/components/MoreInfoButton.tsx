@@ -23,7 +23,7 @@ const MoreInfoButton: React.FC<MoreInfoProps> = ({ nftContractAddress, nftTokenI
       size='xs'
       variant='outline'
     >
-      <Info /> More Info
+      <Info /> NFT Info
     </Button>
   );
 };

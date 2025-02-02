@@ -37,6 +37,7 @@ model Bid {
   amount         Float     @map("amount")
   l1Address      String    @map("l1_address")
   auction        Auction   @relation(fields: [auctionAddress], references: [contractAddress])
+  resultClaimed Boolean    @default(false) @map("result_claimed")
 
   @@map("bids")
 }

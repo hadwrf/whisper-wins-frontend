@@ -1,5 +1,4 @@
 import { getNft } from '@/lib/services/getUserNfts';
-import retrieveWinnerL1 from '@/lib/suave/retrieveWinnerL1';
 import retrieveWinnerSuave from '@/lib/suave/retrieveWinnerSuave';
 import { prismaEdge } from '@/prisma/edge';
 import { NotificationType, ParticipantType } from '@prisma/client';
@@ -10,20 +9,18 @@ export async function GET() {
     // Find auctions where the end time has passed and winner address is null
     const endedAuctions = await prismaEdge.auction.findMany({
       where: {
-        status: 'TIME_ENDED',
+        status: 'RESOLVED',
         winnerAddres: null, // Winner address is not set
       },
     });
 
     for (const auction of endedAuctions) {
       // Fetch winner address from the contract
-      const winnerAddress = await retrieveWinnerL1(auction.contractAddress);
       const winnerAddressSuave = await retrieveWinnerSuave(auction.contractAddress);
 
-      console.log('winnerL1', winnerAddress);
       console.log('winnerAddressSuave', winnerAddressSuave);
 
-      if (winnerAddress) {
+      if (winnerAddressSuave) {
         // Fetch NFT metadata
         const nftMetadata = await getNft({
           contractAddress: auction.nftAddress,
@@ -39,7 +36,7 @@ export async function GET() {
 
         // Create notifications for bidders
         const bidderNotifications = bids.map((bid) => ({
-          type: bid.bidderAddress === winnerAddress ? NotificationType.AUCTION_WON : NotificationType.AUCTION_LOST,
+          type: bid.bidderAddress === winnerAddressSuave ? NotificationType.AUCTION_WON : NotificationType.AUCTION_LOST,
           auctionAddress: auction.contractAddress,
           userAddress: bid.bidderAddress,
           userType: ParticipantType.BIDDER,
@@ -71,10 +68,9 @@ export async function GET() {
           await prismaEdge.notification.createMany({ data: allNotifications });
         }
 
-        // Update the auction status to TIME_ENDED and set the winner address
         await prismaEdge.auction.update({
           where: { contractAddress: auction.contractAddress },
-          data: { status: 'RESOLVED' },
+          data: { status: 'RESOLVED', winnerAddres: winnerAddressSuave },
         });
       }
     }

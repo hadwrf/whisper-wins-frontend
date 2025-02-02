@@ -6,7 +6,7 @@ import { AuctionFormData } from '@/components/forms/CreateAuctionForm';
 import { getPublicClient } from './client';
 import { sealedAuction } from '@/lib/abi';
 
-const ORACLE_ADDRESS: Address = '0x3475084e107e9c2954a2451a1350b861ffc0de04';
+const ORACLE_ADDRESS: Address = '0x4067f49f752b33CB66Aa4F12a66477D148426B2f';
 
 async function createAuction(auctionFormData: AuctionFormData) {
   const { abi, bytecode } = sealedAuction;
@@ -30,7 +30,6 @@ async function createAuction(auctionFormData: AuctionFormData) {
   // Convert JS Date object to Unix timestamp (seconds)
   const auctionEndTimeUnixTimestamp = Math.floor(endTime.getTime() / 1000);
 
-  // TODO CHECK THE DIFFERENCES BETWEEN V2 AND V4
   const hash = await wallet.deployContract({
     abi,
     account: signer.address as Address,
