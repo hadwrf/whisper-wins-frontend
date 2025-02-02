@@ -16,6 +16,8 @@ import { transferNftToAddress, waitForNftTransferReceipt } from '@/lib/ethereum/
 import { useToast } from '@/hooks/use-toast';
 import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
 import { TransferDialog } from '@/components/TransferDialog';
+import setupAuction from '@/lib/suave/setupAuction';
+import readNftHoldingAddress from '@/lib/suave/readNftHoldingAddress';
 import {
   AuctionStatusActionMapping,
   AuctionStatusFromValue,
@@ -41,7 +43,8 @@ const MyAuctions = () => {
 
   const handleButtonClick = async (auction: AuctionCardData) => {
     if (auction.status === AuctionStatus.NFT_TRANSFER_PENDING) {
-      transferNftToAddress(auction.nft.contract.address, auction.nft.tokenId)
+      const nftHoldingAddress = await readNftHoldingAddress(auction.contractAddress);
+      transferNftToAddress(auction.nft.contract.address, auction.nft.tokenId, nftHoldingAddress)
         .then((transactionHash) => {
           console.log('setTransferTokenDialogOpen', true);
           setTransferTokenDialogOpen(true);
@@ -61,6 +64,31 @@ const MyAuctions = () => {
             title: 'Failed to transfer NFT!',
           });
         });
+      return;
+    }
+    if (auction.status === AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING) {
+      setupAuction(auction.contractAddress)
+        .then(async () => {
+          const nftHoldingAddress = await readNftHoldingAddress(auction.contractAddress);
+          console.log('nftHoldingAddress:', nftHoldingAddress);
+          if (!nftHoldingAddress) {
+            toast({
+              title: 'NFT transfer address not found!',
+            });
+            return;
+          }
+          await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.NFT_TRANSFER_PENDING, nftHoldingAddress);
+          toast({
+            title: 'Auction setup successful!',
+          });
+          updateAuctionList(AuctionStatus.NFT_TRANSFER_PENDING, auction.contractAddress);
+        })
+        .catch(() => {
+          toast({
+            title: 'Auction setup failed!',
+          });
+        });
+
       return;
     }
     if (auction.status === AuctionStatus.START_PENDING) {
@@ -169,14 +197,17 @@ const MyAuctions = () => {
   const filteredAuctions = filterAuctions();
   const filteredAndSortedAuctions = sortAuctions(filteredAuctions);
 
-  const updateAuctionRecordInDb = async (auctionAddress: string, status: string) => {
-    const response = await fetch('/api/transferNftToContract', {
-      method: 'POST',
+  const updateAuctionRecordInDb = async (auctionAddress: string, status: string, nftTransferAddress?: string) => {
+    const requestBody = JSON.stringify({
+      contractAddress: auctionAddress,
+      status: status,
+      nftTransferAddress: nftTransferAddress,
+    });
+    console.log('updateAuctionRecordInDb requestBody:', requestBody);
+    const response = await fetch('/api/updateAuctionContract', {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        auctionAddress: auctionAddress,
-        status: status,
-      }),
+      body: requestBody,
     });
     const result = await response.json();
     console.log(result);
