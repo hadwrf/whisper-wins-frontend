@@ -36,17 +36,13 @@ async function endAuction(contractAddress: string) {
     'Transaction Request:',
     JSON.stringify(ccr, (key, value) => (typeof value === 'bigint' ? value.toString() : value), 2),
   );
+  const ccrHash = await wallet.sendTransaction(ccr);
+  const receipts = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
 
-  wallet
-    .sendTransaction(ccr)
-    .then(async (ccrHash) => {
-      const receipts = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
-      console.log('receipt', receipts);
-      console.log('endAuction executed!');
-    })
-    .catch((e) => {
-      console.log('endAuction call error: ', e);
-    });
+  if (!receipts) {
+    throw new Error('end auction transaction failed');
+  }
+  return true;
 }
 
 export default endAuction;

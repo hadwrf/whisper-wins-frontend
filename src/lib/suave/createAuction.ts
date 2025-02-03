@@ -6,7 +6,7 @@ import { AuctionFormData } from '@/components/forms/CreateAuctionForm';
 import { getPublicClient } from './client';
 import { sealedAuction } from '@/lib/abi';
 
-const ORACLE_ADDRESS: Address = '0x4067f49f752b33CB66Aa4F12a66477D148426B2f';
+const ORACLE_ADDRESS: Address = '0x5a5a71d5fef5fdd82ee39bc4c4fdf4b1eb9a3e19';
 
 async function createAuction(auctionFormData: AuctionFormData) {
   const { abi, bytecode } = sealedAuction;

@@ -6,7 +6,7 @@ import { BrowserProvider } from 'ethers';
 import { Hex } from 'viem';
 import { KETTLE_ADDRESS } from './client';
 
-const ORACLE_ADDRESS: Address = '0x3475084e107e9c2954a2451a1350b861ffc0de04';
+const ORACLE_ADDRESS: Address = '0x5a5a71d5fef5fdd82ee39bc4c4fdf4b1eb9a3e19';
 
 async function registerApiKeyOffchain() {
   const { abi } = oracle;

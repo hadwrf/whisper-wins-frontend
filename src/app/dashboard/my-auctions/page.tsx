@@ -104,12 +104,14 @@ const MyAuctions = () => {
     }
     if (auction.status === AuctionStatus.TIME_ENDED) {
       console.log('endAuction in card clicked', auction.contractAddress);
-      await endAuction(auction.contractAddress);
-      await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED);
-      toast({
-        title: 'Auction is resolved!',
+      endAuction(auction.contractAddress).then(async () => {
+        console.log('endAuction call complete. Now the auction status will be updated in the db');
+        await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED);
+        toast({
+          title: 'Auction is resolved!',
+        });
+        updateAuctionList(AuctionStatus.RESOLVED, auction.contractAddress);
       });
-      updateAuctionList(AuctionStatus.RESOLVED, auction.contractAddress);
       return;
     }
     if (auction.status === AuctionStatus.RESOLVED) {

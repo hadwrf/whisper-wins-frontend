@@ -39,8 +39,7 @@ async function startAuction(contractAddress: string) {
     type: SuaveTxRequestTypes.ConfidentialRequest,
     data: encodeFunctionData({
       abi: abi,
-      // todo WHY TEST?
-      functionName: 'startAuctionTest',
+      functionName: 'startAuction',
     }),
     kettleAddress: KETTLE_ADDRESS,
   };
