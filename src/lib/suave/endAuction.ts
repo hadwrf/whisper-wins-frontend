@@ -22,8 +22,7 @@ async function endAuction(contractAddress: string) {
   console.log('gas price', gasPrice);
   const ccr: TransactionRequestSuave = {
     to: contractAddress as Hex,
-    gasPrice: gasPrice,
-    gas: BigInt(10000000),
+    gasPrice: gasPrice * BigInt(10000),
     type: SuaveTxRequestTypes.ConfidentialRequest,
     data: encodeFunctionData({
       abi: abi,
@@ -37,6 +36,13 @@ async function endAuction(contractAddress: string) {
     JSON.stringify(ccr, (key, value) => (typeof value === 'bigint' ? value.toString() : value), 2),
   );
   const ccrHash = await wallet.sendTransaction(ccr);
+  // getPublicClient().simulateContract({
+  //   account: signer.getAddress(),
+  //   address: contractAddress as Hex,
+  //   abi: abi,
+  //   functionName: 'endAuction',
+  // });
+  console.log('ccrHash', ccrHash);
   const receipts = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
 
   if (!receipts) {

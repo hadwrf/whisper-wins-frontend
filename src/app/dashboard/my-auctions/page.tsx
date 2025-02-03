@@ -32,6 +32,7 @@ import { useRouter } from 'next/navigation';
 import MyAuctionsFilter, { Filters } from '@/components/filter/MyAuctionsFilter';
 import { AuctionCardData, getMyAuctionCardData } from '@/lib/services/getAuctionCardData';
 import endAuction from '@/lib/suave/endAuction';
+import moveNFTDebug from '@/lib/suave/moveNFTDebug';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -270,10 +271,10 @@ const MyAuctions = () => {
     }
   }, [auctionsFetched]);
 
-  // const handleNftBack = (contractAddress: string) => {
-  //   console.log('handleNftBack', contractAddress, account);
-  //   moveNFTDebug(contractAddress, account as string);
-  // };
+  const handleNftBack = (contractAddress: string) => {
+    console.log('handleNftBack', contractAddress, account);
+    moveNFTDebug(contractAddress, account as string);
+  };
 
   if (!account) return <LoginToContinue />;
 
@@ -288,8 +289,9 @@ const MyAuctions = () => {
             {filteredAndSortedAuctions.map((auction) => (
               <div key={`${auction.nft.contract.address}-${auction.nft.tokenId}`}>
                 <Card className='w-60'>
-                  <CardMedia onClick={() => printInfo(auction.contractAddress)}>
-                    {/*<Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>*/}
+                  <CardMedia>
+                    <Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>
+                    <Button onClick={() => printInfo(auction.contractAddress)}>Print Info</Button>
                     {auction.nft.image.originalUrl ? (
                       <Image
                         className='m-auto size-full rounded-lg'
