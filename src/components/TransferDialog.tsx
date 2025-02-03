@@ -33,7 +33,7 @@ export function TransferDialog({ open, onOpenChange }: TransferDialogProps) {
           <div className='flex flex-col items-center gap-2 text-center'>
             <h2 className='text-4xl font-bold tracking-tight'>Your transfer is processing...</h2>
             <p className='text-lg text-muted-foreground'>
-              Your NFT transfer of is processing. It should be confirmed on the blockchain shortly.
+              Your NFT transfer is processing. It should be confirmed on the blockchain shortly.
             </p>
           </div>
         </div>

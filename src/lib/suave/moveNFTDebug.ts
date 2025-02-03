@@ -3,7 +3,7 @@ import { Address, custom, encodeFunctionData, type Hex } from '@flashbots/suave-
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
 import { BrowserProvider } from 'ethers';
-import { KETTLE_ADDRESS } from './client';
+import { getPublicClient, KETTLE_ADDRESS } from './client';
 
 async function moveNFTDebug(contractAddress: string, to: string) {
   const { abi } = sealedAuction;
@@ -32,6 +32,13 @@ async function moveNFTDebug(contractAddress: string, to: string) {
 
   const ccrHash = await wallet.sendTransaction(ccr);
   console.log('ccrHash', ccrHash);
+
+  const receipt = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
+  if (!receipt) {
+    throw new Error('Move nft failed');
+  }
+  console.log('Move success');
+  return true;
 }
 
 export default moveNFTDebug;

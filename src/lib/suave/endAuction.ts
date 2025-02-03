@@ -22,7 +22,8 @@ async function endAuction(contractAddress: string) {
   console.log('gas price', gasPrice);
   const ccr: TransactionRequestSuave = {
     to: contractAddress as Hex,
-    gasPrice: gasPrice * BigInt(10000),
+    gasPrice: BigInt(10000000000),
+    gas: BigInt(10000000),
     type: SuaveTxRequestTypes.ConfidentialRequest,
     data: encodeFunctionData({
       abi: abi,
