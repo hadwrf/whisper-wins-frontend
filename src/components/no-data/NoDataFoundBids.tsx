@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export const NoDataFoundBids = () => {
   return (
-    <div className='mx-auto max-w-5xl pt-20'>
+    <div className='mx-auto max-w-5xl'>
       <div className='m-auto grid grid-cols-1 place-items-center justify-center space-y-20'>
         <Image
           src='/searching.svg'
