@@ -35,7 +35,7 @@ const BidStatusStepper: React.FC<BidStatusStepperProps> = ({ currentStep }) => {
         return (
           <li
             key={stepNumber}
-            className={`relative flex-1 ${isCompleted ? 'after:bg-blue-500' : 'after:bg-gray-200'} after:h-full after:w-0.5 ${stepNumber != steps.length ? 'after:inline-block' : 'after:hidden'} after:absolute after:-bottom-10 after:left-4 lg:after:left-5`}
+            className={`relative flex-1 ${isCompleted ? 'after:bg-blue-500' : 'after:bg-gray-200'} after:h-full after:w-0.5 ${stepNumber != 3 ? 'after:inline-block' : 'after:hidden'} after:absolute after:-bottom-10 after:left-4 lg:after:left-5`}
           >
             <a className='flex w-full items-start space-y-2'>
               <span

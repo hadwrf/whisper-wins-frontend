@@ -32,6 +32,7 @@ import { useRouter } from 'next/navigation';
 import MyAuctionsFilter, { Filters } from '@/components/filter/MyAuctionsFilter';
 import { AuctionCardData, getMyAuctionCardData } from '@/lib/services/getAuctionCardData';
 import endAuction from '@/lib/suave/endAuction';
+import { CountdownTimer } from '@/components/CountdownTimer';
 
 const MyAuctions = () => {
   const { account } = useAuthContext();
@@ -268,10 +269,11 @@ const MyAuctions = () => {
     }
   }, [auctionsFetched]);
 
-  // const handleNftBack = (contractAddress: string) => {
-  //   console.log('handleNftBack', contractAddress, account);
-  //   moveNFTDebug(contractAddress, account as string);
-  // };
+  //const handleNftBack = (contractAddress: string) => {
+  //  console.log('handleNftBack', contractAddress, account);
+  //moveNFTDebug(contractAddress, account as string);
+  //  getPrivateKey(contractAddress);
+  //};
 
   if (!account) return <LoginToContinue />;
 
@@ -302,6 +304,17 @@ const MyAuctions = () => {
                   </CardMedia>
                   <CardContent className='h-fit overflow-hidden p-3'>
                     <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{auction.nft.name}</p>
+                    <div className='mb-1 flex justify-between'>
+                      {auction.status == AuctionStatus.RESOLVED && (
+                        <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {0.2}</p>
+                      )}
+                      {auction.endsAt && (
+                        <CountdownTimer
+                          startTime={auction.createdAt}
+                          auctionEndTime={auction.endsAt}
+                        />
+                      )}
+                    </div>
                   </CardContent>
                   <CardFooter className='flex-none'>
                     <div className='w-full'>
@@ -319,7 +332,7 @@ const MyAuctions = () => {
                       <div className='mt-2 flex items-center justify-between'>
                         <Button
                           size='xs'
-                          disabled={auction.status == AuctionStatus.IN_PROGRESS}
+                          disabled={auction.status == AuctionStatus.IN_PROGRESS || auction.resultClaimed}
                           onClick={() => handleButtonClick(auction)}
                         >
                           {AuctionStatusActionMapping.get(auction.status)}
