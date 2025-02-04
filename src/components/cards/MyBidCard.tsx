@@ -22,8 +22,14 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   const { push } = useRouter();
   const { toast } = useToast();
 
-  const handleStatusClick = (bidStatus: BidStatus) => {
-    const step = BidStatusStepMapping.get(bidStatus);
+  const handleStatusClick = (bid: BidCardData) => {
+    let step = BidStatusStepMapping.get(bid.status);
+    if (bid.auction.status == AuctionStatus.RESOLVED) {
+      step = 3;
+    }
+    if (bid.resultClaimed) {
+      step = 4;
+    }
     push(`/dashboard/bid-steps?currentStep=${step}`);
   };
 
@@ -38,7 +44,11 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       }
       return 'Completed';
     }
-    return 'In Progress';
+    if (bid.auction.status == AuctionStatus.TIME_ENDED) {
+      return 'Time Ended';
+    } else {
+      return 'In Progress';
+    }
   }
 
   function getActionWording() {
@@ -52,7 +62,11 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       }
       return 'Completed';
     }
-    return 'In Progress';
+    if (bid.auction.status == AuctionStatus.TIME_ENDED) {
+      return 'Resolve';
+    } else {
+      return 'In Progress';
+    }
   }
 
   const updateAuctionRecordInDb = async (auctionAddress: string, status?: string, resultClaimed?: boolean) => {
@@ -125,7 +139,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       <CardFooter className='w-full flex-none'>
         <div className='w-full'>
           <Button
-            onClick={() => handleStatusClick(bid.status)}
+            onClick={() => handleStatusClick(bid)}
             size='xs'
             variant='outline'
             className={`${BidStatusBackgroundColor.get(bid.status)} font-bold text-white`}
@@ -167,6 +181,6 @@ export const BidStatusActionMapping = new Map<BidStatus, string>()
   .set(BidStatus.LOSER, 'Claim Bid');
 
 export const BidStatusStepMapping = new Map<BidStatus, number>()
-  .set(BidStatus.ACTIVE, 1)
-  .set(BidStatus.WINNER, 2)
-  .set(BidStatus.LOSER, 2);
+  .set(BidStatus.ACTIVE, 2)
+  .set(BidStatus.WINNER, 3)
+  .set(BidStatus.LOSER, 3);
