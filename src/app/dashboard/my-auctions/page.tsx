@@ -133,7 +133,7 @@ const MyAuctions = () => {
         <div className='mt-10'>
           {!loading && !auctions.length && <NoDataFoundAuction />}
           {loading && <SkeletonSellCards />}
-          <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
+          <div className='grid grid-cols-2 gap-4 lg:grid-cols-3'>
             {filteredAndSortedAuctions.map((auction, index) => (
               <div key={`${auction.nft.contract.address}-${index}`}>
                 <MyAuctionCard

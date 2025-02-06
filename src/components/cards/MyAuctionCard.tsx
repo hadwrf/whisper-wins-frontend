@@ -193,7 +193,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
 
   return (
     <>
-      <Card className='w-60'>
+      <Card className='w-72'>
         <CardMedia
           onClick={(e) => {
             e.preventDefault();
