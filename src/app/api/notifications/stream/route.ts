@@ -1,7 +1,8 @@
 import getNewNotifications from '@/lib/db/getNewNotifications';
 import { NextRequest } from 'next/server';
 
-export const runtime = 'edge';
+// Disabled because it fails to build
+// export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
