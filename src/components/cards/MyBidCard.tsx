@@ -147,21 +147,6 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   );
 };
 
-export const BidStatusMapping = new Map<BidStatus, string>()
-  .set(BidStatus.ACTIVE, 'Active')
-  .set(BidStatus.WINNER, 'Winner')
-  .set(BidStatus.LOSER, 'Loser');
-
-export const BidStatusInfoMapping = new Map<BidStatus, string>()
-  .set(BidStatus.ACTIVE, 'Auction in progress')
-  .set(BidStatus.WINNER, 'You won the auction')
-  .set(BidStatus.LOSER, 'You lost the auction');
-
-export const BidStatusActionMapping = new Map<BidStatus, string>()
-  .set(BidStatus.ACTIVE, 'Resolve')
-  .set(BidStatus.WINNER, 'Claim NFT')
-  .set(BidStatus.LOSER, 'Claim Bid');
-
 export const BidStatusStepMapping = new Map<BidStatus, number>()
   .set(BidStatus.ACTIVE, 2)
   .set(BidStatus.WINNER, 3)

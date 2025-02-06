@@ -8,17 +8,6 @@ export const AuctionStatusMapping = new Map<AuctionStatus, string>()
   .set(AuctionStatus.TIME_ENDED, 'Time Ended')
   .set(AuctionStatus.RESOLVED, 'Resolved');
 
-export const AuctionStatusInfoMapping = new Map<AuctionStatus, string>()
-  .set(
-    AuctionStatus.NFT_TRANSFER_PENDING,
-    'You need to transfer your NFT to our stake account to be able to start the auction. This ensures fair auction process.',
-  )
-  .set(AuctionStatus.IN_PROGRESS, 'People are bidding for your NFT.')
-  .set(
-    AuctionStatus.START_PENDING,
-    'The auction has not been started yet. When you start the auction, other people are able to bid for you NFT.',
-  );
-
 export const AuctionStatusActionMapping = new Map<AuctionStatus, string>()
   .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 'Get Address')
   .set(AuctionStatus.NFT_TRANSFER_PENDING, 'Transfer NFT')
