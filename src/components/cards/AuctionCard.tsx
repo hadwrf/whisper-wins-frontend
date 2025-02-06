@@ -1,13 +1,11 @@
 'use client';
 
 import { CountdownTimer } from '@/components/CountdownTimer';
-import MoreInfoButton from '@/components/MoreInfoButton';
 import { NftMedia } from '@/components/NftMedia';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { AuctionCardData } from '@/lib/services/getAuctionCardData';
-import { Hex } from '@flashbots/suave-viem';
 import { Tag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -54,10 +52,6 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
         >
           Place Bid
         </Button>
-        <MoreInfoButton
-          nftContractAddress={auction.nft?.contract.address as Hex}
-          nftTokenId={auction.nft?.tokenId || ''}
-        />
       </CardFooter>
     </Card>
   );

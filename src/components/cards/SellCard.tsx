@@ -1,11 +1,9 @@
 'use client';
 
-import MoreInfoButton from '@/components/MoreInfoButton';
 import { NftMedia } from '@/components/NftMedia';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { Nft } from '@/lib/services/getUserNfts';
-import { Hex } from '@flashbots/suave-viem';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -37,10 +35,6 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
         >
           Sell NFT
         </Button>
-        <MoreInfoButton
-          nftContractAddress={nft?.contract.address as Hex}
-          nftTokenId={nft?.tokenId || ''}
-        />
       </CardFooter>
     </Card>
   );
