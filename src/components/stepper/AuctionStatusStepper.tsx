@@ -28,12 +28,12 @@ const steps = [
   {
     title: 'Resolve the Auction',
     description:
-      'Once the auction ends, the contract will determine the highest bidder.\nThis step ensures that the auction is finalized and a winner is selected.',
+      'Once the auction ends, the contract will determine the highest bidder. This step ensures\nthat the auction is finalized and a winner is selected.',
   },
   {
     title: 'Claim Earning',
     description:
-      'Once the auction ends, you will receive the highest bid amount in ETH.\nThis step finalizes the transaction and ensures you get your earnings from the auction.',
+      'Once the auction ends, you will receive the highest bid amount in ETH. The amount\nyou receive will be taxed in order to fund the transactions.',
   },
 ];
 

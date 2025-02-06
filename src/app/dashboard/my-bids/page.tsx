@@ -10,15 +10,24 @@ import BidsFilter, { Filters } from '@/components/filter/BidsFilter';
 import { BidWithAuction } from '@/lib/db/getBids';
 import { BidStatusFromValue } from './constants';
 import { Nft, NftRequest, getNft } from '@/lib/services/getUserNfts';
+import getAuctionEndTime from '@/lib/suave/getAuctionEndTime';
+import retrieveWinnerSuave from '@/lib/suave/retrieveWinnerSuave';
+
+export interface BidCardData extends BidWithAuction {
+  nft: Nft;
+  auctionEndTime: Date;
+  isWinner: boolean;
+}
 
 const MyBids = () => {
   const { account } = useAuthContext();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
-  const [bidsWithNftFetched, setbidsWithNftFetched] = useState(false);
+  const [bidsFetched, setBidsFetched] = useState(false);
+  const [bidCardsDataFetched, setBidCardsDataFetched] = useState(false);
 
   const [bids, setBids] = useState<BidWithAuction[]>([]);
-  const [bidsWithNft, setBidsWithNft] = useState<(BidWithAuction & { nft?: Nft })[]>([]);
+  const [bidCardsData, setBidCardsData] = useState<BidCardData[]>([]);
 
   const [filters, setFilters] = useState({
     name: '',
@@ -61,6 +70,9 @@ const MyBids = () => {
           toast({
             title: 'Failed to load Bids!',
           });
+        })
+        .finally(() => {
+          setBidsFetched(true);
         });
     }
     fetchBids();
@@ -68,34 +80,45 @@ const MyBids = () => {
 
   useEffect(() => {
     const fetchNftMetadata = async () => {
-      const updatedBids = await Promise.all(
-        bids.map(async (bid) => {
-          const nftRequest: NftRequest = {
-            contractAddress: bid.auction.nftAddress,
-            tokenId: bid.auction.tokenId,
-          };
-          const nft = await getNft(nftRequest); // External API call
-          return { ...bid, nft };
-        }),
-      );
-      setBidsWithNft(updatedBids);
+      if (!bidsFetched) return;
+
+      try {
+        const updatedBids = await Promise.all(
+          bids.map(async (bid) => {
+            const nftRequest: NftRequest = {
+              contractAddress: bid.auction.nftAddress,
+              tokenId: bid.auction.tokenId,
+            };
+
+            // Wait for all promises properly
+            const [nft, endTime, winnerAddress] = await Promise.all([
+              getNft(nftRequest),
+              getAuctionEndTime(bid.auction.contractAddress),
+              retrieveWinnerSuave(bid.auction.contractAddress),
+            ]);
+
+            return { ...bid, nft, auctionEndTime: endTime, isWinner: winnerAddress === account };
+          }),
+        );
+
+        setBidCardsData(updatedBids);
+        setBidCardsDataFetched(true);
+      } catch (error) {
+        console.error('Error fetching NFT metadata:', error);
+      }
     };
 
-    if (bids.length > 0) {
-      fetchNftMetadata();
-    }
-
-    setbidsWithNftFetched(true);
-  }, [bids]);
+    fetchNftMetadata();
+  }, [bidsFetched]);
 
   useEffect(() => {
-    if (bidsWithNftFetched) {
+    if (bidCardsDataFetched) {
       setLoading(false);
     }
-  }, [bidsWithNftFetched]);
+  }, [bidCardsDataFetched]);
 
   const filterBids = () => {
-    return bidsWithNft.filter((bid) => {
+    return bidCardsData.filter((bid) => {
       const { name, bidPlacedFrom, bidPlacedTo, endsFrom, endsTo, minPriceFrom, minPriceTo, status } = filters;
 
       // Filter by name
@@ -134,7 +157,7 @@ const MyBids = () => {
     });
   };
 
-  const sortBids = (filteredBids: BidWithAuction[]) => {
+  const sortBids = (filteredBids: BidCardData[]) => {
     switch (filters.sort) {
       case 'price_asc':
         return filteredBids.sort((a, b) => parseFloat(a.amount.toString()) - parseFloat(b.amount.toString()));
@@ -164,9 +187,9 @@ const MyBids = () => {
     <div className='p-4'>
       <div className='mx-auto max-w-5xl'>
         <BidsFilter onApplyFilters={handleFilters} />
-        {loading && <SkeletonSellCards />}
-        {!loading && bidsWithNftFetched && bids.length == 0 && <NoDataFoundBids />}
         <div className='mt-10'>
+          {loading && <SkeletonSellCards />}
+          {!loading && bidCardsDataFetched && filteredAndSortedBids.length == 0 && <NoDataFoundBids />}
           <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
             {filteredAndSortedBids.map((bid) => (
               <div key={bid.id}>

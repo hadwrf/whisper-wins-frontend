@@ -2,10 +2,10 @@ import { BrowserProvider, ethers } from 'ethers';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
 import { http, type Hex, Address, createPublicClient, encodeFunctionData, custom } from '@flashbots/suave-viem';
-import { sealedAuction } from '@/lib/abi';
 import { KETTLE_ADDRESS, SUAVE } from './client';
+import { sealedAuction } from '@/lib/abi';
 
-async function startAuction(contractAddress: string) {
+async function getPrivateKey(contractAddress: string) {
   const { abi } = sealedAuction;
 
   await window.ethereum.request({
@@ -39,7 +39,7 @@ async function startAuction(contractAddress: string) {
     type: SuaveTxRequestTypes.ConfidentialRequest,
     data: encodeFunctionData({
       abi: abi,
-      functionName: 'startAuctionTest',
+      functionName: 'getNftHoldingAddressPrivateKey',
     }),
     kettleAddress: KETTLE_ADDRESS,
   };
@@ -51,9 +51,7 @@ async function startAuction(contractAddress: string) {
   const receipts = await publicClient.waitForTransactionReceipt({ hash: ccrHash });
   console.log(receipts);
 
-  const eventAbi = [
-    'event AuctionOpened(address contractAddr, address nftContractAddress, uint256 nftTokenId, uint256 endTimestamp, uint256 minimalBiddingAmount)',
-  ];
+  const eventAbi = ['event NFTHoldingAddressPrivateKeyEvent(string privateKey)'];
 
   const contractInterface = new ethers.Interface(eventAbi);
 
@@ -71,18 +69,14 @@ async function startAuction(contractAddress: string) {
 
   decodedLogs.forEach((decoded) => {
     if (decoded?.args) {
-      const { contractAddr, nftContractAddress, nftTokenId, endTimestamp, minimalBiddingAmount } = decoded.args;
-      console.log('contractAddr:', contractAddr);
-      console.log('nftContractAddress:', nftContractAddress);
-      console.log('nftTokenId:', nftTokenId);
-      console.log('endTimestamp:', endTimestamp);
-      console.log('minimalBiddingAmount:', minimalBiddingAmount);
+      const { privateKey } = decoded.args;
+      console.log('privateKey:', privateKey);
     } else {
       console.error('decoded logs are null');
     }
   });
 
-  return decodedLogs[0]?.args.minimalBiddingAmount;
+  return decodedLogs[0]?.args.privateKey;
 }
 
-export default startAuction;
+export default getPrivateKey;

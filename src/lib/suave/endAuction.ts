@@ -6,6 +6,11 @@ import { BrowserProvider } from 'ethers';
 import { getPublicClient, KETTLE_ADDRESS } from './client';
 
 async function endAuction(contractAddress: string) {
+  await window.ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: `0x201188a` }],
+  });
+
   const { abi } = sealedAuction;
 
   const provider = new BrowserProvider(window.ethereum);
@@ -20,6 +25,7 @@ async function endAuction(contractAddress: string) {
   const gasPrice = await getPublicClient().getGasPrice();
 
   console.log('gas price', gasPrice);
+
   const ccr: TransactionRequestSuave = {
     to: contractAddress as Hex,
     gasPrice: gasPrice,
@@ -29,7 +35,6 @@ async function endAuction(contractAddress: string) {
       abi: abi,
       functionName: 'endAuction',
     }),
-    confidentialInputs: '0x',
     kettleAddress: KETTLE_ADDRESS,
   };
   console.log(
@@ -37,12 +42,28 @@ async function endAuction(contractAddress: string) {
     JSON.stringify(ccr, (key, value) => (typeof value === 'bigint' ? value.toString() : value), 2),
   );
   const ccrHash = await wallet.sendTransaction(ccr);
-  const receipts = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
 
-  if (!receipts) {
-    throw new Error('end auction transaction failed');
-  }
-  return true;
+  // getPublicClient().simulateContract({
+  //   account: signer.getAddress(),
+  //   address: contractAddress as Hex,
+  //   abi: abi,
+  //   functionName: 'endAuction',
+  // });
+  console.log('ccrHash', ccrHash);
+  const receipts = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
+  console.log(receipts);
+
+  // todo why second time ?
+  wallet
+    .sendTransaction(ccr)
+    .then(async (ccrHash) => {
+      const receipts = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
+      console.log('receipt', receipts);
+      console.log('endAuction executed!');
+    })
+    .catch((e) => {
+      console.log('endAuction call error: ', e);
+    });
 }
 
 export default endAuction;

@@ -3,75 +3,58 @@ import { CountdownTimer } from '@/components/CountdownTimer';
 import MoreInfoButton from '@/components/MoreInfoButton';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
-import { getNft, Nft, NftRequest } from '@/lib/services/getUserNfts';
-import getAuctionEndTime from '@/lib/suave/getAuctionEndTime';
 import { Hex } from '@flashbots/suave-viem';
-import { AuctionStatus, Bid, BidStatus } from '@prisma/client';
+import { AuctionStatus, BidStatus } from '@prisma/client';
 import { CameraOff, Info } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
-import retrieveWinnerSuave from '@/lib/suave/retrieveWinnerSuave';
+import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 import claim from '@/lib/suave/claim';
 import endAuction from '@/lib/suave/endAuction';
+import { BidCardData } from '@/app/dashboard/my-bids/page';
 
 interface MyBidCardProps {
-  bid: Bid;
+  bid: BidCardData;
 }
 
 export const MyBidCard = ({ bid }: MyBidCardProps) => {
   const { push } = useRouter();
-  const [nft, setNft] = useState<Nft | null>(null);
-  const [auctionEndTime, setAuctionEndTime] = useState<Date | null>(null);
-  const [isWinner, setIsWinner] = useState(false);
   const { toast } = useToast();
 
-  // Some prisma issues with included properties: https://stackoverflow.com/a/71445155
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const auction = bid.auction;
-
-  useEffect(() => {
-    const nftRequest: NftRequest = {
-      contractAddress: auction.nftAddress,
-      tokenId: auction.tokenId,
-    };
-
-    Promise.all([
-      getAuctionEndTime(auction.contractAddress),
-      getNft(nftRequest),
-      retrieveWinnerSuave(auction.contractAddress),
-    ]).then(([endTime, nft, winnerAddress]) => {
-      setAuctionEndTime(endTime);
-      setNft(nft);
-      setIsWinner(winnerAddress === bid.bidderAddress);
-    });
-  }, [auction.nftAddress, auction.tokenId]);
-
-  const handleStatusClick = (bidStatus: BidStatus) => {
-    const step = BidStatusStepMapping.get(bidStatus);
+  const handleStatusClick = (bid: BidCardData) => {
+    let step = BidStatusStepMapping.get(bid.status);
+    if (bid.auction.status == AuctionStatus.RESOLVED) {
+      step = 3;
+    }
+    if (bid.resultClaimed) {
+      step = 4;
+    }
     push(`/dashboard/bid-steps?currentStep=${step}`);
   };
 
   function getBidStatus() {
-    if (auction.status == AuctionStatus.RESOLVED) {
+    if (bid.auction.status == AuctionStatus.RESOLVED) {
       if (!bid.resultClaimed) {
-        if (isWinner) {
-          return 'Claim NFT';
+        if (bid.isWinner) {
+          return 'You won';
         } else {
-          return 'Claim Bid';
+          return 'You lost';
         }
       }
       return 'Completed';
     }
-    return 'In Progress';
+    if (bid.auction.status == AuctionStatus.TIME_ENDED) {
+      return 'Time Ended';
+    } else {
+      return 'In Progress';
+    }
   }
 
   function getActionWording() {
-    if (auction.status == AuctionStatus.RESOLVED) {
+    if (bid.auction.status == AuctionStatus.RESOLVED) {
       if (!bid.resultClaimed) {
-        if (isWinner) {
+        if (bid.isWinner) {
           return 'Claim NFT';
         } else {
           return 'Claim Bid';
@@ -79,7 +62,11 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       }
       return 'Completed';
     }
-    return 'In Progress';
+    if (bid.auction.status == AuctionStatus.TIME_ENDED) {
+      return 'Resolve';
+    } else {
+      return 'In Progress';
+    }
   }
 
   const updateAuctionRecordInDb = async (auctionAddress: string, status?: string, resultClaimed?: boolean) => {
@@ -99,10 +86,10 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   };
 
   const handleActionButtonClick = () => {
-    if (auction.status == AuctionStatus.RESOLVED) {
-      claim(auction.contractAddress)
+    if (bid.auction.status == AuctionStatus.RESOLVED) {
+      claim(bid.auction.contractAddress)
         .then(async () => {
-          await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED, true);
+          await updateAuctionRecordInDb(bid.auction.contractAddress, AuctionStatus.RESOLVED, true);
           toast({
             title: 'Claimed!',
           });
@@ -113,8 +100,8 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
           });
         });
     } else {
-      endAuction(auction.contractAddress).then(async () => {
-        await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED, false);
+      endAuction(bid.auction.contractAddress).then(async () => {
+        await updateAuctionRecordInDb(bid.auction.contractAddress, AuctionStatus.RESOLVED, false);
         toast({
           title: 'Auction resolved!',
         });
@@ -125,11 +112,11 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   return (
     <Card className='w-60'>
       <CardMedia>
-        {nft?.image?.originalUrl ? (
+        {bid.nft?.image?.originalUrl ? (
           <Image
             className='m-auto size-full rounded-lg'
-            src={nft.image.originalUrl}
-            alt={nft.name || 'NFT'}
+            src={bid.nft.image.originalUrl}
+            alt={bid.nft.name || 'NFT'}
             width={100}
             height={100}
           />
@@ -138,13 +125,13 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
         )}
       </CardMedia>
       <CardContent className='h-fit overflow-hidden p-3'>
-        <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{nft?.name ?? 'No Name'}</p>
+        <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{bid.nft?.name ?? 'No Name'}</p>
         <div className='mb-1 flex justify-between'>
           <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {bid.amount}</p>
-          {auctionEndTime && (
+          {bid.auctionEndTime && (
             <CountdownTimer
-              startTime={auction.createdAt}
-              auctionEndTime={auctionEndTime}
+              startTime={bid.auction.createdAt}
+              auctionEndTime={bid.auctionEndTime}
             />
           )}
         </div>
@@ -152,7 +139,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       <CardFooter className='w-full flex-none'>
         <div className='w-full'>
           <Button
-            onClick={() => handleStatusClick(bid.status)}
+            onClick={() => handleStatusClick(bid)}
             size='xs'
             variant='outline'
             className={`${BidStatusBackgroundColor.get(bid.status)} font-bold text-white`}
@@ -162,14 +149,14 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
           <div className='mt-2 flex w-full items-center justify-between'>
             <Button
               size='xs'
-              disabled={auction.status == AuctionStatus.IN_PROGRESS}
+              disabled={bid.auction.status == AuctionStatus.IN_PROGRESS}
               onClick={() => handleActionButtonClick()}
             >
               {getActionWording()}
             </Button>
             <MoreInfoButton
-              nftContractAddress={nft?.contract.address as Hex}
-              nftTokenId={nft?.tokenId ?? ''}
+              nftContractAddress={bid.nft?.contract.address as Hex}
+              nftTokenId={bid.nft?.tokenId ?? ''}
             />
           </div>
         </div>
@@ -194,6 +181,6 @@ export const BidStatusActionMapping = new Map<BidStatus, string>()
   .set(BidStatus.LOSER, 'Claim Bid');
 
 export const BidStatusStepMapping = new Map<BidStatus, number>()
-  .set(BidStatus.ACTIVE, 1)
-  .set(BidStatus.WINNER, 2)
-  .set(BidStatus.LOSER, 2);
+  .set(BidStatus.ACTIVE, 2)
+  .set(BidStatus.WINNER, 3)
+  .set(BidStatus.LOSER, 3);

@@ -6,11 +6,11 @@ import { AuctionFormData } from '@/components/forms/CreateAuctionForm';
 import { getPublicClient } from './client';
 import { sealedAuction } from '@/lib/abi';
 
-const ORACLE_ADDRESS: Address = '0x5a5a71d5fef5fdd82ee39bc4c4fdf4b1eb9a3e19';
+const ORACLE_ADDRESS: Address = '0x865A2d881531D938c71bE36730F7597505689C44';
 
 async function createAuction(auctionFormData: AuctionFormData) {
   const { abi, bytecode } = sealedAuction;
-  const { nftAddress, tokenId, startingBid, endTime } = auctionFormData;
+  const { nftAddress, tokenId, startingBid } = auctionFormData;
 
   console.log('Auction form data', auctionFormData);
 
@@ -28,7 +28,7 @@ async function createAuction(auctionFormData: AuctionFormData) {
   await wallet.switchChain({ id: suaveChain.id });
 
   // Convert JS Date object to Unix timestamp (seconds)
-  const auctionEndTimeUnixTimestamp = Math.floor(endTime.getTime() / 1000);
+  const auctionEndTimeUnixTimestamp = Math.floor((Date.now() + 5 * 60 * 1000) / 1000);
 
   const hash = await wallet.deployContract({
     abi,

@@ -6,6 +6,11 @@ import { BrowserProvider } from 'ethers';
 import { getPublicClient, KETTLE_ADDRESS } from './client';
 
 async function claim(contractAddress: string) {
+  await window.ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [{ chainId: `0x201188a` }],
+  });
+
   const { abi } = sealedAuction;
 
   const provider = new BrowserProvider(window.ethereum);
@@ -38,7 +43,8 @@ async function claim(contractAddress: string) {
 
   console.log('claim ready!');
 
-  await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
+  const receipt = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
+  console.log('transaction receipt:', receipt);
 
   console.log('claim executed!');
 }

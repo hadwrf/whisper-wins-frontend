@@ -80,7 +80,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
   };
 
   const createAuctionRecordInDb = async (auctionAddress: string, auctionFormData: AuctionFormData) => {
-    const { seller, nftAddress, tokenId, startingBid } = auctionFormData;
+    const { seller, nftAddress, tokenId, startingBid, endTime } = auctionFormData;
     const response = await fetch('/api/createAuction', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -90,6 +90,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
         nftAddress: nftAddress,
         tokenId: tokenId,
         minimumBid: startingBid,
+        endTime: endTime,
       }),
     });
     const result = await response.json();
