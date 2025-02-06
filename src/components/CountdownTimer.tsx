@@ -54,31 +54,33 @@ export const CountdownTimer: React.FC<CountdownProps> = ({ startTime, auctionEnd
               )}
             </Badge>
           </TooltipTrigger>
-          <TooltipContent>
-            <div className='rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-2 font-semibold text-white'>
-              Auction Timeline
-            </div>
-            <div className='bg-white p-3 dark:bg-gray-800'>
-              <p className='mb-2 flex items-center text-sm'>
-                <CalendarClock
-                  size={16}
-                  className='mr-2 text-green-500'
-                />
-                <span className='font-medium'>Started:</span>
-                <span className='ml-2 text-gray-600 dark:text-gray-300'>
-                  {format(startTime, "MMM d, yyyy 'at' h:mm a")}
-                </span>
-              </p>
-              <p className='flex items-center text-sm'>
-                <CalendarClock
-                  size={16}
-                  className='mr-2 text-red-500'
-                />
-                <span className='font-medium'>Ends:</span>
-                <span className='ml-2 text-gray-600 dark:text-gray-300'>
-                  {format(auctionEndTime, "MMM d, yyyy 'at' h:mm a")}
-                </span>
-              </p>
+          <TooltipContent className={'w-80 p-0'}>
+            <div className='overflow-hidden rounded-lg'>
+              <div className='bg-gradient-to-r from-emerald-400 to-green-500 px-4 py-2'>
+                <h3 className='text-lg font-semibold text-white'>Auction Timeline</h3>
+              </div>
+              <div className='bg-white p-3 dark:bg-gray-800'>
+                <p className='mb-2 flex items-center text-sm'>
+                  <CalendarClock
+                    size={16}
+                    className='mr-2 text-green-500'
+                  />
+                  <span className='font-medium'>Started:</span>
+                  <span className='ml-2 text-gray-600 dark:text-gray-300'>
+                    {format(startTime, "MMM d, yyyy 'at' h:mm a")}
+                  </span>
+                </p>
+                <p className='flex items-center text-sm'>
+                  <CalendarClock
+                    size={16}
+                    className='mr-2 text-red-500'
+                  />
+                  <span className='font-medium'>Ends:</span>
+                  <span className='ml-2 text-gray-600 dark:text-gray-300'>
+                    {format(auctionEndTime, "MMM d, yyyy 'at' h:mm a")}
+                  </span>
+                </p>
+              </div>
             </div>
           </TooltipContent>
         </Tooltip>

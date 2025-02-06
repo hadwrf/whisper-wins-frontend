@@ -196,34 +196,48 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
   return (
     <>
       <Card className='w-60'>
-        <CardMedia onClick={() => printInfo(auctionCardData.contractAddress)}>
+        <CardMedia
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            printInfo(auctionCardData.contractAddress);
+          }}
+        >
           {/*<Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>*/}
-          {auctionCardData.nft.image.originalUrl ? (
-            <Image
-              className='m-auto size-full rounded-lg'
-              src={auctionCardData.nft.image.originalUrl || ''}
-              alt={auctionCardData.nft.name || 'NFT'}
-              width={100}
-              height={100}
-            />
-          ) : (
-            <CameraOff className='m-auto size-8 h-full text-slate-300' />
-          )}
+          <div className={'relative m-auto size-full'}>
+            {auctionCardData.nft.image.originalUrl ? (
+              <Image
+                className='m-auto size-full rounded-lg'
+                src={auctionCardData.nft.image.originalUrl || ''}
+                alt={auctionCardData.nft.name || 'NFT'}
+                width={500}
+                height={500}
+              />
+            ) : (
+              <CameraOff className='m-auto size-8 h-full text-slate-300' />
+            )}
+            <div className='absolute bottom-1 right-1'>
+              <MoreInfoButton
+                nftContractAddress={auctionCardData.nft?.contract.address as Hex}
+                nftTokenId={auctionCardData.nft?.tokenId || ''}
+              />
+            </div>
+          </div>
         </CardMedia>
         <CardContent className='h-fit overflow-hidden p-3 pb-1'>
           <p className='mb-1 line-clamp-1 text-sm font-semibold tracking-tight'>{auctionCardData.nft.name}</p>
           <div className='mb-1 flex justify-between'>
-            {winningBid && <WinningBidBadge value={`ETH ${winningBid}`} />}
             {auctionCardData.endsAt && (
               <CountdownTimer
                 startTime={auctionCardData.createdAt}
                 auctionEndTime={auctionCardData.endsAt}
               />
             )}
+            {winningBid && <WinningBidBadge value={`ETH ${winningBid}`} />}
           </div>
         </CardContent>
         <CardFooter className='flex-none'>
-          <div className='w-full'>
+          <div className='flex w-full justify-between'>
             <Button
               onClick={() => handleStatusClick(auctionCardData)}
               size='xs'
@@ -235,19 +249,13 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
                 ? 'Completed'
                 : AuctionStatusMapping.get(auctionCardData.status)}
             </Button>
-            <div className='mt-2 flex items-center justify-between'>
-              <Button
-                size='xs'
-                disabled={auctionCardData.status == AuctionStatus.IN_PROGRESS || auctionCardData.resultClaimed}
-                onClick={() => handleButtonClick(auctionCardData)}
-              >
-                {AuctionStatusActionMapping.get(auctionCardData.status)}
-              </Button>
-              <MoreInfoButton
-                nftContractAddress={auctionCardData.nft?.contract.address as Hex}
-                nftTokenId={auctionCardData.nft?.tokenId || ''}
-              />
-            </div>
+            <Button
+              size='xs'
+              disabled={auctionCardData.status == AuctionStatus.IN_PROGRESS || auctionCardData.resultClaimed}
+              onClick={() => handleButtonClick(auctionCardData)}
+            >
+              {AuctionStatusActionMapping.get(auctionCardData.status)}
+            </Button>
           </div>
         </CardFooter>
       </Card>
