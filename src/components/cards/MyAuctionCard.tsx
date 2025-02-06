@@ -23,7 +23,9 @@ import { Auction, AuctionStatus } from '@prisma/client';
 import { CameraOff, Info } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import getWinningBid from '@/lib/suave/getWinningBid';
+import { WinningBidBadge } from '@/components/WinningBidBadge';
 
 interface MyAuctionCardProps {
   auctionCardData: AuctionCardData;
@@ -35,6 +37,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
   const { push } = useRouter();
   const { toast } = useToast();
   const [transferTokenDialogOpen, setTransferTokenDialogOpen] = useState(false);
+  const [winningBid, setWinningBid] = useState<string | null>(null);
 
   const updateAuctionRecordInDb = async (
     auctionAddress: string,
@@ -57,6 +60,18 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
     const result = await response.json();
     console.log(result);
   };
+
+  useEffect(() => {
+    if (auctionCardData.status == AuctionStatus.RESOLVED) {
+      getWinningBid(auctionCardData.contractAddress)
+        .then((bid) => {
+          setWinningBid(bid);
+        })
+        .catch(() => {
+          toast({ title: 'Failed to get winning bid!' });
+        });
+    }
+  }, [auctionCardData.status]);
 
   const updateAuctionList = (newStatus: AuctionStatus) => {
     onUpdateStatus({ ...auctionCardData, status: newStatus });
@@ -195,12 +210,10 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
             <CameraOff className='m-auto size-8 h-full text-slate-300' />
           )}
         </CardMedia>
-        <CardContent className='h-fit overflow-hidden p-3'>
-          <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{auctionCardData.nft.name}</p>
+        <CardContent className='h-fit overflow-hidden p-3 pb-1'>
+          <p className='mb-1 line-clamp-1 text-sm font-semibold tracking-tight'>{auctionCardData.nft.name}</p>
           <div className='mb-1 flex justify-between'>
-            {auctionCardData.status == AuctionStatus.RESOLVED && (
-              <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {0.2}</p>
-            )}
+            {winningBid && <WinningBidBadge value={`ETH ${winningBid}`} />}
             {auctionCardData.endsAt && (
               <CountdownTimer
                 startTime={auctionCardData.createdAt}

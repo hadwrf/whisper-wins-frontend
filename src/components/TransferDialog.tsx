@@ -3,8 +3,7 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import * as React from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Loader2 } from 'lucide-react';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 
 interface TransferDialogProps {
   open: boolean;
