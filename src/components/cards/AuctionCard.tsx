@@ -2,13 +2,13 @@
 
 import { CountdownTimer } from '@/components/CountdownTimer';
 import MoreInfoButton from '@/components/MoreInfoButton';
+import { NftMedia } from '@/components/NftMedia';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { AuctionCardData } from '@/lib/services/getAuctionCardData';
 import { Hex } from '@flashbots/suave-viem';
-import { CameraOff, Tag } from 'lucide-react';
-import Image from 'next/image';
+import { Tag } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -26,17 +26,7 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
   return (
     <Card className='w-60'>
       <CardMedia>
-        {auction.nft?.image?.originalUrl ? (
-          <Image
-            className='m-auto size-full rounded-lg'
-            src={auction.nft.image.originalUrl}
-            alt={auction.nft.name || 'NFT'}
-            width={100}
-            height={100}
-          />
-        ) : (
-          <CameraOff className='m-auto size-8 h-full text-slate-300' />
-        )}
+        <NftMedia nft={auction.nft} />
       </CardMedia>
       <CardContent className='h-fit overflow-hidden p-3'>
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{auction.nft?.name || 'No Name'}</p>

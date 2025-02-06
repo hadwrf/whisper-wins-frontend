@@ -5,27 +5,25 @@ import {
 } from '@/app/dashboard/my-auctions/constants';
 import { AuctionStatusBackgroundColor } from '@/app/ui/colors';
 import { CountdownTimer } from '@/components/CountdownTimer';
-import MoreInfoButton from '@/components/MoreInfoButton';
+import { NftMedia } from '@/components/NftMedia';
 import { TransferDialog } from '@/components/TransferDialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
+import { WinningBidBadge } from '@/components/WinningBidBadge';
 import { useToast } from '@/hooks/use-toast';
 import { transferNftToAddress, waitForNftTransferReceipt } from '@/lib/ethereum/transferNftToAddress';
 import { AuctionCardData } from '@/lib/services/getAuctionCardData';
 import claim from '@/lib/suave/claim';
 import endAuction from '@/lib/suave/endAuction';
+import getWinningBid from '@/lib/suave/getWinningBid';
 import { printInfo } from '@/lib/suave/printInfo';
 import readNftHoldingAddress from '@/lib/suave/readNftHoldingAddress';
 import setupAuction from '@/lib/suave/setupAuction';
 import startAuction from '@/lib/suave/startAuction';
-import { Hex } from '@flashbots/suave-viem';
 import { Auction, AuctionStatus } from '@prisma/client';
-import { CameraOff, Info } from 'lucide-react';
-import Image from 'next/image';
+import { Info } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import getWinningBid from '@/lib/suave/getWinningBid';
-import { WinningBidBadge } from '@/components/WinningBidBadge';
 
 interface MyAuctionCardProps {
   auctionCardData: AuctionCardData;
@@ -204,25 +202,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
           }}
         >
           {/*<Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>*/}
-          <div className={'relative m-auto size-full'}>
-            {auctionCardData.nft.image.originalUrl ? (
-              <Image
-                className='m-auto size-full rounded-lg'
-                src={auctionCardData.nft.image.originalUrl || ''}
-                alt={auctionCardData.nft.name || 'NFT'}
-                width={500}
-                height={500}
-              />
-            ) : (
-              <CameraOff className='m-auto size-8 h-full text-slate-300' />
-            )}
-            <div className='absolute bottom-1 right-1'>
-              <MoreInfoButton
-                nftContractAddress={auctionCardData.nft?.contract.address as Hex}
-                nftTokenId={auctionCardData.nft?.tokenId || ''}
-              />
-            </div>
-          </div>
+          <NftMedia nft={auctionCardData.nft} />
         </CardMedia>
         <CardContent className='h-fit overflow-hidden p-3 pb-1'>
           <p className='mb-1 line-clamp-1 text-sm font-semibold tracking-tight'>{auctionCardData.nft.name}</p>

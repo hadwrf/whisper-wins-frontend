@@ -1,14 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import MoreInfoButton from '@/components/MoreInfoButton';
+import { NftMedia } from '@/components/NftMedia';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { Nft } from '@/lib/services/getUserNfts';
-import { CameraOff } from 'lucide-react';
-import Image from 'next/image';
-import MoreInfoButton from '@/components/MoreInfoButton';
 import { Hex } from '@flashbots/suave-viem';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 type SellCardProps = {
   nft: Nft;
@@ -26,17 +25,7 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
   return (
     <Card className='w-60'>
       <CardMedia>
-        {nft.image.originalUrl ? (
-          <Image
-            className='m-auto size-full rounded-lg'
-            src={nft.image.originalUrl || ''}
-            alt={nft.name || 'NFT'}
-            width={100}
-            height={100}
-          />
-        ) : (
-          <CameraOff className='m-auto size-8 h-full text-slate-300' />
-        )}
+        <NftMedia nft={nft} />
       </CardMedia>
       <CardContent className='h-fit overflow-hidden p-3'>
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{nft.name}</p>

@@ -1,18 +1,16 @@
+import { BidCardData } from '@/app/dashboard/my-bids/page';
 import { BidStatusBackgroundColor } from '@/app/ui/colors';
 import { CountdownTimer } from '@/components/CountdownTimer';
-import MoreInfoButton from '@/components/MoreInfoButton';
+import { NftMedia } from '@/components/NftMedia';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
-import { Hex } from '@flashbots/suave-viem';
-import { AuctionStatus, BidStatus } from '@prisma/client';
-import { CameraOff, Info } from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import React from 'react';
 import { useToast } from '@/hooks/use-toast';
 import claim from '@/lib/suave/claim';
 import endAuction from '@/lib/suave/endAuction';
-import { BidCardData } from '@/app/dashboard/my-bids/page';
+import { AuctionStatus, BidStatus } from '@prisma/client';
+import { Info } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 interface MyBidCardProps {
   bid: BidCardData;
@@ -112,17 +110,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   return (
     <Card className='w-60'>
       <CardMedia>
-        {bid.nft?.image?.originalUrl ? (
-          <Image
-            className='m-auto size-full rounded-lg'
-            src={bid.nft.image.originalUrl}
-            alt={bid.nft.name || 'NFT'}
-            width={100}
-            height={100}
-          />
-        ) : (
-          <CameraOff className='m-auto size-8 h-full text-slate-300' />
-        )}
+        <NftMedia nft={bid.nft} />
       </CardMedia>
       <CardContent className='h-fit overflow-hidden p-3'>
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{bid.nft?.name ?? 'No Name'}</p>
@@ -137,7 +125,7 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
         </div>
       </CardContent>
       <CardFooter className='w-full flex-none'>
-        <div className='w-full'>
+        <div className='flex w-full justify-between'>
           <Button
             onClick={() => handleStatusClick(bid)}
             size='xs'
@@ -146,19 +134,13 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
           >
             <Info /> {getBidStatus()}
           </Button>
-          <div className='mt-2 flex w-full items-center justify-between'>
-            <Button
-              size='xs'
-              disabled={bid.auction.status == AuctionStatus.IN_PROGRESS}
-              onClick={() => handleActionButtonClick()}
-            >
-              {getActionWording()}
-            </Button>
-            <MoreInfoButton
-              nftContractAddress={bid.nft?.contract.address as Hex}
-              nftTokenId={bid.nft?.tokenId ?? ''}
-            />
-          </div>
+          <Button
+            size='xs'
+            disabled={bid.auction.status == AuctionStatus.IN_PROGRESS}
+            onClick={() => handleActionButtonClick()}
+          >
+            {getActionWording()}
+          </Button>
         </div>
       </CardFooter>
     </Card>
