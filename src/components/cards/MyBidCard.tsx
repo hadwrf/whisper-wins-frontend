@@ -31,42 +31,6 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
     push(`/dashboard/bid-steps?currentStep=${step}`);
   };
 
-  function getBidStatus() {
-    if (bid.auction.status == AuctionStatus.RESOLVED) {
-      if (!bid.resultClaimed) {
-        if (bid.isWinner) {
-          return 'You won';
-        } else {
-          return 'You lost';
-        }
-      }
-      return 'Completed';
-    }
-    if (bid.auction.status == AuctionStatus.TIME_ENDED) {
-      return 'Time Ended';
-    } else {
-      return 'In Progress';
-    }
-  }
-
-  function getActionWording() {
-    if (bid.auction.status == AuctionStatus.RESOLVED) {
-      if (!bid.resultClaimed) {
-        if (bid.isWinner) {
-          return 'Claim NFT';
-        } else {
-          return 'Claim Bid';
-        }
-      }
-      return 'Completed';
-    }
-    if (bid.auction.status == AuctionStatus.TIME_ENDED) {
-      return 'Resolve';
-    } else {
-      return 'In Progress';
-    }
-  }
-
   const updateAuctionRecordInDb = async (auctionAddress: string, status?: string, resultClaimed?: boolean) => {
     const requestBody = JSON.stringify({
       contractAddress: auctionAddress,
@@ -132,14 +96,14 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
             variant='outline'
             className={`${BidStatusBackgroundColor.get(bid.status)} font-bold text-white`}
           >
-            <Info /> {getBidStatus()}
+            <Info /> {getBidStatus(bid)}
           </Button>
           <Button
             size='xs'
             disabled={bid.auction.status == AuctionStatus.IN_PROGRESS}
             onClick={() => handleActionButtonClick()}
           >
-            {getActionWording()}
+            {getActionWording(bid)}
           </Button>
         </div>
       </CardFooter>
@@ -147,7 +111,43 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   );
 };
 
-export const BidStatusStepMapping = new Map<BidStatus, number>()
+const BidStatusStepMapping = new Map<BidStatus, number>()
   .set(BidStatus.ACTIVE, 2)
   .set(BidStatus.WINNER, 3)
   .set(BidStatus.LOSER, 3);
+
+function getBidStatus(bid: BidCardData) {
+  if (bid.auction.status == AuctionStatus.RESOLVED) {
+    if (!bid.resultClaimed) {
+      if (bid.isWinner) {
+        return 'You won';
+      } else {
+        return 'You lost';
+      }
+    }
+    return 'Completed';
+  }
+  if (bid.auction.status == AuctionStatus.TIME_ENDED) {
+    return 'Time Ended';
+  } else {
+    return 'In Progress';
+  }
+}
+
+function getActionWording(bid: BidCardData) {
+  if (bid.auction.status == AuctionStatus.RESOLVED) {
+    if (!bid.resultClaimed) {
+      if (bid.isWinner) {
+        return 'Claim NFT';
+      } else {
+        return 'Claim Bid';
+      }
+    }
+    return 'Completed';
+  }
+  if (bid.auction.status == AuctionStatus.TIME_ENDED) {
+    return 'Resolve';
+  } else {
+    return 'In Progress';
+  }
+}
