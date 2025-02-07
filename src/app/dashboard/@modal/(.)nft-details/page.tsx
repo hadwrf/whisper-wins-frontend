@@ -75,7 +75,7 @@ const NftDetaisModal = () => {
                   <li className='flex justify-between border-b py-1 text-sm text-gray-600'>
                     <span>Address</span>
                     <a
-                      href={`https://sepolia.etherscan.io/address/${nft.contract.address}`}
+                      href={`https://sepolia.etherscan.io/nft/${nft.contract.address}/${nft.tokenId}`}
                       target='_blank'
                       rel='noopener noreferrer'
                       className='text-blue-500 hover:underline'
