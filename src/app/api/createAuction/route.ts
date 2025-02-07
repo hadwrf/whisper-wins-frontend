@@ -7,12 +7,14 @@ interface CreateAuctionParams {
   nftAddress: string;
   tokenId: string;
   minimumBid: string;
+  endTime: Date;
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { auctionAddress, ownerAddress, nftAddress, tokenId, minimumBid }: CreateAuctionParams = await req.json();
-    await createAuction({ auctionAddress, ownerAddress, nftAddress, tokenId, minimumBid });
+    const { auctionAddress, ownerAddress, nftAddress, tokenId, minimumBid, endTime }: CreateAuctionParams =
+      await req.json();
+    await createAuction({ auctionAddress, ownerAddress, nftAddress, tokenId, minimumBid, endTime });
     return NextResponse.json({ message: 'Auction created successfully' });
   } catch (error) {
     console.error('Error creating auction:', error);

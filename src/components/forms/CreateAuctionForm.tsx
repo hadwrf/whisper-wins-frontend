@@ -41,7 +41,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
       nftAddress: nftAddress ?? '',
       tokenId: tokenId ?? '',
       startingBid: 0,
-      endTime: new Date(),
+      endTime: new Date(Date.now() + 5 * 60 * 1000 + 30 * 1000), // now plus 5 minutes and 30 seconds default
     },
   });
 
@@ -52,7 +52,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
         nftAddress,
         tokenId,
         startingBid: 0,
-        endTime: new Date(),
+        endTime: new Date(Date.now() + 5 * 60 * 1000 + 30 * 1000), // now plus 5 minutes and 30 seconds default
       });
     }
   }, [account, nftAddress, tokenId, form]);
