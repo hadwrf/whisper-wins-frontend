@@ -36,7 +36,7 @@ export async function GET() {
 
         // Create notifications for bidders
         const bidderNotifications = bids.map((bid) => ({
-          type: bid.bidderAddress === winnerAddressSuave ? NotificationType.AUCTION_WON : NotificationType.AUCTION_LOST,
+          type: bid.l1Address === winnerAddressSuave ? NotificationType.AUCTION_WON : NotificationType.AUCTION_LOST,
           auctionAddress: auction.contractAddress,
           userAddress: bid.l1Address,
           userType: ParticipantType.BIDDER,
