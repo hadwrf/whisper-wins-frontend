@@ -45,7 +45,9 @@ async function claim(contractAddress: string) {
 
   const receipt = await getPublicClient().waitForTransactionReceipt({ hash: ccrHash });
   console.log('transaction receipt:', receipt);
-
+  if (!receipt) {
+    throw new Error('Claim failed');
+  }
   console.log('claim executed!');
 }
 
