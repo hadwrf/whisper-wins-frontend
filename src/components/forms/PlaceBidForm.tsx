@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { placeBidSchema } from '@/app/dashboard/validation';
 import { useState } from 'react';
-import retrieveBiddingAddress from '@/lib/suave/retrieveBiddingAddress';
+import getBiddingAddress from '@/lib/suave/getBiddingAddress';
 import { Spinner } from '@/components/Spinner';
 import { useToast } from '@/hooks/use-toast';
 
@@ -36,7 +36,7 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
 
   const onSubmit = async (data: PlaceBidFormData) => {
     setLoading(true);
-    retrieveBiddingAddress(auctionAddress)
+    getBiddingAddress(auctionAddress)
       .then((biddingAddress) => {
         onBiddingAddressChange(biddingAddress);
         onBiddingAmountChange(data.amount);

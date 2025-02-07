@@ -3,7 +3,7 @@ import { getPublicClient } from './client';
 import { sealedAuction } from '@/lib/abi';
 import { ethers } from 'ethers';
 
-async function retrieveMinimalBid(contractAddress: string): Promise<string> {
+async function getMinimalBid(contractAddress: string): Promise<string> {
   const { abi } = sealedAuction;
 
   const wei = (await getPublicClient().readContract({
@@ -15,4 +15,4 @@ async function retrieveMinimalBid(contractAddress: string): Promise<string> {
   return ethers.formatUnits(wei, 'ether');
 }
 
-export default retrieveMinimalBid;
+export default getMinimalBid;

@@ -1,11 +1,11 @@
-import { BrowserProvider, ethers } from 'ethers';
+import { sealedAuction } from '@/lib/abi';
+import { Address, createPublicClient, custom, encodeFunctionData, type Hex, http } from '@flashbots/suave-viem';
 import { suaveToliman as suaveChain } from '@flashbots/suave-viem/chains';
 import { getSuaveWallet, SuaveTxRequestTypes, type TransactionRequestSuave } from '@flashbots/suave-viem/chains/utils';
-import { http, type Hex, Address, createPublicClient, encodeFunctionData, custom } from '@flashbots/suave-viem';
+import { BrowserProvider, ethers } from 'ethers';
 import { KETTLE_ADDRESS, SUAVE } from './client';
-import { sealedAuction } from '@/lib/abi';
 
-async function getPrivateKey(contractAddress: string) {
+async function getNftHoldingAddressPrivateKey(contractAddress: string) {
   const { abi } = sealedAuction;
 
   await window.ethereum.request({
@@ -58,8 +58,7 @@ async function getPrivateKey(contractAddress: string) {
   const decodedLogs = receipts.logs
     .map((log) => {
       try {
-        const decoded = contractInterface.parseLog(log);
-        return decoded;
+        return contractInterface.parseLog(log);
       } catch (e) {
         console.error('Failed to parse log:', e);
         return null;
@@ -79,4 +78,4 @@ async function getPrivateKey(contractAddress: string) {
   return decodedLogs[0]?.args.privateKey;
 }
 
-export default getPrivateKey;
+export default getNftHoldingAddressPrivateKey;

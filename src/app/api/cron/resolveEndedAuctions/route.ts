@@ -1,5 +1,5 @@
 import { getNft } from '@/lib/services/getUserNfts';
-import retrieveWinnerSuave from '@/lib/suave/retrieveWinnerSuave';
+import getWinnerSuave from '@/lib/suave/getWinnerSuave';
 import { prismaEdge } from '@/prisma/edge';
 import { NotificationType, ParticipantType } from '@prisma/client';
 import { NextResponse } from 'next/server';
@@ -16,7 +16,7 @@ export async function GET() {
 
     for (const auction of endedAuctions) {
       // Fetch winner address from the contract
-      const winnerAddressSuave = await retrieveWinnerSuave(auction.contractAddress);
+      const winnerAddressSuave = await getWinnerSuave(auction.contractAddress);
 
       console.log('winnerAddressSuave', winnerAddressSuave);
 

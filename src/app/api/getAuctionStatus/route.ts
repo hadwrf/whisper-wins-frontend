@@ -19,6 +19,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ auctionStatus });
   } catch (error) {
     console.error('Error retrieving NFT status:', error);
-    return NextResponse.json({ error: 'Failed to retrieve NFT status' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to get NFT status' }, { status: 500 });
   }
 }

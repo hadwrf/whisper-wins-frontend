@@ -7,7 +7,7 @@ import { randomBytes } from 'crypto';
 import { BrowserProvider, ethers, LogDescription } from 'ethers';
 import { getPublicClient, KETTLE_ADDRESS } from './client';
 
-async function retrieveBiddingAddress(contractAddress: string): Promise<Address> {
+async function getBiddingAddress(contractAddress: string): Promise<Address> {
   const { abi } = sealedAuction;
 
   await window.ethereum.request({
@@ -79,7 +79,7 @@ async function retrieveBiddingAddress(contractAddress: string): Promise<Address>
       try {
         const decryptedAddress = aesDecrypt(keyBuffer, encryptedBuffer);
         console.log('Decrypted L1 Address:', decryptedAddress);
-        biddingAddress = `0x${decryptedAddress.toString('hex')}` as Address;
+        biddingAddress = `0x${decryptedAddress.toString('hex')}`;
       } catch (e) {
         console.log('ex', e);
       }
@@ -92,4 +92,4 @@ async function retrieveBiddingAddress(contractAddress: string): Promise<Address>
   return biddingAddress;
 }
 
-export default retrieveBiddingAddress;
+export default getBiddingAddress;

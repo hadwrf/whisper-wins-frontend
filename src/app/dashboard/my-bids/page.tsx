@@ -11,7 +11,7 @@ import { BidWithAuction } from '@/lib/db/getBids';
 import { BidStatusFromValue } from './constants';
 import { Nft, NftRequest, getNft } from '@/lib/services/getUserNfts';
 import getAuctionEndTime from '@/lib/suave/getAuctionEndTime';
-import retrieveWinnerSuave from '@/lib/suave/retrieveWinnerSuave';
+import getWinnerSuave from '@/lib/suave/getWinnerSuave';
 
 export interface BidCardData extends BidWithAuction {
   nft: Nft;
@@ -94,7 +94,7 @@ const MyBids = () => {
             const [nft, endTime, winnerAddress] = await Promise.all([
               getNft(nftRequest),
               getAuctionEndTime(bid.auction.contractAddress),
-              retrieveWinnerSuave(bid.auction.contractAddress),
+              getWinnerSuave(bid.auction.contractAddress),
             ]);
 
             return { ...bid, nft, auctionEndTime: endTime, isWinner: winnerAddress === account };

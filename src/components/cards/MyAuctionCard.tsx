@@ -188,7 +188,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
   //const handleNftBack = (contractAddress: string) => {
   //  console.log('handleNftBack', contractAddress, account);
   //moveNFTDebug(contractAddress, account as string);
-  //  getPrivateKey(contractAddress);
+  //  getNftHoldingAddressPrivateKey(contractAddress);
   //};
 
   return (
