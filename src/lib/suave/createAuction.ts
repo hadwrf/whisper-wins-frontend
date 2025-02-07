@@ -6,8 +6,6 @@ import { AuctionFormData } from '@/components/forms/CreateAuctionForm';
 import { getPublicClient } from './client';
 import { sealedAuction } from '@/lib/abi';
 
-const ORACLE_ADDRESS: Address = '0x865A2d881531D938c71bE36730F7597505689C44';
-
 async function createAuction(auctionFormData: AuctionFormData) {
   const { abi, bytecode } = sealedAuction;
   const { nftAddress, tokenId, startingBid, endTime } = auctionFormData;
@@ -35,7 +33,7 @@ async function createAuction(auctionFormData: AuctionFormData) {
     account: signer.address as Address,
     bytecode: bytecode.object as Hex,
     // 2 february
-    args: [nftAddress, BigInt(tokenId), BigInt(auctionEndTimeUnixTimestamp), bidInWei, ORACLE_ADDRESS],
+    args: [nftAddress, BigInt(tokenId), BigInt(auctionEndTimeUnixTimestamp), bidInWei],
   });
   console.log('deployContract tx hash:', hash);
 
