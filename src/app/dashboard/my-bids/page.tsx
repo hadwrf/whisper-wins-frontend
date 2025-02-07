@@ -70,6 +70,7 @@ const MyBids = () => {
         .catch(() => {
           toast({
             title: 'Failed to load Bids!',
+            variant: 'error',
           });
         })
         .finally(() => {

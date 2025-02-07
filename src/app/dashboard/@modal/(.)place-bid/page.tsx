@@ -56,12 +56,14 @@ const PlaceBidModal = () => {
     })
       .then(() => {
         toast({
-          title: 'Bid persisted in DB!',
+          title: 'Bid successfully sent!',
+          variant: 'success',
         });
       })
       .catch(() => {
         toast({
-          title: 'Bid persisting error!',
+          title: 'Bid could not be sent!',
+          variant: 'error',
         });
       });
   };

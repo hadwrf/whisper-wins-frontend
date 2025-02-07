@@ -64,6 +64,7 @@ const MyNfts = () => {
       } catch (error) {
         toast({
           title: 'Failed to load NFTs!',
+          variant: 'error',
         });
         console.error('Failed to load NFTs:', error);
       } finally {

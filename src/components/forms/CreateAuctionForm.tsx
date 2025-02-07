@@ -71,6 +71,7 @@ export const CreateAuctionForm = ({ nftAddress, tokenId }: CreateAuctionFormProp
         console.log('createAuction error:', e);
         toast({
           title: 'Transaction failed!',
+          variant: 'error',
           description: e.shortMessage,
         });
       })
