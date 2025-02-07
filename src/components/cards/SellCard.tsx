@@ -28,7 +28,7 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
       <CardContent className='h-fit overflow-hidden p-3'>
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{nft.name}</p>
       </CardContent>
-      <CardFooter>
+      <CardFooter className='justify-end'>
         <Button
           size='xs'
           onClick={handleSellClick}

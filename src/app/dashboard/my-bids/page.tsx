@@ -195,7 +195,7 @@ const MyBids = () => {
           <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
             {filteredAndSortedBids.map((bid) => (
               <div key={bid.id}>
-                <MyBidCard bid={bid} />
+                <MyBidCard bidCardData={bid} />
               </div>
             ))}
           </div>

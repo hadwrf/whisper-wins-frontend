@@ -1,5 +1,4 @@
 import { BidCardData } from '@/app/dashboard/my-bids/page';
-import { BidStatusBackgroundColor } from '@/app/ui/colors';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { NftMedia } from '@/components/NftMedia';
 import { Button } from '@/components/ui/button';
@@ -13,10 +12,10 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 
 interface MyBidCardProps {
-  bid: BidCardData;
+  bidCardData: BidCardData;
 }
 
-export const MyBidCard = ({ bid }: MyBidCardProps) => {
+export const MyBidCard = ({ bidCardData }: MyBidCardProps) => {
   const { push } = useRouter();
   const { toast } = useToast();
 
@@ -48,10 +47,10 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   };
 
   const handleActionButtonClick = () => {
-    if (bid.auction.status == AuctionStatus.RESOLVED) {
-      claim(bid.auction.contractAddress)
+    if (bidCardData.auction.status == AuctionStatus.RESOLVED) {
+      claim(bidCardData.auction.contractAddress)
         .then(async () => {
-          await updateAuctionRecordInDb(bid.auction.contractAddress, AuctionStatus.RESOLVED, true);
+          await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED, true);
           toast({
             title: 'Claimed!',
           });
@@ -62,8 +61,8 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
           });
         });
     } else {
-      endAuction(bid.auction.contractAddress).then(async () => {
-        await updateAuctionRecordInDb(bid.auction.contractAddress, AuctionStatus.RESOLVED, false);
+      endAuction(bidCardData.auction.contractAddress).then(async () => {
+        await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED, false);
         toast({
           title: 'Auction resolved!',
         });
@@ -74,16 +73,16 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
   return (
     <Card className='w-60'>
       <CardMedia>
-        <NftMedia nft={bid.nft} />
+        <NftMedia nft={bidCardData.nft} />
       </CardMedia>
       <CardContent className='h-fit overflow-hidden p-3'>
-        <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{bid.nft?.name ?? 'No Name'}</p>
+        <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{bidCardData.nft?.name ?? 'No Name'}</p>
         <div className='mb-1 flex justify-between'>
-          <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {bid.amount}</p>
-          {bid.auctionEndTime && (
+          <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {bidCardData.amount}</p>
+          {bidCardData.auctionEndTime && (
             <CountdownTimer
-              startTime={bid.auction.createdAt}
-              auctionEndTime={bid.auctionEndTime}
+              startTime={bidCardData.auction.createdAt}
+              auctionEndTime={bidCardData.auctionEndTime}
             />
           )}
         </div>
@@ -91,19 +90,19 @@ export const MyBidCard = ({ bid }: MyBidCardProps) => {
       <CardFooter className='w-full flex-none'>
         <div className='flex w-full justify-between'>
           <Button
-            onClick={() => handleStatusClick(bid)}
+            onClick={() => handleStatusClick(bidCardData)}
             size='xs'
             variant='outline'
-            className={`${BidStatusBackgroundColor.get(bid.status)} font-bold text-white`}
+            className={`${getStatusBackgroundColor(bidCardData)} font-bold text-white`}
           >
-            <Info /> {getBidStatus(bid)}
+            <Info /> {getBidStatus(bidCardData)}
           </Button>
           <Button
             size='xs'
-            disabled={bid.auction.status == AuctionStatus.IN_PROGRESS}
+            disabled={bidCardData.auction.status == AuctionStatus.IN_PROGRESS}
             onClick={() => handleActionButtonClick()}
           >
-            {getActionWording(bid)}
+            {getActionWording(bidCardData)}
           </Button>
         </div>
       </CardFooter>
@@ -131,6 +130,14 @@ function getBidStatus(bid: BidCardData) {
     return 'Time Ended';
   } else {
     return 'In Progress';
+  }
+}
+
+function getStatusBackgroundColor(bid: BidCardData) {
+  if (bid.isWinner) {
+    return 'bg-green-500';
+  } else {
+    return 'bg-rose-500';
   }
 }
 
