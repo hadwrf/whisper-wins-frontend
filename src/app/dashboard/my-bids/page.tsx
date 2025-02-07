@@ -12,6 +12,7 @@ import { BidStatusFromValue } from './constants';
 import { Nft, NftRequest, getNft } from '@/lib/services/getUserNfts';
 import getAuctionEndTime from '@/lib/suave/getAuctionEndTime';
 import getWinnerSuave from '@/lib/suave/getWinnerSuave';
+import { LoginToContinue } from '@/components/LoginToContinue';
 
 export interface BidCardData extends BidWithAuction {
   nft: Nft;
@@ -183,6 +184,7 @@ const MyBids = () => {
   const filteredBids = filterBids();
   const filteredAndSortedBids = sortBids(filteredBids);
 
+  if (!account) return <LoginToContinue />;
   return (
     <div className='p-4'>
       <div className='mx-auto max-w-5xl'>

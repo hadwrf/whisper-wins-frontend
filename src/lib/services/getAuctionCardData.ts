@@ -10,7 +10,7 @@ export interface AuctionCardData extends Auction {
   nft: Nft;
 }
 
-export const getAuctionCardData = async (account: string): Promise<AuctionCardData[]> => {
+export const getAuctionCardData = async (account: string | null): Promise<AuctionCardData[]> => {
   try {
     // Fetch auctions
     const response = await fetch(`/api/getBiddableAuctions?accountAddress=${account}`, {

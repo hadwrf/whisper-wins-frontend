@@ -87,7 +87,6 @@ export const AuctionCards = ({ filters = {} }: AuctionCardsProps) => {
 
   useEffect(() => {
     const fetchAuctions = async () => {
-      if (!account) return;
       try {
         const auctionData = await getAuctionCardData(account); // Fetch auction card data
         setAuctions(auctionData); // Update auctions state
