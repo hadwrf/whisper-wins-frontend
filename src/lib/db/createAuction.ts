@@ -7,6 +7,7 @@ interface CreateAuctionParams {
   nftAddress: string;
   tokenId: string;
   minimumBid: string;
+  endTime: Date;
 }
 
 export default async function createAuction(params: CreateAuctionParams) {
@@ -19,7 +20,7 @@ export default async function createAuction(params: CreateAuctionParams) {
       status: AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING,
       minimumBid: parseFloat(params.minimumBid),
       resultClaimed: false,
-      endTime: new Date(),
+      endTime: params.endTime,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
