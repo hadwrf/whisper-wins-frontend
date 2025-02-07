@@ -38,7 +38,7 @@ export async function GET() {
         const bidderNotifications = bids.map((bid) => ({
           type: bid.bidderAddress === winnerAddressSuave ? NotificationType.AUCTION_WON : NotificationType.AUCTION_LOST,
           auctionAddress: auction.contractAddress,
-          userAddress: bid.bidderAddress,
+          userAddress: bid.l1Address,
           userType: ParticipantType.BIDDER,
           nftAddress: auction.nftAddress,
           nftTokenId: auction.tokenId,

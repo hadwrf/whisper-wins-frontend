@@ -33,7 +33,7 @@ export async function GET() {
       const bidderNotifications = bids.map((bid) => ({
         type: NotificationType.AUCTION_TIME_END,
         auctionAddress: auction.contractAddress,
-        userAddress: bid.bidderAddress,
+        userAddress: bid.l1Address,
         userType: ParticipantType.BIDDER,
         nftAddress: auction.nftAddress,
         nftTokenId: auction.tokenId,
