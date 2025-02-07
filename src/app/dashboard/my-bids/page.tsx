@@ -184,6 +184,10 @@ const MyBids = () => {
   const filteredBids = filterBids();
   const filteredAndSortedBids = sortBids(filteredBids);
 
+  const updateBidCardData = (bidCardData: BidCardData) => {
+    setBidCardsData((prevBids) => prevBids.map((bid) => (bid.id === bidCardData.id ? bidCardData : bid)));
+  };
+
   if (!account) return <LoginToContinue />;
   return (
     <div className='p-4'>
@@ -195,7 +199,10 @@ const MyBids = () => {
           <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
             {filteredAndSortedBids.map((bid) => (
               <div key={bid.id}>
-                <MyBidCard bidCardData={bid} />
+                <MyBidCard
+                  bidCardData={bid}
+                  onUpdateStatus={updateBidCardData}
+                />
               </div>
             ))}
           </div>

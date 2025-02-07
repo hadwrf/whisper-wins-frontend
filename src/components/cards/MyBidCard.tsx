@@ -13,11 +13,16 @@ import React from 'react';
 
 interface MyBidCardProps {
   bidCardData: BidCardData;
+  onUpdateStatus: (bid: BidCardData) => void;
 }
 
-export const MyBidCard = ({ bidCardData }: MyBidCardProps) => {
+export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
   const { push } = useRouter();
   const { toast } = useToast();
+
+  const updateBidList = (newStatus: AuctionStatus, resultClaimed: boolean) => {
+    onUpdateStatus({ ...bidCardData, auction: { ...bidCardData.auction, status: newStatus }, resultClaimed });
+  };
 
   const handleStatusClick = (bid: BidCardData) => {
     let step = BidStatusStepMapping.get(bid.status);
@@ -30,11 +35,10 @@ export const MyBidCard = ({ bidCardData }: MyBidCardProps) => {
     push(`/dashboard/bid-steps?currentStep=${step}`);
   };
 
-  const updateAuctionRecordInDb = async (auctionAddress: string, status?: string, resultClaimed?: boolean) => {
+  const updateAuctionRecordInDb = async (auctionAddress: string, status?: string) => {
     const requestBody = JSON.stringify({
       contractAddress: auctionAddress,
       status: status,
-      resultClaimed: resultClaimed,
     });
     console.log('updateAuctionRecordInDb requestBody:', requestBody);
     const response = await fetch('/api/updateAuctionContract', {
@@ -46,25 +50,42 @@ export const MyBidCard = ({ bidCardData }: MyBidCardProps) => {
     console.log('updateAuctionRecordInDb result', result);
   };
 
+  const updateBidRecordInDb = async (resultClaimed?: boolean) => {
+    const requestBody = JSON.stringify({
+      bidId: bidCardData.id,
+      resultClaimed: resultClaimed,
+    });
+    console.log('updateBidRecordInDb requestBody:', requestBody);
+    const response = await fetch('/api/bids', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: requestBody,
+    });
+    const result = await response.json();
+    console.log('updateBidRecordInDb result', result);
+  };
+
   const handleActionButtonClick = () => {
     if (bidCardData.auction.status == AuctionStatus.RESOLVED) {
       claim(bidCardData.auction.contractAddress)
         .then(async () => {
-          await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED, true);
+          await updateBidRecordInDb(true);
+          updateBidList(AuctionStatus.RESOLVED, true);
           toast({
-            title: 'Claimed!',
+            title: 'Successfully claimed the NFT!',
           });
         })
         .catch(() => {
           toast({
-            title: 'Failed to claim!',
+            title: 'Failed to claim the NFT!',
           });
         });
     } else {
       endAuction(bidCardData.auction.contractAddress).then(async () => {
-        await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED, false);
+        await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED);
+        updateBidList(AuctionStatus.RESOLVED, false);
         toast({
-          title: 'Auction resolved!',
+          title: 'Auction resolved successfully!',
         });
       });
     }
