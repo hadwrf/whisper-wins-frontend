@@ -78,7 +78,7 @@ const PlaceBidModal = () => {
         <DialogDescription></DialogDescription>
       </VisuallyHidden>
       <DialogContent>
-        <div className='flex flex-col items-center justify-items-center'>
+        <div className='justify-items-center'>
           {!biddingAddress && !biddingAmount && (
             <>
               <LoadingQRCode />
@@ -86,22 +86,26 @@ const PlaceBidModal = () => {
             </>
           )}
           {biddingAddress && biddingAmount && (
-            <>
+            <div>
               <BiddingQRCode
                 recipient={biddingAddress as Hex}
                 amount={biddingAmount}
               />
-              <p className='mt-5'>Scan QR code to send your bid..</p>
-              <div className='flex items-center gap-2'>
-                <Button
-                  variant={'ghost'}
-                  onClick={() => handleClickTransaction(biddingAddress, biddingAmount)}
-                >
-                  or click here!
-                </Button>
-                <Spinner show={loading} />
+              <div className='mb-1 flex flex-col items-center justify-center gap-2'>
+                <p className=''>Scan QR code to send your bid..</p>
+                <div className='flex items-center'>
+                  <Button
+                    variant='secondary'
+                    size='sm'
+                    onClick={() => handleClickTransaction(biddingAddress, biddingAmount)}
+                    disabled={loading}
+                  >
+                    or click here!
+                  </Button>
+                  <Spinner show={loading} />
+                </div>
               </div>
-            </>
+            </div>
           )}
           {biddingAddress && (
             <BalanceDisplay

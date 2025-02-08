@@ -6,16 +6,17 @@ const client = createPublicClient({
   transport: http(),
 });
 
-async function fetchBalance({ walletAddress }: { walletAddress: Hex }) {
+async function fetchBalance({ walletAddress }: { walletAddress: Hex }): Promise<number> {
   try {
     const balance = await client.getBalance({
       address: walletAddress,
     });
-    const balanceInEther = formatUnits(balance, 18);
+    const balanceInEther = Number(formatUnits(balance, 18));
     console.log(`Balance: ${balanceInEther} ETH`);
     return balanceInEther;
   } catch (error) {
-    console.error('Error fetching balance:', error);
+    console.log('Error fetchBalance', error);
+    throw new Error('Error fetching balance!');
   }
 }
 
