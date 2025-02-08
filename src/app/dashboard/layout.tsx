@@ -11,7 +11,7 @@ export default function Layout(props: Props) {
       <div className='sticky top-0 z-20 shadow-md'>
         <NavBar />
       </div>
-      <div className='grow overflow-y-auto'>
+      <div className='grow'>
         {props.children}
         {props.modal}
       </div>

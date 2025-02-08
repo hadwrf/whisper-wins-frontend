@@ -21,9 +21,10 @@ import readNftHoldingAddress from '@/lib/suave/readNftHoldingAddress';
 import setupAuction from '@/lib/suave/setupAuction';
 import startAuction from '@/lib/suave/startAuction';
 import { Auction, AuctionStatus } from '@prisma/client';
-import { Info } from 'lucide-react';
+import { MousePointerClick } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
 
 interface MyAuctionCardProps {
   auctionCardData: AuctionCardData;
@@ -193,7 +194,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
 
   return (
     <>
-      <Card className='w-72'>
+      <Card className='w-60'>
         <CardMedia
           onClick={(e) => {
             e.preventDefault();
@@ -204,9 +205,9 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
           {/*<Button onClick={() => handleNftBack(auction.contractAddress)}>Move nft</Button>*/}
           <NftMedia nft={auctionCardData.nft} />
         </CardMedia>
-        <CardContent className='h-fit overflow-hidden p-3 pb-1'>
+        <CardContent className='h-fit overflow-hidden p-3 pb-2'>
           <p className='mb-1 line-clamp-1 text-sm font-semibold tracking-tight'>{auctionCardData.nft.name}</p>
-          <div className='mb-1 flex justify-between'>
+          <div className='mb-2 flex justify-between'>
             {auctionCardData.endsAt && (
               <CountdownTimer
                 startTime={auctionCardData.createdAt}
@@ -215,28 +216,26 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
             )}
             {winningBid && <WinningBidBadge value={`ETH ${winningBid}`} />}
           </div>
+          <Badge
+            variant='secondary'
+            onClick={() => handleStatusClick(auctionCardData)}
+            className={`${AuctionStatusBackgroundColor.get(auctionCardData.status)} flex w-full cursor-pointer items-center justify-center text-sky-800`}
+          >
+            <MousePointerClick className='mr-1 size-5' />
+            {auctionCardData.status == AuctionStatus.RESOLVED && auctionCardData.resultClaimed
+              ? 'Completed'
+              : AuctionStatusMapping.get(auctionCardData.status)}
+          </Badge>
         </CardContent>
-        <CardFooter className='flex-none'>
-          <div className='flex w-full justify-between'>
-            <Button
-              onClick={() => handleStatusClick(auctionCardData)}
-              size='xs'
-              variant='outline'
-              className={`${AuctionStatusBackgroundColor.get(auctionCardData.status)} font-bold text-white`}
-            >
-              <Info />
-              {auctionCardData.status == AuctionStatus.RESOLVED && auctionCardData.resultClaimed
-                ? 'Completed'
-                : AuctionStatusMapping.get(auctionCardData.status)}
-            </Button>
-            <Button
-              size='xs'
-              disabled={auctionCardData.status == AuctionStatus.IN_PROGRESS || auctionCardData.resultClaimed}
-              onClick={() => handleButtonClick(auctionCardData)}
-            >
-              {AuctionStatusActionMapping.get(auctionCardData.status)}
-            </Button>
-          </div>
+        <CardFooter>
+          <Button
+            size='xs'
+            className='w-full'
+            disabled={auctionCardData.status == AuctionStatus.IN_PROGRESS || auctionCardData.resultClaimed}
+            onClick={() => handleButtonClick(auctionCardData)}
+          >
+            {AuctionStatusActionMapping.get(auctionCardData.status)}
+          </Button>
         </CardFooter>
       </Card>
       <TransferDialog

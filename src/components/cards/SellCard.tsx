@@ -32,6 +32,7 @@ export const SellCard: React.FC<SellCardProps> = (props: SellCardProps) => {
         <Button
           size='xs'
           onClick={handleSellClick}
+          className='w-full'
         >
           Sell NFT
         </Button>

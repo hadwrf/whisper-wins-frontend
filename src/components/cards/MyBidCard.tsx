@@ -1,15 +1,17 @@
 import { BidCardData } from '@/app/dashboard/my-bids/page';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { NftMedia } from '@/components/NftMedia';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import claim from '@/lib/suave/claim';
 import endAuction from '@/lib/suave/endAuction';
 import { AuctionStatus, BidStatus } from '@prisma/client';
-import { Info } from 'lucide-react';
+import { MousePointerClick } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { BidPriceBadge } from '@/components/BidPriceBadge';
 
 interface MyBidCardProps {
   bidCardData: BidCardData;
@@ -99,10 +101,10 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
       <CardMedia>
         <NftMedia nft={bidCardData.nft} />
       </CardMedia>
-      <CardContent className='h-fit overflow-hidden p-3'>
-        <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{bidCardData.nft?.name ?? 'No Name'}</p>
-        <div className='mb-1 flex justify-between'>
-          <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {bidCardData.amount}</p>
+      <CardContent className='h-fit overflow-hidden p-3 pb-2'>
+        <p className='mb-1 line-clamp-1 text-sm font-semibold tracking-tight'>{bidCardData.nft?.name ?? 'No Name'}</p>
+        <div className='mb-2 flex justify-between'>
+          <BidPriceBadge value={`ETH ${bidCardData.amount}`} />
           {bidCardData.auctionEndTime && (
             <CountdownTimer
               startTime={bidCardData.auction.createdAt}
@@ -110,25 +112,24 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
             />
           )}
         </div>
+        <Badge
+          variant='secondary'
+          onClick={() => handleStatusClick(bidCardData)}
+          className={`${getStatusBackgroundColor(bidCardData)} flex w-full cursor-pointer items-center justify-center text-sky-800`}
+        >
+          <MousePointerClick className='mr-1 size-5 ' />
+          {getBidStatus(bidCardData)}
+        </Badge>
       </CardContent>
-      <CardFooter className='w-full flex-none'>
-        <div className='flex w-full justify-between'>
-          <Button
-            onClick={() => handleStatusClick(bidCardData)}
-            size='xs'
-            variant='outline'
-            className={`${getStatusBackgroundColor(bidCardData)} font-bold text-white`}
-          >
-            <Info /> {getBidStatus(bidCardData)}
-          </Button>
-          <Button
-            size='xs'
-            disabled={bidCardData.auction.status == AuctionStatus.IN_PROGRESS}
-            onClick={() => handleActionButtonClick()}
-          >
-            {getActionWording(bidCardData)}
-          </Button>
-        </div>
+      <CardFooter>
+        <Button
+          size='xs'
+          disabled={bidCardData.auction.status == AuctionStatus.IN_PROGRESS}
+          onClick={() => handleActionButtonClick()}
+          className='w-full'
+        >
+          {getActionWording(bidCardData)}
+        </Button>
       </CardFooter>
     </Card>
   );
@@ -159,9 +160,9 @@ function getBidStatus(bid: BidCardData) {
 
 function getStatusBackgroundColor(bid: BidCardData) {
   if (bid.isWinner) {
-    return 'bg-green-500';
+    return 'bg-green-400/90';
   } else {
-    return 'bg-rose-500';
+    return 'bg-rose-500/90';
   }
 }
 

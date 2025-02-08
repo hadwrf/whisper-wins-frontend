@@ -26,7 +26,7 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
       <CardMedia>
         <NftMedia nft={auction.nft} />
       </CardMedia>
-      <CardContent className='h-fit overflow-hidden p-3'>
+      <CardContent className='h-fit overflow-hidden p-3 pb-2'>
         <p className='line-clamp-1 text-sm font-semibold tracking-tight'>{auction.nft?.name || 'No Name'}</p>
         <div className='mb-1 flex justify-between'>
           <p className='flex items-center text-sm font-semibold text-emerald-400'>ETH {auction.minimumBid}</p>
@@ -49,6 +49,7 @@ export const AuctionCard = ({ auction }: AuctionCardProps) => {
         <Button
           onClick={handleSellClick}
           size='xs'
+          className='w-full'
         >
           Place Bid
         </Button>
