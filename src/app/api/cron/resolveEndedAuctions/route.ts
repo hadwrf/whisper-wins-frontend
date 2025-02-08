@@ -1,7 +1,7 @@
 import { getNft } from '@/lib/services/getUserNfts';
 import getWinnerSuave from '@/lib/suave/getWinnerSuave';
 import { prismaEdge } from '@/prisma/edge';
-import { NotificationType, ParticipantType } from '@prisma/client';
+import { BidStatus, NotificationType, ParticipantType } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -33,6 +33,21 @@ export async function GET() {
         const bids = await prismaEdge.bid.findMany({
           where: { auctionAddress: auction.contractAddress },
         });
+
+        // Create win / lost status for bidders
+        const bidsStatus = bids.map((bid) => ({
+          status: bid.l1Address === winnerAddressSuave ? BidStatus.WINNER : BidStatus.LOSER,
+          id: bid.id,
+        }));
+
+        // Update bids in the Bids table
+        const updatePromises = bidsStatus.map((bid) =>
+          prismaEdge.bid.update({
+            where: { id: bid.id },
+            data: { status: bid.status },
+          }),
+        );
+        await Promise.all(updatePromises);
 
         // Create notifications for bidders
         const bidderNotifications = bids.map((bid) => ({
