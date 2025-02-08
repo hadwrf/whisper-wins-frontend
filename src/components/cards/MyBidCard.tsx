@@ -52,19 +52,22 @@ export const MyBidCard = ({ bidCardData }: MyBidCardProps) => {
         .then(async () => {
           await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED, true);
           toast({
-            title: 'Claimed!',
+            title: 'Claimed the result successfully!',
+            variant: 'success',
           });
         })
         .catch(() => {
           toast({
-            title: 'Failed to claim!',
+            title: 'Failed to claim the result!',
+            variant: 'error',
           });
         });
     } else {
       endAuction(bidCardData.auction.contractAddress).then(async () => {
         await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED, false);
         toast({
-          title: 'Auction resolved!',
+          title: 'Auction resolved successfully!',
+          variant: 'success',
         });
       });
     }

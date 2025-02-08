@@ -43,12 +43,14 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
         setScanMode(true);
         toast({
           title: 'Bidding address retrieved!',
+          variant: 'success',
           description: auctionAddress,
         });
       })
       .catch(() => {
         toast({
           description: 'Transaction signature denied!',
+          variant: 'error',
         });
       })
       .finally(() => {

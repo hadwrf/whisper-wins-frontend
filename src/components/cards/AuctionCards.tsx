@@ -93,6 +93,7 @@ export const AuctionCards = ({ filters = {} }: AuctionCardsProps) => {
       } catch (error) {
         toast({
           title: 'Error fetching auctions!',
+          variant: 'error',
         });
         console.error('Error fetching auctions:', error);
       }

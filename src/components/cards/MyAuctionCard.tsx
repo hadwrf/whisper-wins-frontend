@@ -66,7 +66,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
           setWinningBid(bid);
         })
         .catch(() => {
-          toast({ title: 'Failed to get winning bid!' });
+          toast({ title: 'Failed to get winning bid!', variant: 'error' });
         });
     }
   }, [auctionCardData.status]);
@@ -104,11 +104,11 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
           break;
 
         default:
-          toast({ title: 'Invalid auction status!' });
+          toast({ title: 'Invalid auction status!', variant: 'error' });
       }
     } catch (error) {
       console.error('Error handling button click:', error);
-      toast({ title: 'An unexpected error occurred!' });
+      toast({ title: 'An unexpected error occurred!', variant: 'error' });
     }
   };
 
@@ -125,9 +125,9 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
       await waitForNftTransferReceipt(transactionHash);
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.START_PENDING);
       updateAuctionList(AuctionStatus.START_PENDING);
-      toast({ title: 'NFT transferred successfully!' });
+      toast({ title: 'NFT transferred successfully!', variant: 'success' });
     } catch {
-      toast({ title: 'Failed to transfer NFT!' });
+      toast({ title: 'Failed to transfer NFT!', variant: 'error' });
     } finally {
       setTransferTokenDialogOpen(false);
     }
@@ -139,23 +139,23 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
 
       const nftHoldingAddress = await readNftHoldingAddress(auction.contractAddress);
       if (!nftHoldingAddress) {
-        toast({ title: 'NFT transfer address not found!' });
+        toast({ title: 'NFT transfer address not found!', variant: 'error' });
         return;
       }
 
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.NFT_TRANSFER_PENDING, nftHoldingAddress);
 
-      toast({ title: 'Auction setup successful!' });
+      toast({ title: 'Auction setup successful!', variant: 'success' });
       updateAuctionList(AuctionStatus.NFT_TRANSFER_PENDING);
     } catch {
-      toast({ title: 'Auction setup failed!' });
+      toast({ title: 'Auction setup failed!', variant: 'error' });
     }
   };
 
   const handleStartPending = async (auction: AuctionCardData) => {
     await startAuction(auction.contractAddress);
     await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.IN_PROGRESS);
-    toast({ title: 'Your auction is live!' });
+    toast({ title: 'Your auction is live!', variant: 'success' });
     updateAuctionList(AuctionStatus.IN_PROGRESS);
   };
 
@@ -164,10 +164,10 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
     try {
       await endAuction(auction.contractAddress);
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.RESOLVED);
-      toast({ title: 'Auction is resolved!' });
+      toast({ title: 'Auction is resolved!', variant: 'success' });
       updateAuctionList(AuctionStatus.RESOLVED);
     } catch {
-      toast({ title: 'Failed to resolve auction!' });
+      toast({ title: 'Failed to resolve auction!', variant: 'error' });
     }
   };
 
@@ -176,12 +176,12 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
       try {
         await claim(auction.contractAddress);
         await updateAuctionRecordInDb(auction.contractAddress, undefined, undefined, true);
-        toast({ title: 'Claimed successfully!' });
+        toast({ title: 'Claimed earnings successfully!', variant: 'success' });
       } catch {
-        toast({ title: 'Failed to claim!' });
+        toast({ title: 'Failed to claim earnings!', variant: 'error' });
       }
     } else {
-      toast({ title: 'Already claimed!' });
+      toast({ title: 'Already claimed earnings!', variant: 'error' });
     }
   };
 
