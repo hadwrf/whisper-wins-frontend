@@ -14,7 +14,7 @@ export const AuctionStatusActionMapping = new Map<AuctionStatus, string>()
   .set(AuctionStatus.IN_PROGRESS, 'In progress')
   .set(AuctionStatus.START_PENDING, 'Start auction')
   .set(AuctionStatus.TIME_ENDED, 'Resolve')
-  .set(AuctionStatus.RESOLVED, 'No action needed');
+  .set(AuctionStatus.RESOLVED, 'Claim earning');
 
 export const AuctionStatusStepMapping = new Map<AuctionStatus, number>()
   .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 2)

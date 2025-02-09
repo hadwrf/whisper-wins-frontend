@@ -74,8 +74,8 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
     }
   }, [auctionCardData.status]);
 
-  const updateAuctionList = (newStatus: AuctionStatus) => {
-    onUpdateStatus({ ...auctionCardData, status: newStatus });
+  const updateAuctionList = (newStatus: AuctionStatus, resultClaimed: boolean = false) => {
+    onUpdateStatus({ ...auctionCardData, status: newStatus, resultClaimed });
   };
 
   const handleStatusClick = (auction: Auction) => {
@@ -151,10 +151,10 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
 
       await updateAuctionRecordInDb(auction.contractAddress, AuctionStatus.NFT_TRANSFER_PENDING, nftHoldingAddress);
 
-      toast({ title: 'Auction setup successful!', variant: 'success' });
+      toast({ title: 'NFT transfer address retrieved!', variant: 'success' });
       updateAuctionList(AuctionStatus.NFT_TRANSFER_PENDING);
     } catch {
-      toast({ title: 'Auction setup failed!', variant: 'error' });
+      toast({ title: 'NFT transfer address retrieve failed!', variant: 'error' });
     }
   };
 
@@ -182,6 +182,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
       try {
         await claim(auction.contractAddress);
         await updateAuctionRecordInDb(auction.contractAddress, undefined, undefined, true);
+        updateAuctionList(AuctionStatus.RESOLVED, true);
         toast({ title: 'Claimed earnings successfully!', variant: 'success' });
       } catch {
         toast({ title: 'Failed to claim earnings!', variant: 'error' });
@@ -239,7 +240,9 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
             disabled={shouldDisableButton(auctionCardData, loading)}
             onClick={() => handleButtonClick(auctionCardData)}
           >
-            {AuctionStatusActionMapping.get(auctionCardData.status)}
+            {auctionCardData.status == AuctionStatus.RESOLVED && auctionCardData.resultClaimed
+              ? 'No action needed'
+              : AuctionStatusActionMapping.get(auctionCardData.status)}
             <Spinner show={loading} />
           </Button>
         </CardFooter>
@@ -254,7 +257,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
 
 function shouldDisableButton(auction: AuctionCardData, loading: boolean) {
   // Disable the button if the auction is resolved and the result is already claimed
-  if (auction.status === AuctionStatus.RESOLVED || loading) {
+  if ((auction.status === AuctionStatus.RESOLVED && auction.resultClaimed) || loading) {
     return true;
   }
 
