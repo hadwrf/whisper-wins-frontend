@@ -1,6 +1,8 @@
 import { BidCardData } from '@/app/dashboard/my-bids/page';
+import { BidPriceBadge } from '@/components/BidPriceBadge';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { NftMedia } from '@/components/NftMedia';
+import { Spinner } from '@/components/Spinner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
@@ -10,8 +12,7 @@ import endAuction from '@/lib/suave/endAuction';
 import { AuctionStatus, BidStatus } from '@prisma/client';
 import { MousePointerClick } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
-import { BidPriceBadge } from '@/components/BidPriceBadge';
+import React, { useState } from 'react';
 
 interface MyBidCardProps {
   bidCardData: BidCardData;
@@ -21,6 +22,7 @@ interface MyBidCardProps {
 export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
   const { push } = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
   const updateBidList = (newStatus: AuctionStatus, resultClaimed: boolean) => {
     onUpdateStatus({ ...bidCardData, auction: { ...bidCardData.auction, status: newStatus }, resultClaimed });
@@ -68,6 +70,7 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
   };
 
   const handleActionButtonClick = () => {
+    setLoading(true);
     if (bidCardData.auction.status == AuctionStatus.RESOLVED) {
       claim(bidCardData.auction.contractAddress)
         .then(async () => {
@@ -83,16 +86,23 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
             title: 'Failed to claim the NFT!',
             variant: 'error',
           });
+        })
+        .finally(() => {
+          setLoading(false);
         });
     } else {
-      endAuction(bidCardData.auction.contractAddress).then(async () => {
-        await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED);
-        updateBidList(AuctionStatus.RESOLVED, false);
-        toast({
-          title: 'Auction resolved successfully!',
-          variant: 'success',
+      endAuction(bidCardData.auction.contractAddress)
+        .then(async () => {
+          await updateAuctionRecordInDb(bidCardData.auction.contractAddress, AuctionStatus.RESOLVED);
+          updateBidList(AuctionStatus.RESOLVED, false);
+          toast({
+            title: 'Auction resolved successfully!',
+            variant: 'success',
+          });
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      });
     }
   };
 
@@ -124,11 +134,12 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
       <CardFooter>
         <Button
           size='xs'
-          disabled={bidCardData.auction.status == AuctionStatus.IN_PROGRESS}
+          disabled={bidCardData.auction.status == AuctionStatus.IN_PROGRESS || loading}
           onClick={() => handleActionButtonClick()}
           className='w-full'
         >
           {getActionWording(bidCardData)}
+          <Spinner show={loading} />
         </Button>
       </CardFooter>
     </Card>
