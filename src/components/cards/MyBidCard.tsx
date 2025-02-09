@@ -186,17 +186,20 @@ function getBidStatus(bid: BidCardData) {
     return 'Completed';
   }
   if (bid.auction.status == AuctionStatus.TIME_ENDED) {
-    return 'Time Ended';
+    return 'Time ended';
   } else {
-    return 'In Progress';
+    return 'In progress';
   }
 }
 
 function getStatusBackgroundColor(bid: BidCardData) {
+  if (bid.auction.status == AuctionStatus.IN_PROGRESS) {
+    return 'bg-orange-300 hover:bg-orange-400';
+  }
   if (bid.isWinner) {
-    return 'bg-green-400/90';
+    return 'bg-green-400/90 hover:bg-green-500';
   } else {
-    return 'bg-rose-500/90';
+    return 'bg-rose-500/90 hover:bg-rose-600';
   }
 }
 
@@ -206,7 +209,7 @@ function getActionWording(bid: BidCardData) {
       if (bid.isWinner) {
         return 'Claim NFT';
       } else {
-        return 'Claim Bid';
+        return 'Claim bid';
       }
     }
     return 'No action available';

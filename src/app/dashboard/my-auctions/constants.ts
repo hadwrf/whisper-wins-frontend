@@ -1,20 +1,20 @@
 import { AuctionStatus } from '@prisma/client';
 
 export const AuctionStatusMapping = new Map<AuctionStatus, string>()
-  .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 'Transfer Address Pending')
-  .set(AuctionStatus.NFT_TRANSFER_PENDING, 'NFT Transfer Pending')
-  .set(AuctionStatus.IN_PROGRESS, 'In Progress')
-  .set(AuctionStatus.START_PENDING, 'Start Pending')
-  .set(AuctionStatus.TIME_ENDED, 'Time Ended')
+  .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 'Transfer address pending')
+  .set(AuctionStatus.NFT_TRANSFER_PENDING, 'NFT transfer pending')
+  .set(AuctionStatus.IN_PROGRESS, 'In progress')
+  .set(AuctionStatus.START_PENDING, 'Start pending')
+  .set(AuctionStatus.TIME_ENDED, 'Time ended')
   .set(AuctionStatus.RESOLVED, 'Resolved');
 
 export const AuctionStatusActionMapping = new Map<AuctionStatus, string>()
-  .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 'Get Address')
+  .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 'Get address')
   .set(AuctionStatus.NFT_TRANSFER_PENDING, 'Transfer NFT')
-  .set(AuctionStatus.IN_PROGRESS, 'In Progress')
-  .set(AuctionStatus.START_PENDING, 'Start Auction')
+  .set(AuctionStatus.IN_PROGRESS, 'In progress')
+  .set(AuctionStatus.START_PENDING, 'Start auction')
   .set(AuctionStatus.TIME_ENDED, 'Resolve')
-  .set(AuctionStatus.RESOLVED, 'Claim Earning');
+  .set(AuctionStatus.RESOLVED, 'No action needed');
 
 export const AuctionStatusStepMapping = new Map<AuctionStatus, number>()
   .set(AuctionStatus.NFT_TRANSFER_ADDRESS_PENDING, 2)

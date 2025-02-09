@@ -25,6 +25,7 @@ import { MousePointerClick } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Spinner } from '@/components/Spinner';
 
 interface MyAuctionCardProps {
   auctionCardData: AuctionCardData;
@@ -37,6 +38,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
   const { toast } = useToast();
   const [transferTokenDialogOpen, setTransferTokenDialogOpen] = useState(false);
   const [winningBid, setWinningBid] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const updateAuctionRecordInDb = async (
     auctionAddress: string,
@@ -82,6 +84,7 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
   };
 
   const handleButtonClick = async (auction: AuctionCardData) => {
+    setLoading(true);
     try {
       switch (auction.status) {
         case AuctionStatus.NFT_TRANSFER_PENDING:
@@ -110,6 +113,8 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
     } catch (error) {
       console.error('Error handling button click:', error);
       toast({ title: 'An unexpected error occurred!', variant: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -231,10 +236,11 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
           <Button
             size='xs'
             className='w-full'
-            disabled={auctionCardData.status == AuctionStatus.IN_PROGRESS || auctionCardData.resultClaimed}
+            disabled={shouldDisableButton(auctionCardData, loading)}
             onClick={() => handleButtonClick(auctionCardData)}
           >
             {AuctionStatusActionMapping.get(auctionCardData.status)}
+            <Spinner show={loading} />
           </Button>
         </CardFooter>
       </Card>
@@ -245,3 +251,13 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
     </>
   );
 };
+
+function shouldDisableButton(auction: AuctionCardData, loading: boolean) {
+  // Disable the button if the auction is resolved and the result is already claimed
+  if (auction.status === AuctionStatus.RESOLVED || loading) {
+    return true;
+  }
+
+  // Default: the button is enabled
+  return false;
+}
