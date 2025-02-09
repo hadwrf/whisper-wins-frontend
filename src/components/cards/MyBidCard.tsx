@@ -196,11 +196,7 @@ function getStatusBackgroundColor(bid: BidCardData) {
   if (bid.auction.status == AuctionStatus.IN_PROGRESS) {
     return 'bg-orange-300 hover:bg-orange-400';
   }
-  if (bid.isWinner) {
-    return 'bg-green-400/90 hover:bg-green-500';
-  } else {
-    return 'bg-rose-500/90 hover:bg-rose-600';
-  }
+  return 'bg-green-400/90 hover:bg-green-500';
 }
 
 function getActionWording(bid: BidCardData) {
