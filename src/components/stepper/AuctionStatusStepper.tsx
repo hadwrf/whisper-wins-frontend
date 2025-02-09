@@ -13,7 +13,7 @@ const steps = [
   {
     title: 'Retrieve NFT Transfer Address',
     description:
-      'Obtain the secure address where you will transfer your NFT. This step ensures that your NFT\nis ready forthe auction process and can be transferred safely to the stake account.',
+      'Obtain the secure address where you will transfer your NFT. This step ensures that your NFT\nis ready for the auction process and can be transferred safely to the stake account.',
   },
   {
     title: 'Transfer NFT',
