@@ -114,7 +114,10 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
       <CardContent className='h-fit overflow-hidden p-3 pb-2'>
         <p className='mb-1 line-clamp-1 text-sm font-semibold tracking-tight'>{bidCardData.nft?.name ?? 'No Name'}</p>
         <div className='mb-2 flex justify-between'>
-          <BidPriceBadge value={`ETH ${bidCardData.amount}`} />
+          <BidPriceBadge
+            value={`ETH ${bidCardData.amount}`}
+            status={bidCardData.status}
+          />
           {bidCardData.auctionEndTime && (
             <CountdownTimer
               startTime={bidCardData.auction.createdAt}
@@ -134,7 +137,7 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
       <CardFooter>
         <Button
           size='xs'
-          disabled={bidCardData.auction.status == AuctionStatus.IN_PROGRESS || loading}
+          disabled={shouldDisableButton(bidCardData, loading)}
           onClick={() => handleActionButtonClick()}
           className='w-full'
         >
@@ -150,6 +153,26 @@ const BidStatusStepMapping = new Map<BidStatus, number>()
   .set(BidStatus.ACTIVE, 2)
   .set(BidStatus.WINNER, 3)
   .set(BidStatus.LOSER, 3);
+
+function shouldDisableButton(bidCardData: BidCardData, loading: boolean) {
+  // Disable the button if the auction is resolved and the result is already claimed
+  if (bidCardData.auction.status === AuctionStatus.RESOLVED && bidCardData.resultClaimed) {
+    return true;
+  }
+
+  // Disable the button if the auction is not in a state where actions are valid
+  if (bidCardData.auction.status === AuctionStatus.IN_PROGRESS) {
+    return true;
+  }
+
+  // Disable the button during the loading process to prevent duplicate actions
+  if (loading) {
+    return true;
+  }
+
+  // Default: the button is enabled
+  return false;
+}
 
 function getBidStatus(bid: BidCardData) {
   if (bid.auction.status == AuctionStatus.RESOLVED) {
@@ -186,11 +209,11 @@ function getActionWording(bid: BidCardData) {
         return 'Claim Bid';
       }
     }
-    return 'Completed';
+    return 'No action available';
   }
   if (bid.auction.status == AuctionStatus.TIME_ENDED) {
     return 'Resolve';
   } else {
-    return 'In Progress';
+    return 'No action available';
   }
 }
