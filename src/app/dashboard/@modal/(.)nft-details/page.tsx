@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { Nft, NftRequest, getNft } from '@/lib/services/getUserNfts';
 import Image from 'next/image';
 
-const NftDetaisModal = () => {
+const NftDetailsModal = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -50,7 +50,15 @@ const NftDetaisModal = () => {
                   width={500}
                   height={500}
                 />
-                <h2 className='mt-4 text-2xl font-semibold'>{nft.name || 'Unnamed NFT'}</h2>
+                <h2 className='mt-4 flex items-center text-2xl font-semibold'>
+                  <Image
+                    src='/ethereum-logo.svg'
+                    alt='Ethereum logo'
+                    width={40}
+                    height={40}
+                  />
+                  {nft.name || 'Unnamed NFT'}
+                </h2>
                 <p className='mt-2 text-sm text-gray-600'>{nft.description || 'No description provided.'}</p>
               </div>
 
@@ -108,4 +116,4 @@ const NftDetaisModal = () => {
   );
 };
 
-export default NftDetaisModal;
+export default NftDetailsModal;
