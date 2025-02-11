@@ -15,7 +15,7 @@ export const CountdownTimer: React.FC<CountdownProps> = ({ startTime, auctionEnd
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft(auctionEndTime));
-    }, 60000);
+    }, 1000); // Update every second
 
     return () => clearInterval(timer); // Cleanup on unmount
   }, [auctionEndTime]);
@@ -24,12 +24,13 @@ export const CountdownTimer: React.FC<CountdownProps> = ({ startTime, auctionEnd
     const now = new Date().getTime();
     const difference = endTime.getTime() - now;
 
-    if (difference <= 0) return { days: 0, hours: 0, minutes: 0 };
+    if (difference <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
     return {
       days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
       minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+      seconds: Math.floor((difference % (1000 * 60)) / 1000),
     };
   }
 
@@ -43,13 +44,27 @@ export const CountdownTimer: React.FC<CountdownProps> = ({ startTime, auctionEnd
               className='flex gap-1'
             >
               <CalendarClock size={13} />
-              {timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 ? (
+              {timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0 ? (
                 <span>Ended</span>
               ) : (
                 <>
-                  <span>{timeLeft.days}d </span>
-                  <span>{timeLeft.hours}h </span>
-                  <span>{timeLeft.minutes}m</span>
+                  {timeLeft.days > 0 ? (
+                    <>
+                      <span>{timeLeft.days}d </span>
+                      <span>{timeLeft.hours}h </span>
+                      <span>{timeLeft.minutes}m</span>
+                    </>
+                  ) : timeLeft.hours > 0 ? (
+                    <>
+                      <span>{timeLeft.hours}h </span>
+                      <span>{timeLeft.minutes}m </span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{timeLeft.minutes}m </span>
+                      <span>{timeLeft.seconds}s</span>
+                    </>
+                  )}
                 </>
               )}
             </Badge>
