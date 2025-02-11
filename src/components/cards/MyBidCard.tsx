@@ -9,6 +9,7 @@ import { Card, CardContent, CardFooter, CardMedia } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import claim from '@/lib/suave/claim';
 import endAuction from '@/lib/suave/endAuction';
+import { printInfo } from '@/lib/suave/printInfo';
 import { AuctionStatus, BidStatus } from '@prisma/client';
 import { MousePointerClick } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -108,7 +109,13 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
 
   return (
     <Card className='w-60'>
-      <CardMedia>
+      <CardMedia
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          printInfo(bidCardData.auction.contractAddress);
+        }}
+      >
         <NftMedia nft={bidCardData.nft} />
       </CardMedia>
       <CardContent className='h-fit overflow-hidden p-3 pb-2'>

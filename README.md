@@ -1,3 +1,17 @@
+# <h1 align="center"> Whisper-Wins Frontend </h1>
+
+## What is Whisper-Wins?
+
+Whisper-Wins is an application designed to facilitate sealed auctions on a blockchain.
+By adopting the sealed auction model, it addresses the common drawbacks of current blockchain-based auctions,
+such as lack of privacy, MEV attacks, and last-minute bidding.
+This enhancement elevates the auction experience to a new level.
+
+This repository contains all the necessary files for the frontend of Whisper-Wins.
+The corresponding smart contracts can be found [here](https://github.com/usertakenname/whisper-wins-backend).
+
+# Getting Started
+
 ## Environment Variables Setup
 
 To configure your environment, please follow these steps:
@@ -5,8 +19,6 @@ To configure your environment, please follow these steps:
 1. **Copy the Example File**: Duplicate the `.env.example` file and rename it to `.env`.
 
 2. **Fill in the Necessary Fields**: Open the .env file in a text editor and fill in the required values for your environment.
-
-Oracle address: 0x17fa7F77cA31dDB536A5e13f8167EFaD12B75cB6
 
 ## Running the App in Your Local Environment
 
