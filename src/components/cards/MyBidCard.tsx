@@ -73,18 +73,19 @@ export const MyBidCard = ({ bidCardData, onUpdateStatus }: MyBidCardProps) => {
   const handleActionButtonClick = () => {
     setLoading(true);
     if (bidCardData.auction.status == AuctionStatus.RESOLVED) {
+      const claimedEntity = bidCardData.isWinner ? 'NFT' : 'bid';
       claim(bidCardData.auction.contractAddress)
         .then(async () => {
           await updateBidRecordInDb(true);
           updateBidList(AuctionStatus.RESOLVED, true);
           toast({
-            title: 'Successfully claimed the NFT!',
+            title: `Successfully claimed the ${claimedEntity}!`,
             variant: 'success',
           });
         })
         .catch(() => {
           toast({
-            title: 'Failed to claim the NFT!',
+            title: `Failed to claim the ${claimedEntity}!!`,
             variant: 'error',
           });
         })
@@ -202,6 +203,9 @@ function getBidStatus(bid: BidCardData) {
 function getStatusBackgroundColor(bid: BidCardData) {
   if (bid.auction.status == AuctionStatus.IN_PROGRESS) {
     return 'bg-orange-300 hover:bg-orange-400';
+  }
+  if (bid.auction.status == AuctionStatus.RESOLVED && !bid.isWinner && !bid.resultClaimed) {
+    return 'bg-red-500/90 hover:bg-rose-600';
   }
   return 'bg-green-400/90 hover:bg-green-500';
 }
