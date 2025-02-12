@@ -115,7 +115,7 @@ export const AuctionCards = ({ filters = {} }: AuctionCardsProps) => {
   return (
     <div className='grid grid-cols-3 gap-4 lg:grid-cols-4'>
       {filteredAndSortedAuctions.map((auction) => (
-        <div key={auction.nftAddress}>
+        <div key={auction.contractAddress}>
           <AuctionCard auction={auction} />
         </div>
       ))}
