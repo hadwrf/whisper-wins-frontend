@@ -6,13 +6,14 @@ import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { placeBidSchema } from '@/app/dashboard/validation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import getBiddingAddress from '@/lib/suave/getBiddingAddress';
 import { Spinner } from '@/components/Spinner';
 import { useToast } from '@/hooks/use-toast';
 
 interface PlaceBidFormProps {
   auctionAddress: string;
+  minimumBidAmount: number;
   onBiddingAddressChange: (address: string) => void;
   onBiddingAmountChange: (amount: number) => void;
 }
@@ -21,18 +22,27 @@ interface PlaceBidFormData {
   amount: number;
 }
 
-export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBiddingAmountChange }: PlaceBidFormProps) => {
+export const PlaceBidForm = ({
+  auctionAddress,
+  minimumBidAmount,
+  onBiddingAddressChange,
+  onBiddingAmountChange,
+}: PlaceBidFormProps) => {
   const [loading, setLoading] = useState(false);
   const [scanMode, setScanMode] = useState(false);
 
   const { toast } = useToast();
 
   const form = useForm({
-    resolver: zodResolver(placeBidSchema),
+    resolver: zodResolver(placeBidSchema(minimumBidAmount)),
     defaultValues: {
-      amount: 0,
+      amount: minimumBidAmount,
     },
   });
+
+  useEffect(() => {
+    form.reset({ amount: minimumBidAmount });
+  }, [minimumBidAmount, form.reset]);
 
   const onSubmit = async (data: PlaceBidFormData) => {
     setLoading(true);
@@ -73,7 +83,7 @@ export const PlaceBidForm = ({ auctionAddress, onBiddingAddressChange, onBidding
               <FormControl>
                 <Input
                   placeholder='Bid Amount'
-                  type='number'
+                  type='decimal'
                   {...field}
                 />
               </FormControl>
