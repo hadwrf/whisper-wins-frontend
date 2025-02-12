@@ -5,7 +5,7 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoadingQRCode from '@/components/LoadingQRCode';
 import { PlaceBidForm } from '@/components/forms/PlaceBidForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BiddingQRCode from '@/components/BiddingQRCode';
 import { Hex } from '@flashbots/suave-viem';
 import BalanceDisplay from '@/components/BalanceDisplay';
@@ -14,6 +14,7 @@ import { transferTransactionToAddress } from '@/lib/ethereum/transferTransaction
 import { Spinner } from '@/components/Spinner';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthContext } from '@/context/AuthContext';
+import getMinimalBid from '@/lib/suave/getMinimalBid';
 
 const PlaceBidModal = () => {
   const router = useRouter();
@@ -24,8 +25,15 @@ const PlaceBidModal = () => {
 
   const auctionAddress = searchParams?.get('auctionAddress') || '';
 
+  const [minimumBidAmount, setMinimumBidAmount] = useState(0);
   const [biddingAddress, setBiddingAddress] = useState<string | null>(null);
   const [biddingAmount, setBiddingAmount] = useState<number | null>(null);
+
+  useEffect(() => {
+    getMinimalBid(auctionAddress).then((amount: string) => {
+      setMinimumBidAmount(Number(amount));
+    });
+  }, []);
 
   const handleClickTransaction = (biddingAddress: string | null, biddingAmount: number | null) => {
     setLoading(true);
@@ -116,6 +124,7 @@ const PlaceBidModal = () => {
         </div>
         <PlaceBidForm
           auctionAddress={auctionAddress}
+          minimumBidAmount={minimumBidAmount}
           onBiddingAddressChange={setBiddingAddress}
           onBiddingAmountChange={setBiddingAmount}
         />

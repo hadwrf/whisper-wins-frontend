@@ -240,7 +240,8 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
             disabled={shouldDisableButton(auctionCardData, loading)}
             onClick={() => handleButtonClick(auctionCardData)}
           >
-            {auctionCardData.status == AuctionStatus.RESOLVED && auctionCardData.resultClaimed
+            {(auctionCardData.status == AuctionStatus.RESOLVED && auctionCardData.resultClaimed) ||
+            auctionCardData.status == AuctionStatus.IN_PROGRESS
               ? 'No action needed'
               : AuctionStatusActionMapping.get(auctionCardData.status)}
             <Spinner show={loading} />
@@ -257,7 +258,12 @@ export const MyAuctionCard = (props: MyAuctionCardProps) => {
 
 function shouldDisableButton(auction: AuctionCardData, loading: boolean) {
   // Disable the button if the auction is resolved and the result is already claimed
-  if ((auction.status === AuctionStatus.RESOLVED && auction.resultClaimed) || loading) {
+  // auction is in progress
+  if (
+    (auction.status === AuctionStatus.RESOLVED && auction.resultClaimed) ||
+    auction.status == AuctionStatus.IN_PROGRESS ||
+    loading
+  ) {
     return true;
   }
 
